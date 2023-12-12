@@ -38,3 +38,23 @@ h5 {
 h6 {
   @apply sm:text-lg;
 }
+
+a {
+  @apply text-secondary;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent pb-[6px] mb-[-6px];
+}
+
+.input {
+  @apply px-[24px] py-[12px] text-black-75 placeholder:text-black-50 focus:placeholder:text-black-25 focus:outline-1 focus:outline-primary outline-none outline-offset-0 bg-black-5 rounded-full;
+}
+
+.btn {
+  @apply rounded-full px-[16px] py-[12px] font-semibold;
+}
+
+.btn.primary {
+  @apply text-white bg-primary hover:bg-primary-dark focus:bg-primary-dark;
+}
