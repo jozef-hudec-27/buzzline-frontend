@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  @apply text-black-75;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-bold text-black-100;
+}
+
+h1 {
+  @apply text-4xl sm:text-5xl;
+}
+
+h2 {
+  @apply text-3xl sm:text-4xl;
+}
+
+h3 {
+  @apply text-2xl sm:text-3xl;
+}
+
+h4 {
+  @apply text-xl sm:text-2xl;
+}
+
+h5 {
+  @apply text-lg sm:text-xl;
+}
+
+h6 {
+  @apply sm:text-lg;
+}
