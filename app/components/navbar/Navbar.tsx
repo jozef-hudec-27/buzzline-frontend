@@ -9,7 +9,7 @@ function Navbar() {
       </Link>
 
       <div>
-        <Link href="/features" className="font-bold text-black-100">
+        <Link href="/features" className="pb-[2px] font-bold text-black-100 hover:border-b-[3px] border-secondary">
           Features
         </Link>
       </div>
