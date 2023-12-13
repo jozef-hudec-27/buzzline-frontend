@@ -1,7 +1,14 @@
-import Link from 'next/link'
+'use client'
+
+import { useState } from 'react'
+
 import Navbar from '../components/navbar/Navbar'
+import RegisterLoginForm from '../components/registerLoginForm/RegisterLoginForm'
 
 function RegisterPage() {
+  const [page, setPage] = useState<0 | 1>(0)
+  // 0 -> email, password, confirm password 1 -> first name, last name
+
   return (
     <div>
       <Navbar />
@@ -14,19 +21,7 @@ function RegisterPage() {
               <br /> anywhere
             </h1>
 
-            <form className="w-full flex flex-col gap-[12px]">
-              <input type="email" placeholder="Email address" className="input" autoComplete="email" />
-              <input type="password" placeholder="Password" className="input" autoComplete="new-password" />
-              <input type="password" placeholder="Confirm password" className="input" autoComplete="new-password" />
-
-              <div className="w-fit mt-[12px] flex items-center gap-[24px]">
-                <button className="btn primary">Sign up</button>
-
-                <Link href="/login" className="underline">
-                  Already have an account?
-                </Link>
-              </div>
-            </form>
+            <RegisterLoginForm type="register" page={page} setPage={setPage} />
           </div>
 
           <div className="p-[24px] flex flex-col gap-[32px] sm:gap-[64px] cursor-default w-11/12 sm:w-3/4 xl:w-[59%]">

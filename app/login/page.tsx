@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import Navbar from '../components/navbar/Navbar'
+import RegisterLoginForm from '../components/registerLoginForm/RegisterLoginForm'
 
 function LoginPage() {
   return (
@@ -13,18 +13,7 @@ function LoginPage() {
             <br /> BuzzLine
           </h1>
 
-          <form className="w-full flex flex-col gap-[12px]">
-            <input type="email" placeholder="Email address" className="input" autoComplete="email" />
-            <input type="password" placeholder="Password" className="input" autoComplete="new-password" />
-
-            <div className="w-fit mt-[12px] flex items-center gap-[24px]">
-              <button className="btn primary">Log in</button>
-
-              <Link href="/register" className="underline">
-                Don't have an account yet?
-              </Link>
-            </div>
-          </form>
+          <RegisterLoginForm type="login" />
         </div>
       </section>
     </div>
