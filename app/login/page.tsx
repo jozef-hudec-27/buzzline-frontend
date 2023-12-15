@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import Navbar from '../components/navbar/Navbar'
-import RegisterLoginForm from '../components/registerLoginForm/RegisterLoginForm'
+import LoginForm from './LoginForm'
 import { LoginFormState } from '../register/types'
 
 function LoginPage() {
@@ -20,7 +20,7 @@ function LoginPage() {
             <br /> BuzzLine
           </h1>
 
-          <RegisterLoginForm type="login" formState={formState} setFormState={setFormState} />
+          <LoginForm formState={formState} setFormState={setFormState} />
         </div>
       </section>
     </div>

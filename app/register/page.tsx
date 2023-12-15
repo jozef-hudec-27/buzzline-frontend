@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import Navbar from '../components/navbar/Navbar'
-import RegisterLoginForm from '../components/registerLoginForm/RegisterLoginForm'
+import RegisterForm from './RegisterForm'
 
 import { RegisterFormState } from './types'
 
@@ -30,13 +30,7 @@ function RegisterPage() {
               <br /> anywhere
             </h1>
 
-            <RegisterLoginForm
-              type="register"
-              page={page}
-              setPage={setPage}
-              formState={formState}
-              setFormState={setFormState}
-            />
+            <RegisterForm page={page} setPage={setPage} formState={formState} setFormState={setFormState} />
           </div>
 
           <div className="p-[24px] flex flex-col gap-[32px] sm:gap-[64px] cursor-default w-11/12 sm:w-3/4 xl:w-[59%]">
