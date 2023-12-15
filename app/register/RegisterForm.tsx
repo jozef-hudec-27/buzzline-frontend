@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { ComponentPropsWithRef, ComponentPropsWithoutRef, useRef } from 'react'
 import toast from 'react-hot-toast'
 
 import api from '@/app/api/axiosInstance'
@@ -10,7 +11,6 @@ import api from '@/app/api/axiosInstance'
 import { RegisterFormState } from '@/app/register/types'
 import { AxiosError } from 'axios'
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from 'react'
-
 
 type RegisterFormProps = {
   page: 0 | 1
@@ -21,6 +21,8 @@ type RegisterFormProps = {
 
 function RegisterForm(props: RegisterFormProps) {
   const router = useRouter()
+  const passwordInputRef = useRef<HTMLInputElement>(null)
+  const confirmPasswordInputRef = useRef<HTMLInputElement>(null)
   const { formState, setFormState } = props
 
   const changeState = <T extends RegisterFormState>(key: keyof T, value: string) => {
@@ -58,11 +60,19 @@ function RegisterForm(props: RegisterFormProps) {
     if (props.page === 0) {
       props.setPage(1)
     } else {
+      const { current: passwordInput } = passwordInputRef
+      const { current: confirmPasswordInput } = confirmPasswordInputRef
+
+      if (passwordInput && confirmPasswordInput && passwordInput.value !== confirmPasswordInput.value) {
+        return toast('Passwords do not match.', { icon: '❌' })
+      }
+
       registerMutation.mutate(formState)
     }
+    console.log(passwordInputRef.current?.value, confirmPasswordInputRef.current?.value)
   }
 
-  const inputs1 = [
+  const inputs1: ComponentPropsWithoutRef<'input'>[] = [
     {
       type: 'text',
       placeholder: 'First name',
@@ -86,21 +96,22 @@ function RegisterForm(props: RegisterFormProps) {
     },
   ]
 
-  const inputs2 = [
+  const inputs2: ComponentPropsWithRef<'input'>[] = [
     {
       type: 'password',
       placeholder: 'Password',
       autoComplete: 'new-password',
       value: formState.password,
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('password', e.target.value),
+      ref: passwordInputRef,
     },
     {
       type: 'password',
       placeholder: 'Confirm password',
       autoComplete: 'new-password',
       value: formState.confirmPassword,
-      onChange: (e: ChangeEvent<HTMLInputElement>) =>
-        changeState<RegisterFormState>('confirmPassword', e.target.value),
+      onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('confirmPassword', e.target.value),
+      ref: confirmPasswordInputRef,
     },
   ]
 
