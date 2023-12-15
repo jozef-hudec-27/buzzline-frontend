@@ -69,7 +69,6 @@ function RegisterForm(props: RegisterFormProps) {
 
       registerMutation.mutate(formState)
     }
-    console.log(passwordInputRef.current?.value, confirmPasswordInputRef.current?.value)
   }
 
   const inputs1: ComponentPropsWithoutRef<'input'>[] = [

@@ -7,9 +7,9 @@ import toast from 'react-hot-toast'
 
 import api from '@/app/api/axiosInstance'
 
-import { LoginFormState, RegisterFormState } from '@/app/register/types'
+import { LoginFormState } from '@/app/register/types'
 import { AxiosError } from 'axios'
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from 'react'
+import { ChangeEvent, ComponentPropsWithoutRef, Dispatch, FormEvent, SetStateAction } from 'react'
 
 type LoginFormProps = {
   formState: LoginFormState
@@ -25,13 +25,33 @@ function LoginForm(props: LoginFormProps) {
     setFormState((prevState: T) => ({ ...prevState, [key]: value } as T))
   }
 
-  const loginMutation = useMutation({})
+  const loginMutation = useMutation({
+    mutationFn: async (user: LoginFormState) => {
+      document.getElementById('form-errors')?.replaceChildren() // Clear form errors
+      return await api().post('/auth/login', user)
+    },
+    onSuccess: (data) => {
+      const accessToken: string = data?.data?.accessToken
+      localStorage.setItem('accessToken', accessToken)
+      router.replace('/')
+    },
+    onError: (error: AxiosError) => {
+      if (error.response?.data) {
+        const { message } = error.response.data as { message: string }
+        toast(message, { icon: '❌' })
+      } else {
+        toast('Something went wrong. Please try again later.', { icon: '❌' })
+      }
+    },
+  })
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
+    loginMutation.mutate(formState)
   }
 
-  const inputs = [
+  const inputs: ComponentPropsWithoutRef<'input'>[] = [
     {
       type: 'email',
       placeholder: 'Email address',
@@ -55,7 +75,12 @@ function LoginForm(props: LoginFormProps) {
       ))}
 
       <div className="w-fit mt-[12px] flex items-center gap-[24px]">
-        <button className="btn primary">Log in</button>
+        <button
+          className={`btn primary ${loginMutation.isPending ? 'cursor-wait' : ''}`}
+          disabled={loginMutation.isPending || loginMutation.isSuccess}
+        >
+          Log in
+        </button>
 
         <Link href="/register" className="underline">
           Don't have an account yet?
