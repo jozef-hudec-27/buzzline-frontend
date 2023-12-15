@@ -1,6 +1,14 @@
+'use client'
+
 import Link from 'next/link'
+import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+
+import api from '@/app/api/axiosInstance'
 
 import { LoginFormState, RegisterFormState } from '@/app/register/types'
+import { AxiosError } from 'axios'
 
 type RegisterProps = {
   type: 'register'
@@ -17,6 +25,7 @@ type LoginProps = {
 }
 
 function RegisterLoginForm(props: RegisterProps | LoginProps) {
+  const router = useRouter()
   const { type, formState, setFormState } = props
 
   const changeState = <T extends LoginFormState | RegisterFormState>(key: keyof T, value: string) => {
@@ -24,17 +33,41 @@ function RegisterLoginForm(props: RegisterProps | LoginProps) {
     setFormState((prevState: T) => ({ ...prevState, [key]: value } as T))
   }
 
+  const registerMutation = useMutation({
+    mutationFn: async (user: RegisterFormState) => {
+      document.getElementById('form-errors')?.replaceChildren() // Clear form errors
+      return await api().post('/auth/register', user)
+    },
+    onSuccess: (data) => {
+      router.replace('/login')
+      toast('Successfully registered! You can now log in.', { icon: '🎉', duration: 6000 })
+    },
+    onError: (error: AxiosError) => {
+      if (error.response?.data) {
+        const { errors } = error.response.data as { errors: { msg: string; path: string }[] }
+
+        errors.forEach((error) => {
+          const errorElement = document.createElement('li')
+          errorElement.textContent = error.msg
+          document.getElementById('form-errors')?.appendChild(errorElement)
+        })
+      } else {
+        toast('Something went wrong. Please try again later.', { icon: '❌' })
+      }
+    },
+  })
+
   return (
     <form
       className="w-full flex flex-col gap-[12px]"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault()
 
         if (type === 'register') {
           if (props.page === 0) {
             props.setPage(1)
           } else {
-            //   FETCH
+            registerMutation.mutate(formState)
           }
         } else {
         }
@@ -97,7 +130,12 @@ function RegisterLoginForm(props: RegisterProps | LoginProps) {
           )}
 
           <div className="w-fit mt-[12px] flex items-center gap-[24px]">
-            <button className="btn primary">{props.page === 0 ? 'Continue' : 'Sign up'}</button>
+            <button
+              className={`btn primary ${registerMutation.isPending ? 'cursor-wait' : ''}`}
+              disabled={registerMutation.isPending || registerMutation.isSuccess}
+            >
+              {props.page === 0 ? 'Continue' : 'Sign up'}
+            </button>
 
             {props.page === 0 ? (
               <Link href="/login" className="underline">
@@ -149,6 +187,8 @@ function RegisterLoginForm(props: RegisterProps | LoginProps) {
           </div>
         </>
       )}
+
+      <ul id="form-errors" className="text-red-500 list-disc"></ul>
     </form>
   )
 }

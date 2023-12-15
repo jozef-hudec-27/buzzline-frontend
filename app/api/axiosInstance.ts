@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
-const baseURL = process.env.BASE_URL
+const baseURL = 'http://localhost:4000'
 const axiosOptions = {
   baseURL,
   headers: {

@@ -23,7 +23,7 @@ function RegisterPage() {
       <Navbar />
       <section className="mt-[48px] sm:mt-[96px] px-0 sm:px-[24px] xl:px-[240px]">
         <div className="flex flex-col xl:flex-row items-center gap-[96px]">
-          <div className="flex flex-col gap-[32px]">
+          <div className="flex flex-col gap-[32px] max-w-[322px] sm:max-w-[435px]">
             <h1 className="gradient-text text-[60px] sm:text-[90px] leading-none">
               Chat
               <br /> anytime,

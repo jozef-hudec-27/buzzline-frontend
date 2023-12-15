@@ -56,5 +56,5 @@ a {
 }
 
 .btn.primary {
-  @apply text-white bg-primary hover:bg-primary-dark focus:bg-primary-dark;
+  @apply text-white bg-primary hover:bg-primary-dark focus:bg-primary-dark disabled:bg-black-75 disabled:text-black-50;
 }
