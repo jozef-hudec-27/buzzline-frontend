@@ -42,7 +42,8 @@ axiosInstance.interceptors.response.use(
       return await api(true).request(config) // Retry original request
     } catch (error2) {
       localStorage.removeItem('accessToken')
-      window.location.replace('/login?logout=true') // Refresh token has expired, redirect to login
+      localStorage.setItem('autoLogout', 'true')
+      window.location.replace('/login') // Refresh token has expired, redirect to login
       return await Promise.reject(error2)
     }
   }

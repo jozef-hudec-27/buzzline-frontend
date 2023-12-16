@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
 import api from '@/app/api/axiosInstance'
+import useUserStore from '../zustand/userStore'
 
 import { LoginFormState } from '@/app/register/types'
 import { AxiosError } from 'axios'
@@ -18,6 +19,7 @@ type LoginFormProps = {
 
 function LoginForm(props: LoginFormProps) {
   const router = useRouter()
+  const fetchUser = useUserStore((state) => state.fetchUser)
   const { formState, setFormState } = props
 
   const changeState = <T extends LoginFormState>(key: keyof T, value: string) => {
@@ -33,6 +35,7 @@ function LoginForm(props: LoginFormProps) {
     onSuccess: (data) => {
       const accessToken: string = data?.data?.accessToken
       localStorage.setItem('accessToken', accessToken)
+      fetchUser()
       router.replace('/')
     },
     onError: (error: AxiosError) => {
