@@ -29,7 +29,7 @@ export type Message = {
   sender: string
   content: string
   readBy: string[]
-  createdAt: Date
+  createdAt: string
 }
 
 export type ChatIndex = {

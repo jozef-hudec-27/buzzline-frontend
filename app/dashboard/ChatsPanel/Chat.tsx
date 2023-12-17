@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { ChatIndex } from '@/app/types'
 import useUserStore from '@/app/zustand/userStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
-import { restrictLength } from '@/app/utils'
+import { restrictLength, timeSince } from '@/app/utils'
 
 function Chat({ chat }: { chat: ChatIndex }) {
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
@@ -43,9 +43,13 @@ function Chat({ chat }: { chat: ChatIndex }) {
           <p className={`${hasUnreadMsg && 'font-semibold'}`}>{restrictLength(chatName, 30)}</p>
 
           {chat.newestMessage && (
-            <p className={`${hasUnreadMsg && 'font-semibold'} font-[13px] text-black-65`}>
-              {restrictLength(chat.newestMessage.content, 25)}
-            </p>
+            <div className={`${hasUnreadMsg && 'font-semibold'} text-[13px] text-black-65 flex items-center gap-[4px]`}>
+              {chat.newestMessage.sender === user._id && <p>You:</p>}
+
+              <p>{restrictLength(chat.newestMessage.content, 25)}</p>
+
+              <p>· {timeSince(chat.newestMessage.createdAt)}</p>
+            </div>
           )}
         </div>
 
