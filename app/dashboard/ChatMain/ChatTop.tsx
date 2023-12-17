@@ -1,9 +1,13 @@
 import Image from 'next/image'
 import { TelephoneFill, CameraVideoFill, ThreeDots } from 'react-bootstrap-icons'
 
+import { restrictLength } from '@/app/utils'
+
 import { ChatShow } from '@/app/types'
 
 function ChatTop({ chat }: { chat: ChatShow }) {
+  const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
+
   return (
     <div className="px-[12px] py-[10px] flex items-center justify-between border-b border-black-10 shadow">
       <div className="flex items-center gap-[10px]">
@@ -15,9 +19,7 @@ function ChatTop({ chat }: { chat: ChatShow }) {
           className="w-[36px] h-[36px] rounded-full"
         />
 
-        <p>
-          {chat.users[0].firstName} {chat.users[0].lastName}
-        </p>
+        <p>{restrictLength(chatName, 50)}</p>
       </div>
 
       <div className="flex items-center gap-[24px]">

@@ -6,8 +6,11 @@ import { useEffect, useState } from 'react'
 import { ChatIndex } from '@/app/types'
 import useUserStore from '@/app/zustand/userStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
+import { restrictLength } from '@/app/utils'
 
 function Chat({ chat }: { chat: ChatIndex }) {
+  const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
+
   const user = useUserStore((state) => state.user)
   const fetchChat = useCurrentChatStore((state) => state.fetchChat)
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
@@ -37,13 +40,11 @@ function Chat({ chat }: { chat: ChatIndex }) {
 
       <div className="w-full flex items-center justify-between">
         <div className="flex flex-col items-start">
-          <p className={`${hasUnreadMsg && 'font-semibold'}`}>
-            {chat.users[0].firstName} {chat.users[0].lastName}
-          </p>
+          <p className={`${hasUnreadMsg && 'font-semibold'}`}>{restrictLength(chatName, 30)}</p>
 
           {chat.newestMessage && (
             <p className={`${hasUnreadMsg && 'font-semibold'} font-[13px] text-black-65`}>
-              {chat.newestMessage.content}
+              {restrictLength(chat.newestMessage.content, 25)}
             </p>
           )}
         </div>
