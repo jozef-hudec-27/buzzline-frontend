@@ -6,7 +6,7 @@ import { User as TUser } from './userStore'
 export type Chat = {
   _id: string
   users: TUser[]
-  newestMessage?: { content: string }
+  newestMessage?: { content: string; sender: string; readBy: string[]    }
 }
 
 type ChatsStore = {

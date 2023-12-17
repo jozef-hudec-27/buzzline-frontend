@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-import Chats from './Chats'
+import ChatsPanel from './ChatsPanel/ChatsPanel'
 import useChatsStore from '../zustand/chatsStore'
 
 function DashBoard() {
@@ -14,7 +14,7 @@ function DashBoard() {
 
   return (
     <div>
-      <Chats />
+      <ChatsPanel />
     </div>
   )
 }
