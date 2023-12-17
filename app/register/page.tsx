@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Navbar from '../components/navbar/Navbar'
 import RegisterForm from './RegisterForm'
 
-import { RegisterFormState } from './types'
+import { RegisterFormState } from '@/app/types'
 
 function RegisterPage() {
   const [page, setPage] = useState<0 | 1>(0)

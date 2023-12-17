@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 
 import ChatsPanel from './ChatsPanel/ChatsPanel'
 import useChatsStore from '../zustand/chatsStore'
+import ChatMain from './ChatMain/ChatMain'
 
 function DashBoard() {
   const fetchChats = useChatsStore((state) => state.fetchChats)
@@ -13,8 +14,10 @@ function DashBoard() {
   }, [])
 
   return (
-    <div>
+    <div className='flex'>
       <ChatsPanel />
+
+      <ChatMain />
     </div>
   )
 }

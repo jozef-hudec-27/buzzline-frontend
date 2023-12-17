@@ -3,11 +3,13 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-import { Chat as TChat } from '@/app/zustand/chatsStore'
+import { ChatIndex } from '@/app/types'
 import useUserStore from '@/app/zustand/userStore'
+import useCurrentChatStore from '@/app/zustand/currentChatStore'
 
-function Chats({ chat }: { chat: TChat }) {
+function Chat({ chat }: { chat: ChatIndex }) {
   const user = useUserStore((state) => state.user)
+  const fetchChat = useCurrentChatStore((state) => state.fetchChat)
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 
   useEffect(() => {
@@ -19,7 +21,12 @@ function Chats({ chat }: { chat: TChat }) {
   }, [chat, user])
 
   return (
-    <div className="p-[6px] flex items-center gap-[10px] rounded-[8px] hover:bg-black-5 cursor-pointer">
+    <button
+      className="p-[6px] flex items-center gap-[10px] rounded-[8px] hover:bg-black-5 cursor-pointer"
+      onClick={(e) => {
+        fetchChat(chat._id)
+      }}
+    >
       <Image
         src="https://faceboom.onrender.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4a44a7bd0b470dc8d229be0daebaa1accc5deea/default-avatar.svg"
         alt="avatar"
@@ -29,7 +36,7 @@ function Chats({ chat }: { chat: TChat }) {
       />
 
       <div className="w-full flex items-center justify-between">
-        <div className="flex flex-col">
+        <div className="flex flex-col items-start">
           <p className={`${hasUnreadMsg && 'font-semibold'}`}>
             {chat.users[0].firstName} {chat.users[0].lastName}
           </p>
@@ -43,8 +50,8 @@ function Chats({ chat }: { chat: TChat }) {
 
         {hasUnreadMsg && <div className="w-[8px] h-[8px] bg-secondary rounded-full" aria-hidden></div>}
       </div>
-    </div>
+    </button>
   )
 }
 
-export default Chats
+export default Chat

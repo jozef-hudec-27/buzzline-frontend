@@ -1,17 +1,11 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-import { User as TUser } from './userStore'
-
-export type Chat = {
-  _id: string
-  users: TUser[]
-  newestMessage?: { content: string; sender: string; readBy: string[]    }
-}
+import { ChatIndex } from '@/app/types'
 
 type ChatsStore = {
-  chats: Chat[]
-  setChats: (chats: Chat[]) => void
+  chats: ChatIndex[]
+  setChats: (chats: ChatIndex[]) => void
   isLoading: boolean
   fetchChats: () => any
 }

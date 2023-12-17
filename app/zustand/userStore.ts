@@ -1,13 +1,7 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-export type User = {
-  email: string
-  firstName: string
-  lastName: string
-  chatToken: string
-  _id: string
-}
+import { User } from '@/app/types'
 
 type UserStore = {
   user: User
