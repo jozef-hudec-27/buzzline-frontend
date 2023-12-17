@@ -1,5 +1,6 @@
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import ChatEmpty from './ChatEmpty'
+import ChatTop from './ChatTop'
 
 function ChatMain() {
   const chat = useCurrentChatStore((state) => state.chat)
@@ -16,7 +17,9 @@ function ChatMain() {
   }
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 flex flex-col">
+      <ChatTop chat={chat} />
+
       <p>{chat.users[0].firstName}</p>
     </div>
   )

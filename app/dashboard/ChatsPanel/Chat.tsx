@@ -22,7 +22,7 @@ function Chat({ chat }: { chat: ChatIndex }) {
 
   return (
     <button
-      className="p-[6px] flex items-center gap-[10px] rounded-[8px] hover:bg-black-5 cursor-pointer"
+      className="p-[6px] flex items-center gap-[10px] rounded-[8px] hover:bg-black-5 focus:bg-black-5 outline-none cursor-pointer"
       onClick={(e) => {
         fetchChat(chat._id)
       }}
