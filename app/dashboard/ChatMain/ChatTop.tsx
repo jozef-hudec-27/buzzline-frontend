@@ -21,15 +21,15 @@ function ChatTop({ chat }: { chat: ChatShow }) {
       </div>
 
       <div className="flex items-center gap-[24px]">
-        <button className="text-secondary hover:opacity-75" aria-label="Audio call">
+        <button className="chat-icon" aria-label="Audio call">
           <TelephoneFill size={20} aria-hidden />
         </button>
 
-        <button className="text-secondary hover:opacity-75" aria-label="Video call">
+        <button className="chat-icon" aria-label="Video call">
           <CameraVideoFill size={20} aria-hidden />
         </button>
 
-        <button className="text-secondary hover:opacity-75" aria-label="Options">
+        <button className="chat-icon" aria-label="Options">
           <ThreeDots size={20} aria-hidden />
         </button>
       </div>
