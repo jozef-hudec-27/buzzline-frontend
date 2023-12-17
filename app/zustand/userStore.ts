@@ -1,16 +1,24 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
+export type User = {
+  email: string
+  firstName: string
+  lastName: string
+  chatToken: string
+  _id: string
+}
+
 type UserStore = {
-  user: Object
-  setUser: (user: Object) => void
+  user: User
+  setUser: (user: User) => void
   isLoading: boolean
   fetchUser: () => any
   isLoggedIn: boolean
 }
 
 export default create<UserStore>()((set) => ({
-  user: {},
+  user: {} as User,
   setUser: (user) => set({ user, isLoggedIn: !!Object.keys(user).length }),
   isLoading: true,
   fetchUser: async () => {
@@ -25,8 +33,6 @@ export default create<UserStore>()((set) => ({
       const response = await api(true).get('/api/me')
       set({ user: response.data, isLoading: false, isLoggedIn: !!Object.keys(response.data).length })
     } catch (err: unknown) {
-      console.log('##ZUSTAND ERROR', err)
-
       set({ isLoading: false })
     }
   },

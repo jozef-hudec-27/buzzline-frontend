@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+import DashBoard from './dashboard/Dashboard'
+
 import userStore from './zustand/userStore'
 
 export default function Home() {
@@ -17,6 +19,6 @@ export default function Home() {
   }, [isLoggedIn, isLoading])
 
   if (isLoggedIn) {
-    return <div>DASHBOARD</div>
+    return <DashBoard />
   }
 }
