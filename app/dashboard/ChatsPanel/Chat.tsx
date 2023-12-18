@@ -8,7 +8,12 @@ import useUserStore from '@/app/zustand/userStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import { restrictLength, timeSince } from '@/app/utils'
 
-function Chat({ chat }: { chat: ChatIndex }) {
+type ChatProps = {
+  chat: ChatIndex
+  hideNewestMessage?: boolean
+}
+
+function Chat({ chat, hideNewestMessage }: ChatProps) {
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
 
   const user = useUserStore((state) => state.user)
@@ -42,7 +47,7 @@ function Chat({ chat }: { chat: ChatIndex }) {
         <div className="flex flex-col items-start">
           <p className={`${hasUnreadMsg && 'font-semibold'}`}>{restrictLength(chatName, 30)}</p>
 
-          {chat.newestMessage && (
+          {!hideNewestMessage && chat.newestMessage && (
             <div className={`${hasUnreadMsg && 'font-semibold'} text-[13px] text-black-65 flex items-center gap-[4px]`}>
               {chat.newestMessage.sender === user._id && <p>You:</p>}
 
