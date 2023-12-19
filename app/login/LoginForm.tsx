@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 import api from '@/app/api/axiosInstance'
 import useUserStore from '../zustand/userStore'
 
-import { LoginFormState } from '@/app/register/types'
+import { LoginFormState } from '@/app/types'
 import { AxiosError } from 'axios'
 import { ChangeEvent, ComponentPropsWithoutRef, Dispatch, FormEvent, SetStateAction } from 'react'
 
