@@ -16,6 +16,7 @@
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
+    "socket.io-client": "^4.7.2",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

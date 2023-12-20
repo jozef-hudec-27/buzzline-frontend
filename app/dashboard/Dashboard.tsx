@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { io, Socket } from 'socket.io-client'
 
 import useChatsStore from '../zustand/chatsStore'
 import ChatsPanel from './ChatsPanel/ChatsPanel'
@@ -11,8 +12,10 @@ import Sidebar from './Sidebar/Sidebar'
 function DashBoard() {
   const fetchChats = useChatsStore((state) => state.fetchChats)
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
+  const [socket, setSocket] = useState<Socket | null>(null)
 
   useEffect(() => {
+    setSocket(io('http://localhost:4000'))
     fetchChats()
   }, [])
 
@@ -20,7 +23,6 @@ function DashBoard() {
     <div className="flex">
       <Sidebar leftPanel={leftPanel} setLeftPanel={setLeftPanel} />
 
-      {/* {leftPanel === 'chats' ? <ChatsPanel /> : <PeoplePanel />} */}
       <div className="flex flex-col">
         <div className={leftPanel === 'people' ? 'hidden' : ''}>
           <ChatsPanel />
@@ -31,7 +33,7 @@ function DashBoard() {
         </div>
       </div>
 
-      <ChatMain />
+      <ChatMain socket={socket} />
     </div>
   )
 }
