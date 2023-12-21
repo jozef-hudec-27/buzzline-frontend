@@ -1,25 +1,31 @@
 'use client'
 
-import { Socket } from 'socket.io-client'
 import { useEffect } from 'react'
 
+import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
+import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import ChatEmpty from './ChatEmpty'
 import ChatTop from './ChatTop'
 import ChatBottom from './ChatBottom'
 
-type ChatMainProps = {
-  socket: Socket | null
-}
+function ChatMain() {
+  const socket = useSocketStore((state) => state.socket)
 
-function ChatMain({ socket }: ChatMainProps) {
   const chat = useCurrentChatStore((state) => state.chat)
   const chatLoading = useCurrentChatStore((state) => state.isLoading)
+
+  const fetchMessages = useCurrentChatMessagesStore((state) => state.fetchMessages)
+  const messages = useCurrentChatMessagesStore((state) => state.messages)
+  const setMessages = useCurrentChatMessagesStore((state) => state.setMessages)
+  const messagesLoading = useCurrentChatMessagesStore((state) => state.isLoading)
 
   useEffect(() => {
     if (!Object.keys(chat).length) {
       return
     }
+
+    fetchMessages(chat._id)
 
     socket?.emit('joinRoom', chat._id)
   }, [chat, socket])
@@ -38,7 +44,17 @@ function ChatMain({ socket }: ChatMainProps) {
     <div className="flex-1 flex flex-col">
       <ChatTop chat={chat} />
 
-      <p className="flex-1">{chat.users[0].firstName}</p>
+      <div className="messages flex-1">
+        {messagesLoading ? (
+          <div>Loading messages...</div>
+        ) : (
+          <div>
+            {messages.map((msg, i) => {
+              return <div key={i}>{msg.content}</div>
+            })}
+          </div>
+        )}
+      </div>
 
       <ChatBottom chat={chat} />
     </div>
