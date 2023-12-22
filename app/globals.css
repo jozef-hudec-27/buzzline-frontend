@@ -70,3 +70,15 @@ a {
 .chat-icon {
   @apply text-secondary hover:opacity-75;
 }
+
+.message {
+  @apply px-[16px] py-[10px] rounded-[24px] break-all w-fit max-w-[640px];
+}
+
+.message.own {
+  @apply text-white bg-secondary;
+}
+
+.message.other {
+  @apply bg-black-10;
+}

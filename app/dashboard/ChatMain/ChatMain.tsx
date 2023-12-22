@@ -8,6 +8,7 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import ChatEmpty from './ChatEmpty'
 import ChatTop from './ChatTop'
 import ChatBottom from './ChatBottom'
+import ChatThread from './ChatThread'
 
 function ChatMain() {
   const socket = useSocketStore((state) => state.socket)
@@ -44,17 +45,7 @@ function ChatMain() {
     <div className="flex-1 flex flex-col">
       <ChatTop chat={chat} />
 
-      <div className="messages flex-1">
-        {messagesLoading ? (
-          <div>Loading messages...</div>
-        ) : (
-          <div>
-            {messages.map((msg, i) => {
-              return <div key={i}>{msg.content}</div>
-            })}
-          </div>
-        )}
-      </div>
+      <ChatThread messages={messages} messagesLoading={messagesLoading} />
 
       <ChatBottom chat={chat} />
     </div>

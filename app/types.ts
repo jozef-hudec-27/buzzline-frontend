@@ -26,7 +26,7 @@ export type User = {
 export type Message = {
   _id: string
   chat: string
-  sender: string
+  sender: User
   content: string
   readBy: string[]
   createdAt: string
