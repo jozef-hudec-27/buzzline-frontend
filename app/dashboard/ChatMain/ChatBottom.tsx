@@ -14,6 +14,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
     e.preventDefault()
 
     socket?.emit('message', { chat: chat._id, content: message })
+    setMessage('')
   }
 
   return (

@@ -32,7 +32,7 @@ function DashBoard() {
   }, [])
 
   return (
-    <div className="flex">
+    <div className="flex max-h-[100vh]">
       <Sidebar leftPanel={leftPanel} setLeftPanel={setLeftPanel} />
 
       <div className="flex flex-col">

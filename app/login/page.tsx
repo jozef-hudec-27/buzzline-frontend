@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 
 import Navbar from '../components/navbar/Navbar'
 import LoginForm from './LoginForm'
-import { LoginFormState } from '../register/types'
+import { LoginFormState } from '@/app/types'
 
 function LoginPage() {
   const [formState, setFormState] = useState<LoginFormState>({ email: '', password: '' })

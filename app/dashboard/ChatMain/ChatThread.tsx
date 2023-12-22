@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 
 import useUserStore from '@/app/zustand/userStore'
@@ -11,13 +14,22 @@ type ChatThreadProps = {
 
 function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
   if (messagesLoading) {
-    return <div>Loading messages...</div>
+    return <div className="flex-1">Loading messages...</div>
   }
+
+  const threadRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Scroll to bottom when opened or new message
+    if (messages.length) {
+      threadRef.current?.scrollTo(0, threadRef.current?.scrollHeight)
+    }
+  }, [messages])
 
   const user = useUserStore((state) => state.user)
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 overflow-y-scroll" ref={threadRef}>
       <div className="flex flex-col gap-[4px] px-[16px] pt-[10px]">
         {messages.map((msg, i) => {
           return (

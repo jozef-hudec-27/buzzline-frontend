@@ -32,11 +32,19 @@ export type Message = {
   createdAt: string
 }
 
+export type NewestMessage = {
+  _id: string
+  content: string
+  createdAt: string
+  readBy: string[]
+  sender: string
+}
+
 export type ChatIndex = {
   _id: string
   isGroup: boolean
   users: User[]
-  newestMessage?: Message
+  newestMessage?: NewestMessage
 }
 
 export type ChatShow = {
