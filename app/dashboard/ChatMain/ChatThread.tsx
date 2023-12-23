@@ -19,7 +19,7 @@ type ChatThreadProps = {
 
 function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
   if (messagesLoading) {
-    return <div className="flex-1">Loading messages...</div>
+    return <div className="flex-1 flex justify-center items-center">Loading messages...</div>
   }
 
   const threadRef = useRef<HTMLDivElement>(null)

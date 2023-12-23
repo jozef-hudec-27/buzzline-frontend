@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MicFill, Image, HandThumbsUpFill, EmojiSmileFill } from 'react-bootstrap-icons'
 import useSocketStore from '@/app/zustand/socketStore'
+import toast from 'react-hot-toast'
 
 import { ChatShow } from '@/app/types'
 
@@ -12,6 +13,8 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!message.length || message.length > 500) return
 
     socket?.emit('message', { chat: chat._id, content: message })
     setMessage('')
@@ -34,7 +37,13 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
           placeholder="Aa"
           aria-label="Message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length > 500) {
+              return toast('Maximum message length is 500 characters', { icon: '❌' })
+            }
+
+            setMessage(e.target.value)
+          }}
         />
 
         <button type="button" className="chat-icon" aria-label="Choose an emoji">

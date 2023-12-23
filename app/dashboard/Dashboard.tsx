@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
+import toast from 'react-hot-toast'
 
 import useChatsStore from '../zustand/chatsStore'
 import useSocketStore from '../zustand/socketStore'
@@ -24,6 +25,10 @@ function DashBoard() {
 
     scket.on('message', (data: Message) => {
       addMessage(data)
+    })
+
+    scket.on('error', (data: string) => {
+      toast(data, { icon: '❌' })
     })
 
     setSocket(scket)
