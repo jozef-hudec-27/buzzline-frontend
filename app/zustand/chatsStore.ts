@@ -5,14 +5,14 @@ import { ChatIndex } from '@/app/types'
 
 type ChatsStore = {
   chats: ChatIndex[]
-  setChats: (chats: ChatIndex[]) => void
+  setChats: (updater: (prevChats: ChatIndex[]) => ChatIndex[]) => void
   isLoading: boolean
   fetchChats: () => any
 }
 
 export default create<ChatsStore>()((set) => ({
   chats: [],
-  setChats: (chats) => set({ chats }),
+  setChats: (updater: (prevChats: ChatIndex[]) => ChatIndex[]) => set((prev) => ({ chats: updater(prev.chats) })),
   isLoading: true,
   fetchChats: async () => {
     set({ isLoading: true })

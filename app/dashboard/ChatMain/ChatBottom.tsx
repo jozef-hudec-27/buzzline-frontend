@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import { MicFill, Image, HandThumbsUpFill, EmojiSmileFill } from 'react-bootstrap-icons'
 import useSocketStore from '@/app/zustand/socketStore'
+import useUserStore from '@/app/zustand/userStore'
 import toast from 'react-hot-toast'
 
 import { ChatShow } from '@/app/types'
 
 function ChatBottom({ chat }: { chat: ChatShow }) {
+  const user = useUserStore((state) => state.user)
   const socket = useSocketStore((state) => state.socket)
   const [message, setMessage] = useState('')
 
@@ -17,6 +19,16 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
     if (!message.length || message.length > 500) return
 
     socket?.emit('message', { chat: chat._id, content: message })
+
+    chat.users.concat([user]).forEach((participant) => {
+      socket?.emit('notification', {
+        from: chat._id,
+        to: participant._id,
+        type: 'message',
+        message: { content: message, createdAt: new Date(), readBy: [], sender: user._id },
+      })
+    })
+
     setMessage('')
   }
 

@@ -18,6 +18,7 @@ function DashBoard() {
   const addMessage = useCurrentChatMessagesStore((state) => state.addMessage)
   const setSocket = useSocketStore((state) => state.setSocket)
   const fetchChats = useChatsStore((state) => state.fetchChats)
+  const setChats = useChatsStore((state) => state.setChats)
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
 
   useEffect(() => {
@@ -29,6 +30,20 @@ function DashBoard() {
 
     scket.on('error', (data: string) => {
       toast(data, { icon: '❌' })
+    })
+
+    scket.on('notification', (data) => {
+      if (data.type === 'message') {
+        // Update chats panel
+        setChats((prevChats) => {
+          let chat = prevChats.find((chat) => chat._id === data.from)
+          if (!chat) return prevChats
+
+          chat = { ...chat, newestMessage: data.message }
+          const updatedChats = [chat, ...prevChats.filter((chat) => chat._id !== data.from)]
+          return updatedChats
+        })
+      }
     })
 
     setSocket(scket)
