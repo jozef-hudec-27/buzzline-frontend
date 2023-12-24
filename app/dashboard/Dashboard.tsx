@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 import toast from 'react-hot-toast'
 
+import useUserStore from '../zustand/userStore'
+import useCurrentChatStore from '../zustand/currentChatStore'
 import useChatsStore from '../zustand/chatsStore'
 import useSocketStore from '../zustand/socketStore'
 import useCurrentChatMessagesStore from '../zustand/currentChatMessagesStore'
+
 import ChatsPanel from './ChatsPanel/ChatsPanel'
 import PeoplePanel from './PeoplePanel/PeoplePanel'
 import ChatMain from './ChatMain/ChatMain'
@@ -15,17 +18,31 @@ import Sidebar from './Sidebar/Sidebar'
 import { Message } from '@/app/types'
 
 function DashBoard() {
-  const addMessage = useCurrentChatMessagesStore((state) => state.addMessage)
-  const setSocket = useSocketStore((state) => state.setSocket)
-  const fetchChats = useChatsStore((state) => state.fetchChats)
-  const setChats = useChatsStore((state) => state.setChats)
+  const { addMessage } = useCurrentChatMessagesStore()
+  const { socket, setSocket } = useSocketStore()
+  const { user } = useUserStore()
+  const { chat } = useCurrentChatStore()
+  const { fetchChats, setChats, hasFetched } = useChatsStore()
+
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
 
   useEffect(() => {
-    const scket = io('http://localhost:4000', { query: { token: localStorage.getItem('accessToken') } })
+    const scket = socket || io('http://localhost:4000', { query: { token: localStorage.getItem('accessToken') } })
 
     scket.on('message', (data: Message) => {
       addMessage(data)
+
+      if (data.sender._id === user._id) {
+        // Send notification to all participants
+        chat?.users?.concat([user]).forEach((participant) => {
+          scket.emit('notification', {
+            from: chat._id,
+            to: participant._id,
+            type: 'message',
+            message: data,
+          })
+        })
+      }
     })
 
     scket.on('error', (data: string) => {
@@ -48,8 +65,16 @@ function DashBoard() {
 
     setSocket(scket)
 
-    fetchChats()
-  }, [])
+    if (!hasFetched) {
+      fetchChats()
+    }
+
+    return () => {
+      scket.off('message')
+      scket.off('error')
+      scket.off('notification')
+    }
+  }, [chat, user, hasFetched])
 
   return (
     <div className="flex max-h-[100vh]">
