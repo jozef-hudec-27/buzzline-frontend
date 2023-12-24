@@ -1,5 +1,4 @@
-'use client'
-
+import { memo } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { ChatFill, PeopleFill, BoxArrowRight } from 'react-bootstrap-icons'
@@ -12,7 +11,7 @@ type SidebarProps = {
   setLeftPanel: React.Dispatch<React.SetStateAction<'chats' | 'people'>>
 }
 
-function Sidebar({ leftPanel, setLeftPanel }: SidebarProps) {
+const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
   const router = useRouter()
 
   const activeClass = 'text-black-75 bg-black-5'
@@ -66,6 +65,6 @@ function Sidebar({ leftPanel, setLeftPanel }: SidebarProps) {
       </button>
     </div>
   )
-}
+})
 
 export default Sidebar

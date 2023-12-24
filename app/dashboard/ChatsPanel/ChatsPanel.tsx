@@ -1,12 +1,12 @@
 import { Search } from 'react-bootstrap-icons'
-
-import Chat from './Chat'
+import { memo } from 'react'
 
 import useChatsStore from '../../zustand/chatsStore'
 
-function Chats() {
-  const chats = useChatsStore((state) => state.chats)
-  const chatsLoading = useChatsStore((state) => state.isLoading)
+import Chat from './Chat'
+
+const Chats = memo(function () {
+  const { chats, isLoading: chatsLoading } = useChatsStore()
 
   return (
     <div className="px-[12px] py-[16px] w-[360px] flex flex-col gap-[22px] border-r border-black-10 h-[100vh]">
@@ -33,6 +33,6 @@ function Chats() {
       </div>
     </div>
   )
-}
+})
 
 export default Chats

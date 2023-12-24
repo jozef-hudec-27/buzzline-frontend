@@ -1,25 +1,18 @@
-'use client'
-
-import { useEffect } from 'react'
+import { useEffect, memo } from 'react'
 
 import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
+
 import ChatEmpty from './ChatEmpty'
 import ChatTop from './ChatTop'
 import ChatBottom from './ChatBottom'
 import ChatThread from './ChatThread'
 
-function ChatMain() {
+const ChatMain = memo(function () {
   const socket = useSocketStore((state) => state.socket)
-
-  const chat = useCurrentChatStore((state) => state.chat)
-  const chatLoading = useCurrentChatStore((state) => state.isLoading)
-
-  const fetchMessages = useCurrentChatMessagesStore((state) => state.fetchMessages)
-  const messages = useCurrentChatMessagesStore((state) => state.messages)
-  const setMessages = useCurrentChatMessagesStore((state) => state.setMessages)
-  const messagesLoading = useCurrentChatMessagesStore((state) => state.isLoading)
+  const { chat, isLoading: chatLoading } = useCurrentChatStore()
+  const { fetchMessages, messages, isLoading: messagesLoading } = useCurrentChatMessagesStore()
 
   useEffect(() => {
     if (!Object.keys(chat).length) {
@@ -50,6 +43,6 @@ function ChatMain() {
       <ChatBottom chat={chat} />
     </div>
   )
-}
+})
 
 export default ChatMain
