@@ -30,6 +30,8 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
 
     if (newestMessage && newestMessage.sender !== user._id && !newestMessage.readBy.includes(user._id)) {
       setHasUnreadMsg(true)
+    } else {
+      setHasUnreadMsg(false)
     }
   }, [chat, user])
 
