@@ -3,10 +3,13 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-import { ChatIndex } from '@/app/types'
 import useUserStore from '@/app/zustand/userStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
-import { restrictLength, timeSince } from '@/app/utils'
+import useChatsStore from '@/app/zustand/chatsStore'
+
+import { restrictLength, timeSince, randomInt } from '@/app/utils'
+
+import { ChatIndex } from '@/app/types'
 
 type ChatProps = {
   chat: ChatIndex
@@ -14,11 +17,13 @@ type ChatProps = {
 }
 
 function Chat({ chat, hideNewestMessage }: ChatProps) {
-  const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
-
   const user = useUserStore((state) => state.user)
   const fetchChat = useCurrentChatStore((state) => state.fetchChat)
+  const setChats = useChatsStore((state) => state.setChats)
+
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
+
+  const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
 
   useEffect(() => {
     const { newestMessage } = chat
@@ -33,6 +38,11 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
       className="p-[6px] flex items-center gap-[10px] rounded-[8px] hover:bg-black-5 focus:bg-black-5 outline-none cursor-pointer"
       onClick={(e) => {
         fetchChat(chat._id)
+
+        if (randomInt(1, 5) > 3) {
+          // Rerender ChatsPanel to update newestMessage
+          setChats((prevChats) => prevChats)
+        }
       }}
     >
       <Image

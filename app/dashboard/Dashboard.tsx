@@ -18,11 +18,15 @@ import Sidebar from './Sidebar/Sidebar'
 import { Message } from '@/app/types'
 
 function DashBoard() {
-  const { addMessage } = useCurrentChatMessagesStore()
+  const addMessage = useCurrentChatMessagesStore((state) => state.addMessage)
   const { socket, setSocket } = useSocketStore()
-  const { user } = useUserStore()
-  const { chat } = useCurrentChatStore()
-  const { fetchChats, setChats, hasFetched } = useChatsStore()
+  const user = useUserStore((state) => state.user)
+  const chat = useCurrentChatStore((state) => state.chat)
+  const { fetchChats, setChats, hasFetched } = useChatsStore((state) => ({
+    fetchChats: state.fetchChats,
+    setChats: state.setChats,
+    hasFetched: state.hasFetched,
+  }))
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
 
