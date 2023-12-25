@@ -86,3 +86,7 @@ a {
 .online-dot {
   @apply absolute right-0 bottom-[5px] w-[10px] h-[10px] rounded-full bg-online border border-white;
 }
+
+.unread-messages-panel-dot {
+  @apply absolute right-[4px] bottom-[6px] w-[10px] h-[10px] rounded-full bg-secondary border border-white;
+}
