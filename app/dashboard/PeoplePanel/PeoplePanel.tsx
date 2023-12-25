@@ -1,17 +1,35 @@
 import { memo } from 'react'
 
+import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 
 import Chat from '../ChatsPanel/Chat'
 
 import { ChatIndex } from '@/app/types'
 
-function removeGroupChats(chats: ChatIndex[]): ChatIndex[] {
-  return chats.filter((chat) => !chat.isGroup)
-}
-
 const PeoplePanel = memo(function () {
   const { chats, isLoading: chatsLoading } = useChatsStore()
+  const { isOnline } = useOnlineUsersStore()
+
+  function removeGroupChats(chats: ChatIndex[]): ChatIndex[] {
+    return chats.filter((chat) => !chat.isGroup)
+  }
+
+  function removeOfflineChats(chats: ChatIndex[]): ChatIndex[] {
+    const filtered: ChatIndex[] = []
+
+    chats.forEach((chat) => {
+      if (chat.users.some((user) => isOnline(user._id))) {
+        filtered.push(chat)
+      }
+    })
+
+    return filtered
+  }
+
+  function filterChats(chats: ChatIndex[]): ChatIndex[] {
+    return removeOfflineChats(removeGroupChats(chats))
+  }
 
   return (
     <div className="px-[12px] py-[16px] w-[360px] flex flex-col gap-[22px] border-r border-black-10 h-[100vh]">
@@ -24,7 +42,7 @@ const PeoplePanel = memo(function () {
 
         {!chatsLoading && !chats.length && <p>You have no chats</p>}
 
-        {removeGroupChats(chats).map((chat) => (
+        {filterChats(chats).map((chat) => (
           <Chat key={chat._id} chat={chat} hideNewestMessage />
         ))}
       </div>
