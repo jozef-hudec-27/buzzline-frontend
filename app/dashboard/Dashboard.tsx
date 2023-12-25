@@ -9,6 +9,7 @@ import useCurrentChatStore from '../zustand/currentChatStore'
 import useChatsStore from '../zustand/chatsStore'
 import useSocketStore from '../zustand/socketStore'
 import useCurrentChatMessagesStore from '../zustand/currentChatMessagesStore'
+import useOnlineUsersStore from '../zustand/onlineUsersStore'
 
 import ChatsPanel from './ChatsPanel/ChatsPanel'
 import PeoplePanel from './PeoplePanel/PeoplePanel'
@@ -26,6 +27,12 @@ function DashBoard() {
     fetchChats: state.fetchChats,
     setChats: state.setChats,
     hasFetched: state.hasFetched,
+  }))
+  const { addUser, removeUser } = useOnlineUsersStore((state) => ({
+    addUser: state.addUser,
+    removeUser: state.removeUser,
+    isOnline: state.isOnline,
+    users: state.users,
   }))
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
@@ -64,6 +71,18 @@ function DashBoard() {
           const updatedChats = [chat, ...prevChats.filter((chat) => chat._id !== data.from)]
           return updatedChats
         })
+      }
+    })
+
+    scket.on('onlineStatus', (data) => {
+      if (data.isOnline) {
+        if (!data.isResponse) {
+          scket.emit('onlineStatusResponse', { from: user._id, to: data.userId, isOnline: true, isResponse: true })
+        }
+
+        addUser(data.userId)
+      } else {
+        removeUser(data.userId)
       }
     })
 
