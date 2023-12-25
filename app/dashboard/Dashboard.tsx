@@ -31,8 +31,6 @@ function DashBoard() {
   const { addUser, removeUser } = useOnlineUsersStore((state) => ({
     addUser: state.addUser,
     removeUser: state.removeUser,
-    isOnline: state.isOnline,
-    users: state.users,
   }))
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
@@ -96,6 +94,7 @@ function DashBoard() {
       scket.off('message')
       scket.off('error')
       scket.off('notification')
+      scket.off('onlineStatus')
     }
   }, [chat, user, hasFetched])
 

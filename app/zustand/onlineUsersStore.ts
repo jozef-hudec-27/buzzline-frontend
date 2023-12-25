@@ -9,13 +9,15 @@ type OnlineUsersStore = {
 
 export default create<OnlineUsersStore>((set, get) => ({
   users: new Set(),
-  addUser: (userId) => set((state) => ({ users: new Set(state.users).add(userId) })),
-  removeUser: (userId) =>
-    set((state) => {
-      const newUsers = new Set(state.users)
-      newUsers.delete(userId)
-      return { users: newUsers }
-    }),
+  addUser: (userId) => {
+    get().users.add(userId)
+    // Required to update state so that subscribed components rerender
+    set((state) => ({ users: state.users }))
+  },
+  removeUser: (userId) => {
+    get().users.delete(userId)
+    set((state) => ({ users: state.users }))
+  },
   isOnline: (userId) => {
     return get().users.has(userId)
   },
