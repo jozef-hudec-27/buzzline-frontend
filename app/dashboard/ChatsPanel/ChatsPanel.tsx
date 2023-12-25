@@ -27,10 +27,10 @@ const Chats = memo(function () {
   }
 
   return (
-    <div className="px-[12px] py-[16px] w-[360px] flex flex-col gap-[22px] border-r border-black-10 h-[100vh]">
-      <h3>Chats</h3>
+    <div className="left-panel">
+      <h3 className='hidden lg:block'>Chats</h3>
 
-      <div className="px-[24px] py-[12px] flex items-center gap-[10px] bg-black-5 rounded-full w-full">
+      <div className="px-[24px] py-[12px] hidden lg:flex items-center gap-[10px] bg-black-5 rounded-full w-full">
         <Search size={16} className="text-black-25" />
 
         <input

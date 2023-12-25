@@ -40,7 +40,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
 
   return (
     <button
-      className="p-[6px] flex items-center gap-[10px] rounded-[8px] hover:bg-black-5 focus:bg-black-5 outline-none cursor-pointer"
+      className="p-[6px] flex flex-col lg:flex-row items-center gap-0 lg:gap-[10px] rounded-[8px] hover:bg-black-5 focus:bg-black-5 outline-none cursor-pointer"
       onClick={(e) => {
         fetchChat(chat._id)
 
@@ -64,10 +64,10 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
 
       <div className="w-full flex items-center justify-between">
         <div className="flex flex-col items-start">
-          <p className={`${hasUnreadMsg && 'font-semibold'}`}>{restrictLength(chatName, 30)}</p>
+          <p className={`${hasUnreadMsg && 'font-semibold'} hidden lg:block`}>{restrictLength(chatName, 30)}</p>
 
           {!hideNewestMessage && chat.newestMessage && (
-            <div className={`${hasUnreadMsg && 'font-semibold'} text-[13px] text-black-65 flex items-center gap-[4px]`}>
+            <div className={`${hasUnreadMsg && 'font-semibold'} text-[13px] text-black-65 hidden lg:flex items-center gap-[4px]`}>
               {chat.newestMessage.sender === user._id && <p>You:</p>}
 
               <p>{restrictLength(chat.newestMessage.content, 25)}</p>

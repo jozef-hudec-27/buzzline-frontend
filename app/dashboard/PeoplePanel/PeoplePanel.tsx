@@ -32,8 +32,8 @@ const PeoplePanel = memo(function () {
   }
 
   return (
-    <div className="px-[12px] py-[16px] w-[360px] flex flex-col gap-[22px] border-r border-black-10 h-[100vh]">
-      <h3>People</h3>
+    <div className="left-panel">
+      <h3 className='hidden lg:block'>People</h3>
 
       <p className="text-[13px]">Active contacts</p>
 

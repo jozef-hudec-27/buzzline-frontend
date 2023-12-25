@@ -90,3 +90,7 @@ a {
 .unread-messages-panel-dot {
   @apply absolute right-[4px] bottom-[6px] w-[10px] h-[10px] rounded-full bg-secondary border border-white;
 }
+
+.left-panel {
+  @apply px-[12px] py-[16px] w-[90px] lg:w-[360px] flex flex-col gap-[22px] border-r border-black-10 h-[100vh];
+}
