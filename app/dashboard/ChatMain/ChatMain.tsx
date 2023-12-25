@@ -57,7 +57,10 @@ const ChatMain = memo(function () {
 
     socket?.emit('joinRoom', chat._id)
 
-    readUnreadMessagesMutation.mutate()
+    // Read unread messages, only if not sent and read by current user
+    if (chat.newestMessage?.sender !== user._id && !chat.newestMessage?.readBy.includes(user._id)) {
+      readUnreadMessagesMutation.mutate()
+    }
   }, [chat, socket])
 
   if (!chatLoading && !Object.keys(chat).length) {

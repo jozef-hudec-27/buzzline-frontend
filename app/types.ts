@@ -51,5 +51,5 @@ export type ChatShow = {
   _id: string
   isGroup: boolean
   users: User[]
-  newestMessage?: string
+  newestMessage?: NewestMessage
 }
