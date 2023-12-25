@@ -82,3 +82,7 @@ a {
 .message.other {
   @apply bg-black-10;
 }
+
+.online-dot {
+  @apply absolute right-0 bottom-[5px] w-[10px] h-[10px] rounded-full bg-online border border-white;
+}

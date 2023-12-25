@@ -32,6 +32,9 @@ const config: Config = {
           10: '#E8E6E8',
           5: '#F3F2F3',
         },
+        online: {
+          DEFAULT: '#5AD539',
+        },
       },
     },
   },

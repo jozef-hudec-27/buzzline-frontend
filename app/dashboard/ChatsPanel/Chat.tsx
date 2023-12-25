@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import useUserStore from '@/app/zustand/userStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import useChatsStore from '@/app/zustand/chatsStore'
+import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 
 import { restrictLength, timeSince, randomInt } from '@/app/utils'
 
@@ -20,10 +21,12 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
   const user = useUserStore((state) => state.user)
   const fetchChat = useCurrentChatStore((state) => state.fetchChat)
   const setChats = useChatsStore((state) => state.setChats)
+  const { isOnline } = useOnlineUsersStore()
 
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
+  const online = chat.users.some((user) => isOnline(user._id))
 
   useEffect(() => {
     const { newestMessage } = chat
@@ -47,13 +50,17 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
         }
       }}
     >
-      <Image
-        src="https://faceboom.onrender.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4a44a7bd0b470dc8d229be0daebaa1accc5deea/default-avatar.svg"
-        alt="avatar"
-        width={48}
-        height={48}
-        className="w-[48px] h-[48px] rounded-full"
-      />
+      <div className="min-w-[48px] min-h-[48px] relative">
+        <Image
+          src="https://faceboom.onrender.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4a44a7bd0b470dc8d229be0daebaa1accc5deea/default-avatar.svg"
+          alt="avatar"
+          width={48}
+          height={48}
+          className="rounded-full"
+        />
+
+        {online && <div className="online-dot" aria-label="Online"></div>}
+      </div>
 
       <div className="w-full flex items-center justify-between">
         <div className="flex flex-col items-start">
