@@ -43,6 +43,23 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
 
   const user = useUserStore((state) => state.user)
 
+  function messageTooltip(msg: Message) {
+    return {
+      anchorSelect: `#tooltip-${msg._id}`,
+      arrowColor: 'transparent',
+      content: new Date(msg.createdAt).toLocaleString('en-GB', {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      }),
+      offset: 4,
+      delayShow: 400,
+    }
+  }
+
   return (
     <div className="flex-1 overflow-y-scroll" ref={threadRef}>
       <div className="flex flex-col gap-[4px] px-[16px] pt-[10px]">
@@ -66,24 +83,23 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
                 />
               )}
 
-              <div
-                className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} `}
-                data-tooltip-id={`tooltip-${msg._id}`}
-                data-tooltip-content={new Date(msg.createdAt).toLocaleString('en-GB', {
-                  year: '2-digit',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  hour12: true,
-                })}
-                data-tooltip-place={msgBelongsToUser(msg, user) ? 'left' : 'right'}
-                data-tooltip-delay-show={400}
-              >
+              <div className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} `} id={`tooltip-${msg._id}`}>
                 {msg.content}
               </div>
 
-              <Tooltip id={`tooltip-${msg._id}`} className="!rounded-[8px] !bg-black-100 !drop-shadow-md" arrowColor="transparent" offset={4} />
+              {/* Tooltip for larger devices */}
+              <Tooltip
+                {...messageTooltip(msg)}
+                className="hidden sm:block !rounded-[8px] !bg-black-100 !drop-shadow-md"
+                place={msgBelongsToUser(msg, user) ? 'left' : 'right'}
+              />
+
+              {/* Tooltip for mobile devices */}
+              <Tooltip
+                {...messageTooltip(msg)}
+                className="sm:hidden !rounded-[8px] !bg-black-100 !drop-shadow-md"
+                place="bottom"
+              />
             </div>
           )
         })}

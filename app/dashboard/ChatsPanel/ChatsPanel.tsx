@@ -42,7 +42,7 @@ const Chats = memo(function () {
         />
       </div>
 
-      <div className="flex flex-col overflow-auto">
+      <div className="flex sm:flex-col overflow-auto">
         {chatsLoading && <p>Loading your chats...</p>}
 
         {!chatsLoading && !chats.length && <p>You have no chats</p>}

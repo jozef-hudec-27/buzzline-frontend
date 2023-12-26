@@ -11,7 +11,7 @@ input[type='search']::-webkit-search-results-decoration {
 }
 
 html {
-  @apply text-black-75;
+  @apply text-black-75 h-[100vh];
 }
 
 h1,
@@ -92,5 +92,5 @@ a {
 }
 
 .left-panel {
-  @apply px-[12px] py-[16px] w-[90px] lg:w-[360px] flex flex-col gap-[22px] border-r border-black-10 h-[100vh];
+  @apply px-[12px] py-[16px] sm:w-[90px] lg:w-[360px] flex flex-row sm:flex-col gap-[22px] border-b sm:border-b-0 sm:border-r border-black-10 sm:h-[100vh];
 }

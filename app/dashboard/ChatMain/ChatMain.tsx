@@ -74,7 +74,7 @@ const ChatMain = memo(function () {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col h-0 sm:h-auto">
       <ChatTop chat={chat} />
 
       <ChatThread messages={messages} messagesLoading={messagesLoading} />

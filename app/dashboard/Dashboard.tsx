@@ -99,7 +99,7 @@ function DashBoard() {
   }, [chat, user, hasFetched])
 
   return (
-    <div className="flex max-h-[100vh]">
+    <div className="flex flex-col sm:flex-row h-[100vh] ">
       <Sidebar leftPanel={leftPanel} setLeftPanel={setLeftPanel} />
 
       <div className="flex flex-col">

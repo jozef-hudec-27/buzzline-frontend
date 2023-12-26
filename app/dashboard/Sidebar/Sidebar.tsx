@@ -37,8 +37,8 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
   })
 
   return (
-    <div className="px-[12px] py-[16px] flex flex-col items-center justify-between border-r border-black-5">
-      <div className="flex flex-col items-center gap-[16px]">
+    <div className="px-[12px] py-[16px] flex sm:flex-col items-center justify-between border-b sm:border-b-0 sm:border-r border-black-10">
+      <div className="flex sm:flex-col items-center gap-[16px]">
         <button
           className={`relative p-[6px] rounded-[8px] hover:bg-black-5 ${
             leftPanel === 'chats' ? activeClass : 'text-black-50'
@@ -59,7 +59,10 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
           <PeopleFill size={32} aria-hidden />
         </button>
 
-        <div className="w-[32px] h-[1px] bg-black-10 mt-[16px]" aria-hidden></div>
+        <div
+          className="w-[1px] sm:w-[32px] h-[32px] sm:h-[1px] bg-black-10 sm:mt-[16px] ml-[16px] sm:ml-0"
+          aria-hidden
+        ></div>
       </div>
 
       <button

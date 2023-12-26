@@ -34,7 +34,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
       <form className="py-[12px] px-[24px] flex items-center bg-black-5 flex-1 rounded-full" onSubmit={onSubmit}>
         <input
           type="text"
-          className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none"
+          className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none w-0"
           placeholder="Aa"
           aria-label="Message"
           value={message}

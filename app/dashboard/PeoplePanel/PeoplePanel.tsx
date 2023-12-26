@@ -31,18 +31,22 @@ const PeoplePanel = memo(function () {
     return removeOfflineChats(removeGroupChats(chats))
   }
 
+  const filteredChats = filterChats(chats)
+
   return (
     <div className="left-panel">
-      <h3 className='hidden lg:block'>People</h3>
+      <h3 className="hidden lg:block">People</h3>
 
-      <p className="text-[13px]">Active contacts</p>
+      <p className="text-[13px] hidden sm:block">Active contacts</p>
 
-      <div className="flex flex-col overflow-auto">
+      {!filteredChats.length && <p className="text-[12px] italic">No active contacts</p>}
+
+      <div className="flex sm:flex-col overflow-auto">
         {chatsLoading && <p>Loading your chats...</p>}
 
         {!chatsLoading && !chats.length && <p>You have no chats</p>}
 
-        {filterChats(chats).map((chat) => (
+        {filteredChats.map((chat) => (
           <Chat key={chat._id} chat={chat} hideNewestMessage />
         ))}
       </div>
