@@ -71,6 +71,10 @@ a {
   @apply text-secondary hover:opacity-75;
 }
 
+.icon-btn {
+  @apply p-[6px] rounded-[8px] hover:bg-black-5 active:bg-black-10 text-black-50;
+}
+
 .message {
   @apply px-[16px] py-[10px] rounded-[24px] break-all w-fit max-w-[640px];
 }

@@ -45,19 +45,13 @@ function UpdateAvatarModal({ isOpen, setIsOpen }: UpdateAvatarModalProps) {
     setPreviewUrl('')
   }, [isOpen])
 
-  Modal.setAppElement('html')
+  Modal.setAppElement('#root')
 
   return (
     <Modal
       isOpen={isOpen}
-      onAfterOpen={() => {
-        document.body?.style.setProperty('overflow', 'hidden')
-      }}
-      onAfterClose={() => {
-        document.body?.style.setProperty('overflow', 'auto')
-      }}
       onRequestClose={() => setIsOpen(false)}
-      contentLabel="Update user avatar"
+      contentLabel="Update user avatar modal"
       className="w-11/12 md:w-2/3 lg:w-1/2 fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 p-[32px] bg-white drop-shadow-xl rounded-[24px]"
     >
       <div className="flex flex-col gap-[32px] items-center">

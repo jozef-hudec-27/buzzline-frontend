@@ -25,7 +25,6 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
   const router = useRouter()
 
   const activeClass = 'text-black-75 bg-black-5'
-  const bottomBtnClass = 'p-[6px] rounded-[8px] hover:bg-black-5 active:bg-black-10 text-black-50'
 
   const hasUnreadMessages = chats.some((chat) => chat.newestMessage && !chat.newestMessage.readBy.includes(user._id))
 
@@ -73,7 +72,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
 
       <div className="flex sm:flex-col items-center gap-[12px]">
         <button
-          className={bottomBtnClass}
+          className='icon-btn'
           aria-label="Update avatar"
           onClick={() => {
             setShowUpdateAvatarModal(true)
@@ -83,7 +82,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         </button>
 
         <button
-          className={`${bottomBtnClass} ${logoutMutation.isPending && 'cursor-wait'}`}
+          className={`icon-btn ${logoutMutation.isPending && 'cursor-wait'}`}
           aria-label="Log out"
           onClick={() => {
             logoutMutation.mutate()

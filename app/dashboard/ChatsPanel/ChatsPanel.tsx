@@ -1,8 +1,9 @@
-import { Search } from 'react-bootstrap-icons'
+import { Search, PersonFillAdd } from 'react-bootstrap-icons'
 import { memo, useState } from 'react'
 
 import useChatsStore from '../../zustand/chatsStore'
 
+import NewChatModal from './NewChatModal'
 import Chat from './Chat'
 
 import { ChatIndex } from '@/app/types'
@@ -11,6 +12,7 @@ const Chats = memo(function () {
   const { chats, isLoading: chatsLoading } = useChatsStore()
 
   const [search, setSearch] = useState('')
+  const [showNewChatModal, setShowNewChatModal] = useState(false)
 
   function searchChats(c: ChatIndex[]): ChatIndex[] {
     const searchResult: ChatIndex[] = []
@@ -28,7 +30,15 @@ const Chats = memo(function () {
 
   return (
     <div className="left-panel">
-      <h3 className='hidden lg:block'>Chats</h3>
+      <div className="flex items-center justify-center lg:justify-between">
+        <h3 className="hidden lg:block">Chats</h3>
+
+        <button className="icon-btn" aria-label="Update avatar" onClick={() => setShowNewChatModal(true)}>
+          <PersonFillAdd size={24} aria-hidden />
+        </button>
+
+        <NewChatModal isOpen={showNewChatModal} setIsOpen={setShowNewChatModal} />
+      </div>
 
       <div className="px-[24px] py-[12px] hidden lg:flex items-center gap-[10px] bg-black-5 rounded-full w-full">
         <Search size={16} className="text-black-25" />
