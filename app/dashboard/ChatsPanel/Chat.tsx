@@ -8,6 +8,7 @@ import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 
+import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength, timeSince, randomInt } from '@/app/utils'
 
 import { ChatIndex } from '@/app/types'
@@ -51,13 +52,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
       }}
     >
       <div className="min-w-[48px] min-h-[48px] relative">
-        <Image
-          src="https://faceboom.onrender.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4a44a7bd0b470dc8d229be0daebaa1accc5deea/default-avatar.svg"
-          alt="avatar"
-          width={48}
-          height={48}
-          className="rounded-full"
-        />
+        <Avatar src={chat.users[0].avatarUrl} alt="" size={48} />
 
         {online && <div className="online-dot" aria-label="Online"></div>}
       </div>

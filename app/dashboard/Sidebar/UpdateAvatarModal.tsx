@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import Modal from 'react-modal'
-import Image from 'next/image'
 import toast from 'react-hot-toast'
 
 import useUserStore from '@/app/zustand/userStore'
 
+import Avatar from '@/app/components/avatar/Avatar'
 import api from '@/app/api/axiosInstance'
 
 type UpdateAvatarModalProps = {
@@ -63,13 +63,7 @@ function UpdateAvatarModal({ isOpen, setIsOpen }: UpdateAvatarModalProps) {
       <div className="flex flex-col gap-[32px] items-center">
         <h2>Update Avatar</h2>
 
-        <Image
-          src={previewUrl || user.avatarUrl || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || ''}
-          alt="My avatar"
-          width={200}
-          height={200}
-          className="rounded-full shadow-lg w-[200px] h-[200px]"
-        />
+        <Avatar src={previewUrl || user.avatarUrl} alt="My avatar" size={200} cls="shadow-lg w-[200px] h-[200px]" />
 
         <div className="flex gap-[16px]">
           <button className="btn primary" onClick={() => fileInputRef.current?.click()} disabled={!!file}>

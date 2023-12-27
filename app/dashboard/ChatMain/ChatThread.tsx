@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import { Tooltip } from 'react-tooltip'
 
 import useUserStore from '@/app/zustand/userStore'
+
+import Avatar from '@/app/components/avatar/Avatar'
 
 import { Message, User } from '@/app/types'
 
@@ -72,12 +73,11 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
               }`}
             >
               {!msgBelongsToUser(msg, user) && (
-                <Image
-                  src="https://faceboom.onrender.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4a44a7bd0b470dc8d229be0daebaa1accc5deea/default-avatar.svg"
-                  alt="avatar"
-                  width={28}
-                  height={28}
-                  className={`w-[28px] h-[28px] rounded-full relative top-[4px] ${
+                <Avatar
+                  src={msg.sender.avatarUrl}
+                  alt={`${user.firstName} ${user.lastName}`}
+                  size={28}
+                  cls={`w-[28px] h-[28px] relative top-[4px] ${
                     msgBelongsToUser(messages[i + 1], msg.sender) ? 'opacity-0' : ''
                   }`}
                 />

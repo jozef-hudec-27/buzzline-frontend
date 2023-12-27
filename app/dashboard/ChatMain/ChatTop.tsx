@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import { TelephoneFill, CameraVideoFill, ThreeDots } from 'react-bootstrap-icons'
 
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 
+import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils'
 
 import { ChatShow } from '@/app/types'
@@ -17,13 +17,7 @@ function ChatTop({ chat }: { chat: ChatShow }) {
     <div className="px-[12px] py-[10px] flex items-center justify-between border-b border-black-10 shadow">
       <div className="flex items-center gap-[10px]">
         <div className="min-w-[36px] min-h-[36px] relative">
-          <Image
-            src="https://faceboom.onrender.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e4a44a7bd0b470dc8d229be0daebaa1accc5deea/default-avatar.svg"
-            alt="avatar"
-            width={36}
-            height={36}
-            className="rounded-full"
-          />
+          <Avatar src={chat.users[0].avatarUrl} alt="" size={36} />
 
           {online && <div className="online-dot" aria-label="Online"></div>}
         </div>
