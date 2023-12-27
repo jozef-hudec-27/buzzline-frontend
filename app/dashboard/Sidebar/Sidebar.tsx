@@ -1,11 +1,13 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { ChatFill, PeopleFill, BoxArrowRight } from 'react-bootstrap-icons'
+import { ChatFill, PeopleFill, BoxArrowRight, PersonBoundingBox } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 
 import useUserStore from '@/app/zustand/userStore'
 import useChatsStore from '@/app/zustand/chatsStore'
+
+import UpdateAvatarModal from './UpdateAvatarModal'
 
 import api from '@/app/api/axiosInstance'
 
@@ -18,9 +20,13 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
   const user = useUserStore((state) => state.user)
   const chats = useChatsStore((state) => state.chats)
 
+  const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false)
+
   const router = useRouter()
 
   const activeClass = 'text-black-75 bg-black-5'
+  const bottomBtnClass = 'p-[6px] rounded-[8px] hover:bg-black-5 active:bg-black-10 text-black-50'
+
   const hasUnreadMessages = chats.some((chat) => chat.newestMessage && !chat.newestMessage.readBy.includes(user._id))
 
   const logoutMutation = useMutation({
@@ -65,18 +71,30 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         ></div>
       </div>
 
-      <button
-        className={`p-[6px] rounded-[8px] hover:bg-black-5 active:bg-black-10 text-black-50 ${
-          logoutMutation.isPending && 'cursor-wait'
-        }`}
-        aria-label="Log out"
-        onClick={() => {
-          logoutMutation.mutate()
-        }}
-        disabled={logoutMutation.isPending || logoutMutation.isSuccess}
-      >
-        <BoxArrowRight size={24} aria-hidden />
-      </button>
+      <div className="flex sm:flex-col items-center gap-[12px]">
+        <button
+          className={bottomBtnClass}
+          aria-label="Update avatar"
+          onClick={() => {
+            setShowUpdateAvatarModal(true)
+          }}
+        >
+          <PersonBoundingBox size={24} aria-hidden />
+        </button>
+
+        <button
+          className={`${bottomBtnClass} ${logoutMutation.isPending && 'cursor-wait'}`}
+          aria-label="Log out"
+          onClick={() => {
+            logoutMutation.mutate()
+          }}
+          disabled={logoutMutation.isPending || logoutMutation.isSuccess}
+        >
+          <BoxArrowRight size={24} aria-hidden />
+        </button>
+      </div>
+
+      <UpdateAvatarModal isOpen={showUpdateAvatarModal} setIsOpen={setShowUpdateAvatarModal} />
     </div>
   )
 })

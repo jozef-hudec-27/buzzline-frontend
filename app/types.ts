@@ -19,6 +19,7 @@ export type User = {
   firstName: string
   lastName: string
   chatToken: string
+  avatarUrl?: string
   _id: string
 }
 

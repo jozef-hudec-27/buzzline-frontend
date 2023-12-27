@@ -67,7 +67,11 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
           <p className={`${hasUnreadMsg && 'font-semibold'} hidden lg:block`}>{restrictLength(chatName, 30)}</p>
 
           {!hideNewestMessage && chat.newestMessage && (
-            <div className={`${hasUnreadMsg && 'font-semibold'} text-[13px] text-black-65 hidden lg:flex items-center gap-[4px]`}>
+            <div
+              className={`${
+                hasUnreadMsg && 'font-semibold'
+              } text-[13px] text-black-65 hidden lg:flex items-center gap-[4px]`}
+            >
               {chat.newestMessage.sender === user._id && <p>You:</p>}
 
               <p>{restrictLength(chat.newestMessage.content, 25)}</p>

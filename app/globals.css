@@ -94,3 +94,7 @@ a {
 .left-panel {
   @apply px-[12px] py-[16px] sm:w-[90px] lg:w-[360px] flex flex-row sm:flex-col gap-[22px] border-b sm:border-b-0 sm:border-r border-black-10 sm:h-[100vh];
 }
+
+.ReactModal__Overlay {
+  @apply !bg-[rgb(23,3,22,0.5)];
+}
