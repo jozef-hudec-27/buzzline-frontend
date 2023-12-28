@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { Tooltip } from 'react-tooltip'
+import ReactAudioPlayer from 'react-h5-audio-player'
 
 import useUserStore from '@/app/zustand/userStore'
 
@@ -84,7 +85,18 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
               )}
 
               <div className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} `} id={`tooltip-${msg._id}`}>
-                {msg.content}
+                {msg.voiceClipUrl ? (
+                  <div className="flex items-center justify-center w-[400px]">
+                    <ReactAudioPlayer
+                      src={msg.voiceClipUrl}
+                      showJumpControls={false}
+                      showDownloadProgress={false}
+                      layout="horizontal-reverse"
+                    />
+                  </div>
+                ) : (
+                  msg.content
+                )}
               </div>
 
               {/* Tooltip for larger devices */}

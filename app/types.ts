@@ -29,6 +29,8 @@ export type Message = {
   chat: string
   sender: User
   content: string
+  voiceClipUrl?: string
+  imageUrl?: string
   readBy: string[]
   createdAt: string
 }

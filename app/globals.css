@@ -110,3 +110,65 @@ a {
 .mobile-menu-item {
   @apply text-black-75 text-[18px] font-semibold hover:bg-black-5 w-full p-[16px] rounded-[8px];
 }
+
+/* MESSAGE VOICE CLIP */
+
+.rhap_additional-controls {
+  @apply !hidden;
+}
+
+.message.own .rhap_container {
+  @apply bg-secondary shadow-none;
+}
+
+.message.own .rhap_container svg {
+  @apply text-white;
+}
+
+.message.own .rhap_time {
+  @apply text-white;
+}
+
+.message.own .rhap_volume-indicator,
+.message.own .rhap_progress-indicator {
+  @apply bg-black-50;
+}
+
+.message.own .rhap_volume-bar,
+.message.own .rhap_progress-bar {
+  @apply bg-black-25;
+}
+
+.message.own .rhap_progress-filled {
+  @apply bg-black-50;
+}
+
+.rhap_additional-controls {
+  @apply !hidden;
+}
+
+.message.other .rhap_container {
+  @apply bg-black-10 shadow-none;
+}
+
+.message.other .rhap_container svg {
+  @apply text-black-75;
+}
+
+.message.other .rhap_time {
+  @apply text-black-75;
+}
+
+.message.other .rhap_volume-indicator,
+.message.other .rhap_progress-indicator {
+  @apply bg-black-75;
+}
+
+.message.other .rhap_volume-bar,
+.message.other .rhap_progress-bar {
+  @apply bg-black-25;
+}
+
+.message.other .rhap_progress-filled {
+  @apply bg-black-75;
+}
