@@ -1,8 +1,9 @@
 import { memo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { ChatFill, PeopleFill, BoxArrowRight, PersonBoundingBox } from 'react-bootstrap-icons'
+import { ChatFill, PeopleFill, BoxArrowRight, PersonBoundingBox, List } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu'
 
 import useUserStore from '@/app/zustand/userStore'
 import useChatsStore from '@/app/zustand/chatsStore'
@@ -72,7 +73,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
 
       <div className="flex sm:flex-col items-center gap-[12px]">
         <button
-          className='icon-btn'
+          className="icon-btn hidden sm:block"
           aria-label="Update avatar"
           onClick={() => {
             setShowUpdateAvatarModal(true)
@@ -82,7 +83,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         </button>
 
         <button
-          className={`icon-btn ${logoutMutation.isPending && 'cursor-wait'}`}
+          className={`icon-btn hidden sm:block ${logoutMutation.isPending && 'cursor-wait'}`}
           aria-label="Log out"
           onClick={() => {
             logoutMutation.mutate()
@@ -91,6 +92,26 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         >
           <BoxArrowRight size={24} aria-hidden />
         </button>
+
+        <Menu
+          menuButton={
+            <MenuButton className="sm:hidden" aria-label="More actions menu">
+              <List size={24} className="text-black-50" aria-hidden />
+            </MenuButton>
+          }
+          menuClassName="mobile-menu"
+        >
+          <MenuItem onClick={() => setShowUpdateAvatarModal(true)} className="mobile-menu-item">
+            Update avatar
+          </MenuItem>
+          <MenuItem
+            onClick={() => logoutMutation.mutate()}
+            disabled={logoutMutation.isPending || logoutMutation.isSuccess}
+            className="mobile-menu-item"
+          >
+            Log out
+          </MenuItem>
+        </Menu>
       </div>
 
       <UpdateAvatarModal isOpen={showUpdateAvatarModal} setIsOpen={setShowUpdateAvatarModal} />

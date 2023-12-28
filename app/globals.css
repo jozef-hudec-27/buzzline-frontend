@@ -102,3 +102,11 @@ a {
 .ReactModal__Overlay {
   @apply !bg-[rgb(23,3,22,0.5)];
 }
+
+.mobile-menu {
+  @apply sm:hidden rounded-[8px] bg-white border border-black-10 shadow-md px-[16px] py-[8px] w-[196px] z-10;
+}
+
+.mobile-menu-item {
+  @apply text-black-75 text-[18px] font-semibold hover:bg-black-5 w-full p-[16px] rounded-[8px];
+}
