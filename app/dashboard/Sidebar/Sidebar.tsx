@@ -1,14 +1,14 @@
 import { memo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
-import { ChatFill, PeopleFill, BoxArrowRight, PersonBoundingBox, List } from 'react-bootstrap-icons'
+import { ChatFill, PeopleFill, BoxArrowRight, PersonFill, List } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu'
 
 import useUserStore from '@/app/zustand/userStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 
-import UpdateAvatarModal from './UpdateAvatarModal'
+import AboutMeModal from './AboutMeModal'
 
 import api from '@/app/api/axiosInstance'
 
@@ -21,7 +21,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
   const user = useUserStore((state) => state.user)
   const chats = useChatsStore((state) => state.chats)
 
-  const [showUpdateAvatarModal, setShowUpdateAvatarModal] = useState(false)
+  const [showAboutMeModal, setShowAboutMeModal] = useState(false)
 
   const router = useRouter()
 
@@ -76,10 +76,10 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
           className="icon-btn hidden sm:block"
           aria-label="Update avatar"
           onClick={() => {
-            setShowUpdateAvatarModal(true)
+            setShowAboutMeModal(true)
           }}
         >
-          <PersonBoundingBox size={24} aria-hidden />
+          <PersonFill size={24} aria-hidden />
         </button>
 
         <button
@@ -101,7 +101,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
           }
           menuClassName="mobile-menu"
         >
-          <MenuItem onClick={() => setShowUpdateAvatarModal(true)} className="mobile-menu-item">
+          <MenuItem onClick={() => setShowAboutMeModal(true)} className="mobile-menu-item">
             Update avatar
           </MenuItem>
           <MenuItem
@@ -114,7 +114,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         </Menu>
       </div>
 
-      <UpdateAvatarModal isOpen={showUpdateAvatarModal} setIsOpen={setShowUpdateAvatarModal} />
+      <AboutMeModal isOpen={showAboutMeModal} setIsOpen={setShowAboutMeModal} />
     </div>
   )
 })

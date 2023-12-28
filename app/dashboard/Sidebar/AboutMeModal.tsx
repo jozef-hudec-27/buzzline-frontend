@@ -2,18 +2,19 @@ import { useState, useRef, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import Modal from 'react-modal'
 import toast from 'react-hot-toast'
+import { ClipboardFill } from 'react-bootstrap-icons'
 
 import useUserStore from '@/app/zustand/userStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import api from '@/app/api/axiosInstance'
 
-type UpdateAvatarModalProps = {
+type AboutMeModalProps = {
   isOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function UpdateAvatarModal({ isOpen, setIsOpen }: UpdateAvatarModalProps) {
+function AboutMeModal({ isOpen, setIsOpen }: AboutMeModalProps) {
   const user = useUserStore((state) => state.user)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -55,7 +56,7 @@ function UpdateAvatarModal({ isOpen, setIsOpen }: UpdateAvatarModalProps) {
       className="w-11/12 md:w-2/3 lg:w-1/2 fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 p-[32px] bg-white drop-shadow-xl rounded-[24px]"
     >
       <div className="flex flex-col gap-[32px] items-center">
-        <h2>Update Avatar</h2>
+        <h2>{`${user.firstName} ${user.lastName}`}</h2>
 
         <Avatar src={previewUrl || user.avatarUrl} alt="My avatar" size={200} cls="shadow-lg w-[200px] h-[200px]" />
 
@@ -76,6 +77,21 @@ function UpdateAvatarModal({ isOpen, setIsOpen }: UpdateAvatarModalProps) {
             Update
           </button>
         </div>
+
+        <button
+          className="btn primary flex items-center gap-[8px]"
+          aria-label="Copy chat token to clipboard"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(user.chatToken)
+              toast('Chat token copied to clipboard.', { icon: '📋' })
+            } catch (err) {
+              toast('Unable to copy chat token to clipboard.', { icon: '❌' })
+            }
+          }}
+        >
+          <ClipboardFill aria-hidden /> Chat token
+        </button>
 
         <input
           type="file"
@@ -100,4 +116,4 @@ function UpdateAvatarModal({ isOpen, setIsOpen }: UpdateAvatarModalProps) {
   )
 }
 
-export default UpdateAvatarModal
+export default AboutMeModal
