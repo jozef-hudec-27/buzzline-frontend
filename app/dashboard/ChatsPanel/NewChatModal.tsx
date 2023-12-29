@@ -32,7 +32,7 @@ function NewChatModal({ isOpen, setIsOpen }: NewChatModalProps) {
       } else if (res?.message) {
         toast(res?.message, { icon: '❌' })
       } else {
-        toast('Something went wrong', { icon: '❌' })
+        toast('Something went wrong.', { icon: '❌' })
       }
     },
     onSuccess: (data) => {

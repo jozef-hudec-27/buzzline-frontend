@@ -92,6 +92,9 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
                       showJumpControls={false}
                       showDownloadProgress={false}
                       layout="horizontal-reverse"
+                      defaultDuration=""
+                      defaultCurrentTime="00:00"
+                      timeFormat="mm:ss"
                     />
                   </div>
                 ) : (
