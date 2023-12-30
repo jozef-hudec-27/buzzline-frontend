@@ -139,7 +139,11 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
             <EmojiButton setMessage={setMessage} />
           </form>
 
-          <button className="chat-icon" aria-label="Send a like">
+          <button
+            className="chat-icon"
+            aria-label="Send a like"
+            onClick={() => socket?.emit('message', { chat: chat._id, content: '👍' })}
+          >
             <HandThumbsUpFill size={20} aria-hidden />
           </button>
 

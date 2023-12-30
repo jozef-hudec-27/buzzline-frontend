@@ -69,7 +69,13 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
             >
               {chat.newestMessage.sender === user._id && <p>You:</p>}
 
-              <p>{restrictLength(chat.newestMessage.content, 25)}</p>
+              <p className={chat.newestMessage.voiceClipUrl || chat.newestMessage.imageUrl ? 'italic' : ''}>
+                {chat.newestMessage.voiceClipUrl
+                  ? 'Voice clip'
+                  : chat.newestMessage.imageUrl
+                  ? 'Image'
+                  : restrictLength(chat.newestMessage.content, 25)}
+              </p>
 
               <p>· {timeSince(chat.newestMessage.createdAt)}</p>
             </div>

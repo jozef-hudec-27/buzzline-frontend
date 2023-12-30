@@ -38,6 +38,8 @@ export type Message = {
 export type NewestMessage = {
   _id: string
   content: string
+  voiceClipUrl?: string
+  imageUrl?: string
   createdAt: string
   readBy: string[]
   sender: string

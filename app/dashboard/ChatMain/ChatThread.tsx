@@ -87,8 +87,8 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
 
               <div
                 className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} ${
-                  msg.imageUrl ? '!bg-white' : ''
-                }`}
+                  msg.imageUrl || msg.content === '👍' ? '!bg-white' : ''
+                } ${msg.content === '👍' ? 'text-[64px]' : ''}`}
                 id={`tooltip-${msg._id}`}
               >
                 {msg.voiceClipUrl ? (
