@@ -106,7 +106,7 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
                 ) : msg.imageUrl ? (
                   <Image
                     src={msg.imageUrl}
-                    alt=""
+                    alt={`Message from ${msg.sender.firstName}`}
                     width={300}
                     height={300}
                     className="w-[300px] h-auto rounded-[24px] drop-shadow-sm"
@@ -119,14 +119,14 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
               {/* Tooltip for larger devices */}
               <Tooltip
                 {...messageTooltip(msg)}
-                className="hidden sm:block !rounded-[8px] !bg-black-100 !drop-shadow-md"
+                className="hidden sm:block !rounded-[8px] !bg-black-100 !drop-shadow-md z-10"
                 place={msgBelongsToUser(msg, user) ? 'left' : 'right'}
               />
 
               {/* Tooltip for mobile devices */}
               <Tooltip
                 {...messageTooltip(msg)}
-                className="sm:hidden !rounded-[8px] !bg-black-100 !drop-shadow-md"
+                className="sm:hidden !rounded-[8px] !bg-black-100 !drop-shadow-md z-10"
                 place="bottom"
                 // @ts-ignore
                 openEvents={msg.voiceClipUrl && []}

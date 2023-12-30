@@ -1,13 +1,14 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import { MicFill, Image, HandThumbsUpFill, EmojiSmileFill } from 'react-bootstrap-icons'
+import { MicFill, Image, HandThumbsUpFill } from 'react-bootstrap-icons'
 import useSocketStore from '@/app/zustand/socketStore'
 import toast from 'react-hot-toast'
 import getBlobDuration from 'get-blob-duration'
 
 import { ChatShow } from '@/app/types'
 import VoiceClipRecording from './VoiceClipRecording'
+import EmojiButton from './EmojiButton'
 
 function ChatBottom({ chat }: { chat: ChatShow }) {
   const socket = useSocketStore((state) => state.socket)
@@ -135,9 +136,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
               }}
             />
 
-            <button type="button" className="chat-icon" aria-label="Choose an emoji">
-              <EmojiSmileFill size={20} aria-hidden />
-            </button>
+            <EmojiButton setMessage={setMessage} />
           </form>
 
           <button className="chat-icon" aria-label="Send a like">

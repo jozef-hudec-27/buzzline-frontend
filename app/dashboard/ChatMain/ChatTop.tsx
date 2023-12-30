@@ -17,7 +17,7 @@ function ChatTop({ chat }: { chat: ChatShow }) {
     <div className="px-[12px] py-[10px] flex items-center justify-between border-b border-black-10 shadow">
       <div className="flex items-center gap-[10px]">
         <div className="min-w-[36px] min-h-[36px] relative">
-          <Avatar src={chat.users[0].avatarUrl} alt="" size={36} />
+          <Avatar src={chat.users[0].avatarUrl} alt={chatName} size={36} />
 
           {online && <div className="online-dot" aria-label="Online"></div>}
         </div>

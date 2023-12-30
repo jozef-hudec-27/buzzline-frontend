@@ -52,7 +52,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
       }}
     >
       <div className="min-w-[48px] min-h-[48px] relative">
-        <Avatar src={chat.users[0].avatarUrl} alt="" size={48} />
+        <Avatar src={chat.users[0].avatarUrl} alt={chatName} size={48} />
 
         {online && <div className="online-dot" aria-label="Online"></div>}
       </div>

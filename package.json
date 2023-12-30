@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@szhsin/react-menu": "^4.1.0",
     "@tanstack/react-query": "^5.13.4",
     "axios": "^1.6.2",
+    "emoji-mart": "^5.5.2",
     "get-blob-duration": "^1.2.0",
     "next": "14.0.4",
     "react": "^18",
@@ -20,6 +23,7 @@
     "react-h5-audio-player": "^3.9.1",
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
+    "react-tiny-popover": "^8.0.4",
     "react-tooltip": "^5.25.0",
     "socket.io-client": "^4.7.2",
     "zustand": "^4.4.7"
