@@ -21,6 +21,8 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
   const mediaRecorder = useRef<MediaRecorder | null>(null)
   const recordedChunks = useRef<Blob[]>([])
 
+  const imageInput = useRef<HTMLInputElement | null>(null)
+
   useEffect(() => {
     const audio = document.getElementById('voice-clip-preview') as HTMLAudioElement
 
@@ -113,7 +115,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
             <MicFill size={20} aria-hidden />
           </button>
 
-          <button className="chat-icon" aria-label="Attach a file">
+          <button className="chat-icon" aria-label="Send an image" onClick={() => imageInput.current?.click()}>
             <Image size={20} aria-hidden />
           </button>
 
@@ -141,6 +143,25 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
           <button className="chat-icon" aria-label="Send a like">
             <HandThumbsUpFill size={20} aria-hidden />
           </button>
+
+          <input
+            type="file"
+            className="hidden"
+            ref={imageInput}
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+
+              if (!file) return
+
+              if (!file.type.startsWith('image')) {
+                return toast('File must be an image.', { icon: '❌' })
+              } else if (file.size > 5 * 1024 * 1024) {
+                return toast('Image is too large.', { icon: '❌' })
+              }
+
+              socket?.emit('message', { chat: chat._id, image: file })
+            }}
+          />
         </>
       )}
     </div>

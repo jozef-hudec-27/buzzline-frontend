@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { Tooltip } from 'react-tooltip'
 import ReactAudioPlayer from 'react-h5-audio-player'
+import Image from 'next/image'
 
 import useUserStore from '@/app/zustand/userStore'
 
@@ -84,7 +85,12 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
                 />
               )}
 
-              <div className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} `} id={`tooltip-${msg._id}`}>
+              <div
+                className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} ${
+                  msg.imageUrl ? '!bg-white' : ''
+                }`}
+                id={`tooltip-${msg._id}`}
+              >
                 {msg.voiceClipUrl ? (
                   <div className="flex items-center justify-center w-[280px] sm:w-[400px]">
                     <ReactAudioPlayer
@@ -97,6 +103,14 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
                       timeFormat="mm:ss"
                     />
                   </div>
+                ) : msg.imageUrl ? (
+                  <Image
+                    src={msg.imageUrl}
+                    alt=""
+                    width={300}
+                    height={300}
+                    className="w-[300px] h-auto rounded-[24px] drop-shadow-sm"
+                  />
                 ) : (
                   msg.content
                 )}
