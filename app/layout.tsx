@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       <ReactQueryProvider>
         <body className={inter.className}>
-          <Toaster toastOptions={{ className: '!text-black-75 !rounded-[16px]' }} />
+          <Toaster toastOptions={{ className: '!text-black-75 !rounded-[16px]', duration: 5000 }} />
 
           <div id="root">{children}</div>
         </body>

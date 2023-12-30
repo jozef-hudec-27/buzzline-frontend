@@ -40,41 +40,45 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
   }, [voiceClip])
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    mediaRecorder.current = new MediaRecorder(stream)
-    mediaRecorder.current.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        recordedChunks.current.push(e.data)
-      }
-    }
-
-    mediaRecorder.current.onstop = () => {
-      stream.getTracks().forEach((track) => track.stop())
-
-      let blob = null
-
-      if (!recordingCancelled.current) {
-        blob = new Blob(recordedChunks.current)
-
-        if (blob.size <= 5 * 1024 * 1024) {
-          setVoiceClip(blob)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      mediaRecorder.current = new MediaRecorder(stream)
+      mediaRecorder.current.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          recordedChunks.current.push(e.data)
         }
       }
 
-      setIsRecordingVoiceClip(false)
-      recordedChunks.current = []
-      recordingCancelled.current = false
+      mediaRecorder.current.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop())
 
-      if (blob && blob.size > 5 * 1024 * 1024) {
-        return toast('Voice clip is too large.', { icon: '❌' })
+        let blob = null
+
+        if (!recordingCancelled.current) {
+          blob = new Blob(recordedChunks.current)
+
+          if (blob.size <= 5 * 1024 * 1024) {
+            setVoiceClip(blob)
+          }
+        }
+
+        setIsRecordingVoiceClip(false)
+        recordedChunks.current = []
+        recordingCancelled.current = false
+
+        if (blob && blob.size > 5 * 1024 * 1024) {
+          return toast('Voice clip is too large.', { icon: '❌' })
+        }
+
+        setIsRecordingVoiceClip(false)
+        return
       }
 
-      setIsRecordingVoiceClip(false)
-      return
+      mediaRecorder.current.start()
+      setIsRecordingVoiceClip(true)
+    } catch (err) {
+      toast('Microphone access is needed to send a voice clip.', { icon: '🎤' })
     }
-
-    mediaRecorder.current.start()
-    setIsRecordingVoiceClip(true)
   }
 
   const stopRecording = () => {
@@ -105,7 +109,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
         />
       ) : (
         <>
-          <button className="chat-icon" aria-label="Send a voice clip" onClick={startRecording}>
+          <button className="chat-icon" aria-label="Record a voice clip" onClick={startRecording}>
             <MicFill size={20} aria-hidden />
           </button>
 

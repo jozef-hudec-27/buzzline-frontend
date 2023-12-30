@@ -86,7 +86,7 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
 
               <div className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} `} id={`tooltip-${msg._id}`}>
                 {msg.voiceClipUrl ? (
-                  <div className="flex items-center justify-center w-[400px]">
+                  <div className="flex items-center justify-center w-[280px] sm:w-[400px]">
                     <ReactAudioPlayer
                       src={msg.voiceClipUrl}
                       showJumpControls={false}
@@ -114,6 +114,8 @@ function ChatThread({ messages, messagesLoading }: ChatThreadProps) {
                 {...messageTooltip(msg)}
                 className="sm:hidden !rounded-[8px] !bg-black-100 !drop-shadow-md"
                 place="bottom"
+                // @ts-ignore
+                openEvents={msg.voiceClipUrl && []}
               />
             </div>
           )

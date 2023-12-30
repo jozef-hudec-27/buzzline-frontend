@@ -131,7 +131,7 @@ a {
 
 .message.own .rhap_volume-indicator,
 .message.own .rhap_progress-indicator {
-  @apply bg-black-50;
+  @apply bg-white;
 }
 
 .message.own .rhap_volume-bar,
