@@ -12,6 +12,7 @@
     "@szhsin/react-menu": "^4.1.0",
     "@tanstack/react-query": "^5.13.4",
     "axios": "^1.6.2",
+    "get-blob-duration": "^1.2.0",
     "next": "14.0.4",
     "react": "^18",
     "react-bootstrap-icons": "^1.10.3",

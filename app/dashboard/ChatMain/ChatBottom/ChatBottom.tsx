@@ -1,29 +1,22 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import {
-  MicFill,
-  Image,
-  HandThumbsUpFill,
-  EmojiSmileFill,
-  XCircleFill,
-  SendFill,
-  StopFill,
-  PlayFill,
-} from 'react-bootstrap-icons'
+import { MicFill, Image, HandThumbsUpFill, EmojiSmileFill } from 'react-bootstrap-icons'
 import useSocketStore from '@/app/zustand/socketStore'
 import toast from 'react-hot-toast'
+import getBlobDuration from 'get-blob-duration'
 
 import { ChatShow } from '@/app/types'
+import VoiceClipRecording from './VoiceClipRecording'
 
 function ChatBottom({ chat }: { chat: ChatShow }) {
   const socket = useSocketStore((state) => state.socket)
 
   const [message, setMessage] = useState('')
 
+  //   Voice clip recording
   const [isRecordingVoiceClip, setIsRecordingVoiceClip] = useState(false)
   const recordingCancelled = useRef(false)
-  const [finishedRecording, setFinishedRecording] = useState(false)
   const [voiceClip, setVoiceClip] = useState<Blob | null>(null)
   const mediaRecorder = useRef<MediaRecorder | null>(null)
   const recordedChunks = useRef<Blob[]>([])
@@ -33,8 +26,16 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
 
     if (voiceClip && audio) {
       audio.src = URL.createObjectURL(voiceClip)
+
+      const getDuration = async () => {
+        const duration = await getBlobDuration(voiceClip)
+        audio.dataset.duration = duration.toString()
+      }
+
+      getDuration()
     } else if (audio) {
       audio.src = ''
+      audio.dataset.duration = ''
     }
   }, [voiceClip])
 
@@ -48,12 +49,6 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
     }
 
     mediaRecorder.current.onstop = () => {
-      console.log(
-        'ONSTOP',
-        `finishedRecording: ${finishedRecording}`,
-        `recordingCancelled: ${recordingCancelled.current}`
-      )
-
       stream.getTracks().forEach((track) => track.stop())
 
       let blob = null
@@ -88,7 +83,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
     }
   }
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!message.length || message.length > 500) return
@@ -101,68 +96,13 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
   return (
     <div className="px-[16px] py-[10px] flex items-center gap-[16px]">
       {isRecordingVoiceClip || voiceClip ? (
-        <>
-          <button
-            className="chat-icon"
-            aria-label="Cancel recording"
-            onClick={() => {
-              if (!finishedRecording) recordingCancelled.current = true
-              setVoiceClip(null)
-              setFinishedRecording(false)
-              if (!finishedRecording) stopRecording()
-            }}
-          >
-            <XCircleFill size={20} aria-hidden />
-          </button>
-
-          <div className="py-[12px] px-[24px] flex-1 flex items-center justify-between rounded-full bg-secondary">
-            <button
-              className="chat-icon bg-white rounded-full"
-              aria-label={finishedRecording ? 'Play my voice clip' : 'Finish recording'}
-              onClick={() => {
-                if (finishedRecording) {
-                  const audio = document.getElementById('voice-clip-preview') as HTMLAudioElement
-                  audio?.play()
-                } else {
-                  setFinishedRecording(true)
-                  stopRecording()
-                }
-              }}
-            >
-              {finishedRecording ? <PlayFill size={20} aria-hidden /> : <StopFill size={20} aria-hidden />}
-            </button>
-
-            <input type="text" className="bg-secondary w-0" tabIndex={-1} aria-hidden />
-
-            <div className="bg-white text-secondary font-semibold px-[8px] rounded-full">0:00</div>
-          </div>
-
-          <button
-            className="chat-icon"
-            aria-label="Send voice clip"
-            onClick={(e) => {
-              const button = e.currentTarget
-
-              if (finishedRecording) {
-                if (!voiceClip) return
-
-                socket?.emit('message', { chat: chat._id, voiceClip })
-                setVoiceClip(null)
-                setFinishedRecording(false)
-              } else {
-                setFinishedRecording(true)
-                stopRecording()
-                setTimeout(() => {
-                  button?.click()
-                }, 100)
-              }
-            }}
-          >
-            <SendFill size={20} aria-hidden />
-          </button>
-
-          <audio id="voice-clip-preview" className="hidden"></audio>
-        </>
+        <VoiceClipRecording
+          chat={chat}
+          voiceClip={voiceClip}
+          setVoiceClip={setVoiceClip}
+          recordingCancelled={recordingCancelled}
+          stopRecording={stopRecording}
+        />
       ) : (
         <>
           <button className="chat-icon" aria-label="Send a voice clip" onClick={startRecording}>
@@ -173,7 +113,7 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
             <Image size={20} aria-hidden />
           </button>
 
-          <form className="py-[12px] px-[24px] flex items-center bg-black-5 flex-1 rounded-full" onSubmit={onSubmit}>
+          <form className="py-[12px] px-[24px] flex items-center bg-black-5 flex-1 rounded-full" onSubmit={sendMessage}>
             <input
               type="text"
               className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none w-0"
