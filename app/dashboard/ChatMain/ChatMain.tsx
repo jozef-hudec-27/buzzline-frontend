@@ -14,7 +14,12 @@ import ChatBottom from './ChatBottom/ChatBottom'
 import ChatThread from './ChatThread'
 import api from '@/app/api/axiosInstance'
 
-const ChatMain = memo(function () {
+type ChatMainProps = {
+  typingUsers: string[]
+  setTypingUsers: React.Dispatch<React.SetStateAction<string[]>>
+}
+
+const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) {
   const user = useUserStore((state) => state.user)
   const socket = useSocketStore((state) => state.socket)
   const { chat, isLoading: chatLoading } = useCurrentChatStore()
@@ -89,6 +94,8 @@ const ChatMain = memo(function () {
 
     socket?.emit('joinRoom', chat._id)
 
+    setTypingUsers([])
+
     // Read unread messages, only if not sent and read by current user
     if (chat.newestMessage?.sender !== user._id && !chat.newestMessage?.readBy.includes(user._id)) {
       readUnreadMessagesMutation.mutate()
@@ -112,6 +119,26 @@ const ChatMain = memo(function () {
       <ChatThread messages={messages} messagesLoading={initialLoading} fetchOlderMessages={fetchOlderMessages} />
 
       <ChatBottom chat={chat} />
+
+      <div
+        className={`${
+          !typingUsers.length && 'hidden'
+        } fixed left-1/2 -translate-x-1/2 bottom-[64px] bg-[rgb(255,255,255,0.9)] border border-black-5 shadow py-[8px] px-[16px] rounded-[24px]`}
+      >
+        {Array.from(new Set(typingUsers)).map((userId) => {
+          const userFirstName = chat.users.find((u) => u._id === userId)?.firstName
+
+          if (!userFirstName) return
+
+          return (
+            <p key={`typing-${userId}`} className="text-[13px]">
+              {userFirstName} is typing<span className="typing-dot">.</span>
+              <span className="typing-dot">.</span>
+              <span className="typing-dot">.</span>✍️
+            </p>
+          )
+        })}
+      </div>
     </div>
   )
 })

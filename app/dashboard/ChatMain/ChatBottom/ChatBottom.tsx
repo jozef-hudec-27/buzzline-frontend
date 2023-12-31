@@ -42,6 +42,14 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
     }
   }, [voiceClip])
 
+  useEffect(() => {
+    if (message.length > 0) {
+      socket?.emit('typing', { chat: chat._id, isTyping: true })
+    } else {
+      socket?.emit('typing', { chat: chat._id, isTyping: false })
+    }
+  }, [message])
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -128,11 +136,13 @@ function ChatBottom({ chat }: { chat: ChatShow }) {
               aria-label="Message"
               value={message}
               onChange={(e) => {
-                if (e.target.value.length > 500) {
+                const newMsg = e.target.value
+
+                if (newMsg.length > 500) {
                   return toast('Maximum message length is 500 characters.', { icon: '❌' })
                 }
 
-                setMessage(e.target.value)
+                setMessage(newMsg)
               }}
             />
 

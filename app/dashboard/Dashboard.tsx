@@ -34,6 +34,7 @@ function DashBoard() {
   }))
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
+  const [typingUsers, setTypingUsers] = useState<string[]>([])
 
   useEffect(() => {
     const scket = socket || io('http://localhost:4000', { query: { token: localStorage.getItem('accessToken') } })
@@ -51,6 +52,18 @@ function DashBoard() {
             message: data,
           })
         })
+      }
+    })
+
+    scket.on('typing', (data: { userId: string; isTyping: boolean }) => {
+      const { userId, isTyping } = data
+
+      if (userId === user._id) return
+
+      if (isTyping && !typingUsers.includes(userId)) {
+        setTypingUsers((prevTypingUsers) => [...prevTypingUsers, userId])
+      } else if (!isTyping) {
+        setTypingUsers((prevTypingUsers) => prevTypingUsers.filter((id) => id !== userId))
       }
     })
 
@@ -81,6 +94,10 @@ function DashBoard() {
         addUser(data.userId)
       } else {
         removeUser(data.userId)
+
+        if (typingUsers.includes(data.userId)) {
+          setTypingUsers((prevTypingUsers) => prevTypingUsers.filter((id) => id !== data.userId))
+        }
       }
     })
 
@@ -92,11 +109,12 @@ function DashBoard() {
 
     return () => {
       scket.off('message')
+      scket.off('typing')
       scket.off('error')
       scket.off('notification')
       scket.off('onlineStatus')
     }
-  }, [chat, user, hasFetched])
+  }, [chat, user, hasFetched, typingUsers])
 
   return (
     <div className="flex flex-col sm:flex-row h-[100vh] ">
@@ -112,7 +130,7 @@ function DashBoard() {
         </div>
       </div>
 
-      <ChatMain />
+      <ChatMain typingUsers={typingUsers} setTypingUsers={setTypingUsers} />
     </div>
   )
 }
