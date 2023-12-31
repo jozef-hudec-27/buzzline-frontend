@@ -1,5 +1,6 @@
-import { useEffect, memo } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 
 import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
@@ -17,8 +18,30 @@ const ChatMain = memo(function () {
   const user = useUserStore((state) => state.user)
   const socket = useSocketStore((state) => state.socket)
   const { chat, isLoading: chatLoading } = useCurrentChatStore()
-  const { fetchMessages, messages, isLoading: messagesLoading } = useCurrentChatMessagesStore()
+  const {
+    fetchMessages,
+    setMessages,
+    messages,
+    isLoading: messagesLoading,
+    initialLoading,
+  } = useCurrentChatMessagesStore()
   const setChats = useChatsStore((state) => state.setChats)
+
+  const [nextMessagesPage, setNextMessagesPage] = useState<null | number>(null)
+
+  const fetchOlderMessages = async () => {
+    if (!nextMessagesPage || messagesLoading || initialLoading) return false
+
+    try {
+      const response = await fetchMessages(chat._id, nextMessagesPage)
+      setNextMessagesPage(response.nextPage)
+      setMessages((prevMessages) => [...response.docs.reverse(), ...prevMessages])
+    } catch (err) {
+      toast('Error fetching messages.', { icon: '❌' })
+    }
+
+    return true
+  }
 
   const readUnreadMessagesMutation = useMutation({
     mutationFn: async () => {
@@ -53,7 +76,16 @@ const ChatMain = memo(function () {
       return
     }
 
-    fetchMessages(chat._id)
+    const getMessages = async () => {
+      try {
+        const response = await fetchMessages(chat._id, undefined, true)
+        setMessages((prevMessages) => response.docs.reverse())
+        setNextMessagesPage(response.nextPage)
+      } catch (err) {
+        toast('Error fetching messages.', { icon: '❌' })
+      }
+    }
+    getMessages()
 
     socket?.emit('joinRoom', chat._id)
 
@@ -77,7 +109,7 @@ const ChatMain = memo(function () {
     <div className="flex-1 flex flex-col h-0 sm:h-auto">
       <ChatTop chat={chat} />
 
-      <ChatThread messages={messages} messagesLoading={messagesLoading} />
+      <ChatThread messages={messages} messagesLoading={initialLoading} fetchOlderMessages={fetchOlderMessages} />
 
       <ChatBottom chat={chat} />
     </div>
