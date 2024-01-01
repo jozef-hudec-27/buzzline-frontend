@@ -1,20 +1,15 @@
 import { useState, useRef, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import Modal from 'react-modal'
 import toast from 'react-hot-toast'
 import { ClipboardFill } from 'react-bootstrap-icons'
 
 import useUserStore from '@/app/zustand/userStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
+import Modal, { ModalProps } from '@/app/components/Modal/Modal'
 import api from '@/app/api/axiosInstance'
 
-type AboutMeModalProps = {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-function AboutMeModal({ isOpen, setIsOpen }: AboutMeModalProps) {
+function AboutMeModal({ isOpen, setIsOpen }: ModalProps) {
   const user = useUserStore((state) => state.user)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -46,15 +41,8 @@ function AboutMeModal({ isOpen, setIsOpen }: AboutMeModalProps) {
     setPreviewUrl('')
   }, [isOpen])
 
-  Modal.setAppElement('#root')
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={() => setIsOpen(false)}
-      contentLabel="Update user avatar modal"
-      className="w-11/12 md:w-2/3 lg:w-1/2 fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 p-[32px] bg-white drop-shadow-xl rounded-[24px]"
-    >
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} contentLabel="Update user avatar modal">
       <div className="flex flex-col gap-[32px] items-center">
         <h2>{`${user.firstName} ${user.lastName}`}</h2>
 

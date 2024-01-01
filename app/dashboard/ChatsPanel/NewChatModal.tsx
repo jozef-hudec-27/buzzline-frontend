@@ -1,21 +1,16 @@
-import Modal from 'react-modal'
 import { useMutation } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 
 import useChatsStore from '@/app/zustand/chatsStore'
 
+import Modal, { ModalProps } from '@/app/components/Modal/Modal'
 import api from '@/app/api/axiosInstance'
 
 import { AxiosError } from 'axios'
 import { ChatIndex } from '@/app/types'
 
-type NewChatModalProps = {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-function NewChatModal({ isOpen, setIsOpen }: NewChatModalProps) {
+function NewChatModal({ isOpen, setIsOpen }: ModalProps) {
   const setChats = useChatsStore((state) => state.setChats)
 
   const [chatToken, setChatToken] = useState('')
@@ -52,15 +47,8 @@ function NewChatModal({ isOpen, setIsOpen }: NewChatModalProps) {
     setChatToken('')
   }, [isOpen])
 
-  Modal.setAppElement('#root')
-
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={() => setIsOpen(false)}
-      contentLabel="New chat modal"
-      className="w-11/12 md:w-2/3 lg:w-1/2 fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 p-[32px] bg-white drop-shadow-xl rounded-[24px]"
-    >
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} contentLabel="New chat modal">
       <div className="flex flex-col gap-[32px] items-center">
         <h2>New Chat</h2>
 
