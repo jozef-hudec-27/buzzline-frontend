@@ -1,14 +1,14 @@
 import { TelephoneFill, CameraVideoFill, ThreeDots } from 'react-bootstrap-icons'
 
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
+import useCurrentChatStore from '@/app/zustand/currentChatStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils'
 
-import { ChatShow } from '@/app/types'
-
-function ChatTop({ chat }: { chat: ChatShow }) {
+function ChatTop() {
   const { isOnline } = useOnlineUsersStore()
+  const chat = useCurrentChatStore((state) => state.chat)
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))

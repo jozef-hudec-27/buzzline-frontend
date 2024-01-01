@@ -2,16 +2,18 @@
 
 import { useRef, useState, useEffect } from 'react'
 import { MicFill, Image, HandThumbsUpFill } from 'react-bootstrap-icons'
-import useSocketStore from '@/app/zustand/socketStore'
 import toast from 'react-hot-toast'
 import getBlobDuration from 'get-blob-duration'
 
-import { ChatShow } from '@/app/types'
-import VoiceClipRecording from './VoiceClipRecording'
-import EmojiButton from './EmojiButton'
+import useSocketStore from '@/app/zustand/socketStore'
+import useCurrentChatStore from '@/app/zustand/currentChatStore'
 
-function ChatBottom({ chat }: { chat: ChatShow }) {
+import EmojiButton from './EmojiButton'
+import VoiceClipRecording from './VoiceClipRecording'
+
+function ChatBottom() {
   const socket = useSocketStore((state) => state.socket)
+  const chat = useCurrentChatStore((state) => state.chat)
 
   const [message, setMessage] = useState('')
 

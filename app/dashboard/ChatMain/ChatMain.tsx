@@ -114,11 +114,11 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
 
   return (
     <div className="flex-1 flex flex-col h-0 sm:h-auto">
-      <ChatTop chat={chat} />
+      <ChatTop />
 
-      <ChatThread messages={messages} messagesLoading={initialLoading} fetchOlderMessages={fetchOlderMessages} />
+      <ChatThread fetchOlderMessages={fetchOlderMessages} initialLoading={initialLoading} />
 
-      <ChatBottom chat={chat} />
+      <ChatBottom />
 
       <div
         className={`${

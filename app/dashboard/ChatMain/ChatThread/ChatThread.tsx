@@ -1,21 +1,20 @@
-'use client'
-
 import { useEffect, useRef } from 'react'
+
+import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 
 import Message from './Message'
 
-import { Message as TMessage } from '@/app/types'
-
 type ChatThreadProps = {
-  messages: TMessage[]
-  messagesLoading: boolean
   fetchOlderMessages: () => Promise<boolean>
+  initialLoading: boolean
 }
 
-function ChatThread({ messages, messagesLoading, fetchOlderMessages }: ChatThreadProps) {
-  if (messagesLoading) {
+function ChatThread({ fetchOlderMessages, initialLoading }: ChatThreadProps) {
+  if (initialLoading) {
     return <div className="flex-1 flex justify-center items-center">Loading messages...</div>
   }
+
+  const messages = useCurrentChatMessagesStore((state) => state.messages)
 
   const threadRef = useRef<HTMLDivElement>(null)
 
@@ -61,7 +60,7 @@ function ChatThread({ messages, messagesLoading, fetchOlderMessages }: ChatThrea
     >
       <div className="flex flex-col gap-[4px] px-[16px] pt-[10px]">
         {messages.map((msg, i) => {
-          return <Message key={msg._id} initialMsg={msg} messages={messages} i={i} />
+          return <Message key={msg._id} initialMsg={msg} i={i} />
         })}
       </div>
     </div>

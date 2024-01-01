@@ -4,8 +4,8 @@ import Image from 'next/image'
 import { Tooltip } from 'react-tooltip'
 
 import useUserStore from '@/app/zustand/userStore'
-import useSocketStore from '@/app/zustand/socketStore'
 import useRemovedMessagesStore from '@/app/zustand/removedMessagesStore'
+import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 
@@ -14,14 +14,13 @@ import RemoveMessageModal from './RemoveMessageModal'
 
 type MessageProps = {
   initialMsg: Message
-  messages: Message[]
   i: number
 }
 
-function Message({ initialMsg, messages, i }: MessageProps) {
+function Message({ initialMsg, i }: MessageProps) {
   const user = useUserStore((state) => state.user)
-  const socket = useSocketStore((state) => state.socket)
   const removedMessages = useRemovedMessagesStore((state) => state.removedMessages)
+  const messages = useCurrentChatMessagesStore((state) => state.messages)
 
   const [msg, setMsg] = useState<Message>(initialMsg)
   const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null)
