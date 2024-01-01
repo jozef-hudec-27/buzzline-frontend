@@ -9,8 +9,9 @@ import useUserStore from '@/app/zustand/userStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 
 import AboutMeModal from './AboutMeModal'
-
 import api from '@/app/api/axiosInstance'
+
+import { User } from '@/app/types'
 
 type SidebarProps = {
   leftPanel: 'chats' | 'people'
@@ -18,7 +19,7 @@ type SidebarProps = {
 }
 
 const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
-  const user = useUserStore((state) => state.user)
+  const { user, setUser } = useUserStore((state) => ({ user: state.user, setUser: state.setUser }))
   const chats = useChatsStore((state) => state.chats)
 
   const [showAboutMeModal, setShowAboutMeModal] = useState(false)
@@ -35,6 +36,8 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
     },
     onSuccess: () => {
       localStorage.removeItem('accessToken')
+      setUser({} as User)
+      localStorage.setItem('logout', 'true')
       router.replace('/login')
     },
     onError: () => {
