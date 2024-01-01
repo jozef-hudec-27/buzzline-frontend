@@ -60,6 +60,8 @@ function LoginForm(props: LoginFormProps) {
       placeholder: 'Email address',
       autoComplete: 'email',
       value: formState.email,
+      'aria-label': 'Email address',
+      autoFocus: true,
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<LoginFormState>('email', e.target.value),
     },
     {
@@ -67,6 +69,7 @@ function LoginForm(props: LoginFormProps) {
       placeholder: 'Password',
       autoComplete: 'current-password',
       value: formState.password,
+      'aria-label': 'Password',
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<LoginFormState>('password', e.target.value),
     },
   ]

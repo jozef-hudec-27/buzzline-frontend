@@ -55,7 +55,7 @@ const Chats = memo(function () {
       <div className="flex sm:flex-col overflow-auto">
         {chatsLoading && <p>Loading your chats...</p>}
 
-        {!chatsLoading && !chats.length && <p>You have no chats</p>}
+        {!chatsLoading && !chats.length && <p className="text-[12px] italic">You have no chats</p>}
 
         {searchChats(chats).map((chat) => (
           <Chat key={chat._id} chat={chat} />

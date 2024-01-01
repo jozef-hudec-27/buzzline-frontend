@@ -59,6 +59,9 @@ function RegisterForm(props: RegisterFormProps) {
 
     if (props.page === 0) {
       props.setPage(1)
+      setTimeout(() => {
+        passwordInputRef.current?.focus()
+      }, 100)
     } else {
       const { current: passwordInput } = passwordInputRef
       const { current: confirmPasswordInput } = confirmPasswordInputRef
@@ -77,6 +80,8 @@ function RegisterForm(props: RegisterFormProps) {
       placeholder: 'First name',
       autoComplete: 'given-name',
       value: formState.firstName,
+      'aria-label': 'First name',
+      autoFocus: true,
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('firstName', e.target.value),
     },
     {
@@ -84,6 +89,7 @@ function RegisterForm(props: RegisterFormProps) {
       placeholder: 'Last name',
       autoComplete: 'family-name',
       value: formState.lastName,
+      'aria-label': 'Last name',
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('lastName', e.target.value),
     },
     {
@@ -91,6 +97,7 @@ function RegisterForm(props: RegisterFormProps) {
       placeholder: 'Email address',
       autoComplete: 'email',
       value: formState.email,
+      'aria-label': 'Email address',
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('email', e.target.value),
     },
   ]
@@ -101,6 +108,7 @@ function RegisterForm(props: RegisterFormProps) {
       placeholder: 'Password',
       autoComplete: 'new-password',
       value: formState.password,
+      'aria-label': 'Password',
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('password', e.target.value),
       ref: passwordInputRef,
     },
@@ -109,6 +117,7 @@ function RegisterForm(props: RegisterFormProps) {
       placeholder: 'Confirm password',
       autoComplete: 'new-password',
       value: formState.confirmPassword,
+      'aria-label': 'Confirm password',
       onChange: (e: ChangeEvent<HTMLInputElement>) => changeState<RegisterFormState>('confirmPassword', e.target.value),
       ref: confirmPasswordInputRef,
     },

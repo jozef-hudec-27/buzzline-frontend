@@ -44,8 +44,6 @@ const PeoplePanel = memo(function () {
       <div className="flex sm:flex-col overflow-auto">
         {chatsLoading && <p>Loading your chats...</p>}
 
-        {!chatsLoading && !chats.length && <p>You have no chats</p>}
-
         {filteredChats.map((chat) => (
           <Chat key={chat._id} chat={chat} hideNewestMessage />
         ))}
