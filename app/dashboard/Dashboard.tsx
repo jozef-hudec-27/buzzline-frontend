@@ -83,6 +83,11 @@ function DashBoard() {
 
     scket.on('notification', (data) => {
       if (data.type === 'message') {
+        if (data.message?.sender?._id !== user._id && data.from !== chat?._id) {
+          const notiAudio = document.getElementById('noti-audio') as HTMLAudioElement
+          notiAudio?.play()
+        }
+
         // Update chats panel
         setChats((prevChats) => {
           let chat = prevChats.find((chat) => chat._id === data.from)
@@ -142,6 +147,8 @@ function DashBoard() {
       </div>
 
       <ChatMain typingUsers={typingUsers} setTypingUsers={setTypingUsers} />
+
+      <audio src="assets/sounds/noti.wav" className="hidden" id="noti-audio"></audio>
     </div>
   )
 }

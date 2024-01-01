@@ -8,11 +8,11 @@ function Navbar() {
         <Logo cls="w-[40px] h-[40px]" aria-hidden />
       </Link>
 
-      <div>
+      {/* <div>
         <Link href="/features" className="pb-[2px] font-bold text-black-100 hover:border-b-[3px] border-secondary">
           Features
         </Link>
-      </div>
+      </div> */}
     </nav>
   )
 }

@@ -25,7 +25,7 @@ function ChatTop() {
         <p>{restrictLength(chatName, 50)}</p>
       </div>
 
-      <div className="flex items-center gap-[24px]">
+      {/* <div className="flex items-center gap-[24px]">
         <button className="chat-icon" aria-label="Audio call">
           <TelephoneFill size={20} aria-hidden />
         </button>
@@ -37,7 +37,7 @@ function ChatTop() {
         <button className="chat-icon" aria-label="Options">
           <ThreeDots size={20} aria-hidden />
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }
