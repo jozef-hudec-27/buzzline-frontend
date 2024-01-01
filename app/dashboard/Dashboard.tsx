@@ -10,6 +10,7 @@ import useChatsStore from '../zustand/chatsStore'
 import useSocketStore from '../zustand/socketStore'
 import useCurrentChatMessagesStore from '../zustand/currentChatMessagesStore'
 import useOnlineUsersStore from '../zustand/onlineUsersStore'
+import useRemovedMessagesStore from '../zustand/removedMessagesStore'
 
 import ChatsPanel from './ChatsPanel/ChatsPanel'
 import PeoplePanel from './PeoplePanel/PeoplePanel'
@@ -19,7 +20,10 @@ import Sidebar from './Sidebar/Sidebar'
 import { Message } from '@/app/types'
 
 function DashBoard() {
-  const addMessage = useCurrentChatMessagesStore((state) => state.addMessage)
+  const { addMessage, removeMessage } = useCurrentChatMessagesStore((state) => ({
+    addMessage: state.addMessage,
+    removeMessage: state.removeMessage,
+  }))
   const { socket, setSocket } = useSocketStore()
   const user = useUserStore((state) => state.user)
   const chat = useCurrentChatStore((state) => state.chat)
@@ -32,6 +36,7 @@ function DashBoard() {
     addUser: state.addUser,
     removeUser: state.removeUser,
   }))
+  const addRemovedMessage = useRemovedMessagesStore((state) => state.addRemovedMessage)
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
   const [typingUsers, setTypingUsers] = useState<string[]>([])
@@ -65,6 +70,11 @@ function DashBoard() {
       } else if (!isTyping) {
         setTypingUsers((prevTypingUsers) => prevTypingUsers.filter((id) => id !== userId))
       }
+    })
+
+    scket.on('messageRemove', (data: { messageId: string }) => {
+      removeMessage(data.messageId) // Remove from Zustand store
+      addRemovedMessage(data.messageId) // Make sure message component rerenders
     })
 
     scket.on('error', (data: string) => {
@@ -110,6 +120,7 @@ function DashBoard() {
     return () => {
       scket.off('message')
       scket.off('typing')
+      scket.off('messageRemove')
       scket.off('error')
       scket.off('notification')
       scket.off('onlineStatus')

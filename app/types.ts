@@ -31,6 +31,7 @@ export type Message = {
   content: string
   voiceClipUrl?: string
   imageUrl?: string
+  isRemoved?: boolean
   readBy: string[]
   createdAt: string
 }
@@ -40,6 +41,7 @@ export type NewestMessage = {
   content: string
   voiceClipUrl?: string
   imageUrl?: string
+  isRemoved?: boolean
   createdAt: string
   readBy: string[]
   sender: string

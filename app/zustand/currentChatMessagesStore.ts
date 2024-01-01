@@ -20,16 +20,42 @@ type CurrentChatMessagesStore = {
   messages: Message[]
   setMessages: (updater: (prevMessages: Message[]) => Message[]) => void
   addMessage: (message: Message) => void
+  removeMessage: (messageId: string) => void
   isLoading: boolean
   initialLoading: boolean
   fetchMessages: (chatId: string, page?: number, initial?: boolean) => Promise<MessagesResponse>
 }
 
-export default create<CurrentChatMessagesStore>()((set) => ({
+export default create<CurrentChatMessagesStore>()((set, get) => ({
   messages: [],
   setMessages: (updater: (prevMessages: Message[]) => Message[]) =>
     set((prev) => ({ messages: updater(prev.messages) })),
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
+  removeMessage: (messageId) => {
+    // set((state) => {
+    //   if (!state.messages.find((message) => message._id === messageId)) {
+    //     return { messages: state.messages }
+    //   }
+
+    //   const newMessages = state.messages.map((message) => {
+    //     if (message._id === messageId) {
+    //       return { ...message, isRemoved: true, content: '', voiceClipUrl: undefined, imageUrl: undefined }
+    //     }
+    //     return message
+    //   })
+
+    //   return { messages: newMessages }
+    // })
+
+    for (let i = 0; i < get().messages.length; i++) {
+      const message = get().messages[i]
+
+      if (message._id === messageId) {
+        get().messages[i] = { ...message, isRemoved: true, content: '', voiceClipUrl: undefined, imageUrl: undefined }
+        break
+      }
+    }
+  },
   isLoading: false,
   initialLoading: false,
   fetchMessages: async (chatId, page = 1, initial = false) => {

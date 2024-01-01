@@ -11,7 +11,7 @@ import useChatsStore from '@/app/zustand/chatsStore'
 import ChatEmpty from './ChatEmpty'
 import ChatTop from './ChatTop'
 import ChatBottom from './ChatBottom/ChatBottom'
-import ChatThread from './ChatThread'
+import ChatThread from './ChatThread/ChatThread'
 import api from '@/app/api/axiosInstance'
 
 type ChatMainProps = {

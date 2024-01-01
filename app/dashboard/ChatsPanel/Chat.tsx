@@ -69,8 +69,8 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
             >
               {chat.newestMessage.sender === user._id && <p>You:</p>}
 
-              <p className={chat.newestMessage.voiceClipUrl || chat.newestMessage.imageUrl ? 'italic' : ''}>
-                {chat.newestMessage.voiceClipUrl
+              <p className={chat.newestMessage.isRemoved || chat.newestMessage.voiceClipUrl || chat.newestMessage.imageUrl ? 'italic' : ''}>
+                {chat.newestMessage.isRemoved ? 'Message removed'  : chat.newestMessage.voiceClipUrl
                   ? 'Voice clip'
                   : chat.newestMessage.imageUrl
                   ? 'Image'
