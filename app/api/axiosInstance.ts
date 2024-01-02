@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
-const baseURL = 'http://localhost:4000'
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 const axiosOptions = {
   baseURL,
   headers: {

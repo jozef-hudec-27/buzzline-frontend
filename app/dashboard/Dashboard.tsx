@@ -42,7 +42,7 @@ function DashBoard() {
   const [typingUsers, setTypingUsers] = useState<string[]>([])
 
   useEffect(() => {
-    const scket = socket || io('http://localhost:4000', { query: { token: localStorage.getItem('accessToken') } })
+    const scket = socket || io(process.env.NEXT_PUBLIC_BASE_URL || '', { query: { token: localStorage.getItem('accessToken') } })
 
     scket.on('message', (data: Message) => {
       addMessage(data)
