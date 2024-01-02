@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
     const { response, config } = error
     // If the error is not due to an expired access token, reject the promise
     // @ts-ignore
-    if (!response?.data?.message?.includes('expired') || !config) {
+    if (!config || (!response?.data?.message?.includes('expired') && !response?.data?.message?.includes('missing'))) {
       return await Promise.reject(error)
     }
 

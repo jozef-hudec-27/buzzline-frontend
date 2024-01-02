@@ -1,5 +1,4 @@
 import { memo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { ChatFill, PeopleFill, BoxArrowRight, PersonFill, List } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
@@ -11,20 +10,16 @@ import useChatsStore from '@/app/zustand/chatsStore'
 import AboutMeModal from './AboutMeModal'
 import api from '@/app/api/axiosInstance'
 
-import { User } from '@/app/types'
-
 type SidebarProps = {
   leftPanel: 'chats' | 'people'
   setLeftPanel: React.Dispatch<React.SetStateAction<'chats' | 'people'>>
 }
 
 const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
-  const { user, setUser } = useUserStore((state) => ({ user: state.user, setUser: state.setUser }))
+  const user = useUserStore((state) => state.user)
   const chats = useChatsStore((state) => state.chats)
 
   const [showAboutMeModal, setShowAboutMeModal] = useState(false)
-
-  const router = useRouter()
 
   const activeClass = 'text-black-75 bg-black-5'
 
@@ -36,9 +31,8 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
     },
     onSuccess: () => {
       localStorage.removeItem('accessToken')
-      setUser({} as User)
       localStorage.setItem('logout', 'true')
-      router.replace('/login')
+      window.location.replace('/login')
     },
     onError: () => {
       toast('Unable to log out.', { icon: '❌' })

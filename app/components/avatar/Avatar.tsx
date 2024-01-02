@@ -1,5 +1,7 @@
 import Image from 'next/image'
 
+import defaultAvatar from '/public/assets/images/default-avatar.svg'
+
 type AvatarProps = {
   src: string
   size: number
@@ -10,11 +12,11 @@ type AvatarProps = {
 function Avatar({ src, size, alt, cls }: AvatarProps) {
   return (
     <Image
-      src={src || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || ''}
+      src={src || defaultAvatar || ''}
       alt={alt}
       width={size}
       height={size}
-      className={`rounded-full ${cls || ''}`}
+      className={`rounded-full aspect-square ${cls || ''}`}
     />
   )
 }
