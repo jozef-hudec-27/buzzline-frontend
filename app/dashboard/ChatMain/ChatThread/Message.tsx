@@ -100,7 +100,7 @@ function Message({ initialMsg, i }: MessageProps) {
         ) : msg.voiceClipUrl ? (
           <div className="flex items-center justify-center w-[280px] sm:w-[400px]">
             <ReactAudioPlayer
-              src={msg.voiceClipUrl}
+              src={msg.voiceClipUrl.replace('.webm', '.mp3')}
               showJumpControls={false}
               showDownloadProgress={false}
               layout="horizontal-reverse"

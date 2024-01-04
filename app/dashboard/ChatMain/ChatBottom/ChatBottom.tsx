@@ -68,7 +68,7 @@ function ChatBottom() {
         let blob = null
 
         if (!recordingCancelled.current) {
-          blob = new Blob(recordedChunks.current)
+          blob = new Blob(recordedChunks.current, { type: 'audio/mpeg' })
 
           if (blob.size <= 5 * 1024 * 1024) {
             setVoiceClip(blob)
