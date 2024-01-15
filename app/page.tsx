@@ -14,11 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
-      if (localStorage.getItem('logout')) {
-        localStorage.removeItem('logout')
-      } else {
-        router.replace('/register')
-      }
+      router.replace('/register')
     }
   }, [isLoggedIn, isLoading])
 

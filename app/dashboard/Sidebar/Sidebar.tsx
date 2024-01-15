@@ -31,7 +31,6 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
     },
     onSuccess: () => {
       localStorage.removeItem('accessToken')
-      localStorage.setItem('logout', 'true')
       window.location.replace('/login')
     },
     onError: () => {
