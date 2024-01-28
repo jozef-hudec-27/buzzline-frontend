@@ -122,11 +122,21 @@ function ChatBottom() {
         />
       ) : (
         <>
-          <button className="chat-icon" aria-label="Record a voice clip" onClick={startRecording}>
+          <button
+            className="chat-icon"
+            aria-label="Record a voice clip"
+            title="Record a voice clip"
+            onClick={startRecording}
+          >
             <MicFill size={20} aria-hidden />
           </button>
 
-          <button className="chat-icon" aria-label="Send an image" onClick={() => imageInput.current?.click()}>
+          <button
+            className="chat-icon"
+            aria-label="Send an image"
+            title="Send an image"
+            onClick={() => imageInput.current?.click()}
+          >
             <Image size={20} aria-hidden />
           </button>
 
@@ -154,6 +164,7 @@ function ChatBottom() {
           <button
             className="chat-icon"
             aria-label="Send a like"
+            title="Send a like"
             onClick={() => socket?.emit('message', { chat: chat._id, content: '👍' })}
           >
             <HandThumbsUpFill size={20} aria-hidden />

@@ -34,6 +34,7 @@ function EmojiButton({ setMessage }: EmojiButtonProps) {
         type="button"
         className="chat-icon relative"
         aria-label="Choose an emoji"
+        title="Choose an emoji"
         onClick={() => setShowEmojiPicker((prev) => !prev)}
       >
         <EmojiSmileFill size={20} aria-hidden />

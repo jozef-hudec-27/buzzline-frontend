@@ -33,7 +33,7 @@ const Chats = memo(function () {
       <div className="flex items-center justify-center lg:justify-between">
         <h3 className="hidden lg:block">Chats</h3>
 
-        <button className="icon-btn" aria-label="Update avatar" onClick={() => setShowNewChatModal(true)}>
+        <button className="icon-btn" aria-label="New chat" title="New chat" onClick={() => setShowNewChatModal(true)}>
           <PersonFillAdd size={24} aria-hidden />
         </button>
 

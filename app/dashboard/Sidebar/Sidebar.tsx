@@ -46,6 +46,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
             leftPanel === 'chats' ? activeClass : 'text-black-50'
           }`}
           aria-label="Chats"
+          title="Chats"
           onClick={() => setLeftPanel('chats')}
         >
           <ChatFill size={32} aria-hidden />
@@ -56,6 +57,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         <button
           className={`p-[6px] rounded-[8px] hover:bg-black-5 ${leftPanel === 'people' ? activeClass : 'text-black-50'}`}
           aria-label="People"
+          title="People"
           onClick={() => setLeftPanel('people')}
         >
           <PeopleFill size={32} aria-hidden />
@@ -70,7 +72,8 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
       <div className="flex sm:flex-col items-center gap-[12px]">
         <button
           className="icon-btn hidden sm:block"
-          aria-label="Update avatar"
+          aria-label="About me"
+          title="About me"
           onClick={() => {
             setShowAboutMeModal(true)
           }}
@@ -81,6 +84,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         <button
           className={`icon-btn hidden sm:block ${logoutMutation.isPending && 'cursor-wait'}`}
           aria-label="Log out"
+          title="Log out"
           onClick={() => {
             logoutMutation.mutate()
           }}
@@ -98,7 +102,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
           menuClassName="mobile-menu"
         >
           <MenuItem onClick={() => setShowAboutMeModal(true)} className="mobile-menu-item">
-            Update avatar
+            About me
           </MenuItem>
           <MenuItem
             onClick={() => logoutMutation.mutate()}
