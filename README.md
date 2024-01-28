@@ -10,6 +10,7 @@ BuzzLine is a real-time messaging web application. Features include live message
 
 <br>
 
+<div>
 <img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1706466973/buzzline-register_tiicij.png" alt="Buzzline register page" width="500"/>
 
 <img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1706466973/buzzline-login_mqvazn.png" alt="Buzzline register page" width="500"/>
@@ -17,11 +18,12 @@ BuzzLine is a real-time messaging web application. Features include live message
 <img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1706466974/buzzline-voice-clip_f1djp6.png" alt="Buzzline register page" width="500"/>
 
 <img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1706466974/buzzline-remove-msg_grxdkq.png" alt="Buzzline register page" width="500"/>
+</div>
 <br/>
 
 ## 🚀 BuzzLine Front End
 
-This repo contains code for BuzzLine's front-end. The framework used is Next.js 14, which makes sure the app's performance and SEO is out of this world!
+This repo contains code for BuzzLine's front-end (back-end code can be found [here](https://github.com/jozef-hudec-27/buzzline-backend)). The framework used is Next.js 14, which makes sure the app's performance and SEO is out of this world!
 
 ### 🦾 Tech Stack
 
