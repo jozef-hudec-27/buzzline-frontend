@@ -7,7 +7,7 @@ type UserStore = {
   user: User
   setUser: (user: User) => void
   isLoading: boolean
-  fetchUser: () => any
+  fetchUser: () => Promise<User>
   isLoggedIn: boolean
 }
 
@@ -18,7 +18,7 @@ export default create<UserStore>()((set) => ({
   fetchUser: async () => {
     if (!localStorage.getItem('accessToken')) {
       set({ isLoading: false })
-      return
+      throw new Error()
     }
 
     set({ isLoading: true })
@@ -26,8 +26,11 @@ export default create<UserStore>()((set) => ({
     try {
       const response = await api(true).get('/api/me')
       set({ user: response.data, isLoading: false, isLoggedIn: !!Object.keys(response.data).length })
+
+      return response.data as User
     } catch (err: unknown) {
       set({ isLoading: false })
+      throw err
     }
   },
   isLoggedIn: false,

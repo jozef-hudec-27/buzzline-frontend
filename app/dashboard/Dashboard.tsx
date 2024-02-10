@@ -42,7 +42,8 @@ function DashBoard() {
   const [typingUsers, setTypingUsers] = useState<string[]>([])
 
   useEffect(() => {
-    const scket = socket || io(process.env.NEXT_PUBLIC_BASE_URL || '', { query: { token: localStorage.getItem('accessToken') } })
+    const scket =
+      socket || io(process.env.NEXT_PUBLIC_BASE_URL || '', { query: { token: localStorage.getItem('accessToken') } })
 
     scket.on('message', (data: Message) => {
       addMessage(data)
@@ -53,7 +54,7 @@ function DashBoard() {
           scket.emit('notification', {
             from: chat._id,
             to: participant._id,
-            type: 'message',
+            type: 'NOTI_MESSAGE',
             message: data,
           })
         })
@@ -82,21 +83,26 @@ function DashBoard() {
     })
 
     scket.on('notification', (data) => {
-      if (data.type === 'message') {
-        if (data.message?.sender?._id !== user._id && data.from !== chat?._id) {
-          const notiAudio = document.getElementById('noti-audio') as HTMLAudioElement
-          notiAudio?.play()
-        }
+      switch (data.type) {
+        case 'NOTI_MESSAGE':
+          if (data.message?.sender?._id !== user._id && data.from !== chat?._id) {
+            const notiAudio = document.getElementById('noti-audio') as HTMLAudioElement
+            notiAudio?.play()
+          }
 
-        // Update chats panel
-        setChats((prevChats) => {
-          let chat = prevChats.find((chat) => chat._id === data.from)
-          if (!chat) return prevChats
+          // Update chats panel
+          setChats((prevChats) => {
+            let chat = prevChats.find((chat) => chat._id === data.from)
+            if (!chat) return prevChats
 
-          chat = { ...chat, newestMessage: data.message }
-          const updatedChats = [chat, ...prevChats.filter((chat) => chat._id !== data.from)]
-          return updatedChats
-        })
+            chat = { ...chat, newestMessage: data.message }
+            const updatedChats = [chat, ...prevChats.filter((chat) => chat._id !== data.from)]
+            return updatedChats
+          })
+          break
+        case 'NOTI_CALLEE_IN_CALL':
+          toast('User is in another call', { icon: '❌' })
+          break
       }
     })
 
