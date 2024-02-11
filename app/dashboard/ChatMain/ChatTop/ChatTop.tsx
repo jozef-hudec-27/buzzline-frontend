@@ -8,17 +8,20 @@ import useMediaCallStore from '@/app/zustand/mediaCallStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils'
+import { accessUserMediaCatchHandler } from '@/app/mediaCallUtils'
 
 function ChatTop() {
   const { isOnline } = useOnlineUsersStore()
   const chat = useCurrentChatStore((state) => state.chat)
   const peer = usePeerStore((state) => state.peer)
-  const { setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream } = useMediaCallStore((state) => ({
-    setOutcomingCall: state.setOutcomingCall,
-    currentCall: state.currentCall,
-    setCurrentCall: state.setCurrentCall,
-    setLocalMediaStream: state.setLocalMediaStream,
-  }))
+  const { setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream } =
+    useMediaCallStore((state) => ({
+      setOutcomingCall: state.setOutcomingCall,
+      currentCall: state.currentCall,
+      setCurrentCall: state.setCurrentCall,
+      setLocalMediaStream: state.setLocalMediaStream,
+      setRemoteMediaStream: state.setRemoteMediaStream,
+    }))
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))
@@ -30,7 +33,7 @@ function ChatTop() {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video })
       setLocalMediaStream(stream)
 
-      const call = peer?.call(remotePeerId, stream)
+      const call = peer?.call(remotePeerId, stream, { metadata: { video } })
 
       call?.on('close', () => {
         setCurrentCall(null)
@@ -39,11 +42,12 @@ function ChatTop() {
 
       call?.on('stream', (remoteStream) => {
         setCurrentCall(call)
+        setRemoteMediaStream(remoteStream)
       })
 
       if (call) setOutcomingCall(call)
-    } catch {
-      toast(`Please allow the microphone ${video ? 'and camera' : ''} access.`, { icon: '❌' })
+    } catch (e) {
+      accessUserMediaCatchHandler(e, video)
     }
   }
 

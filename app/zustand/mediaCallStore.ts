@@ -15,6 +15,9 @@ type MediaCallStore = {
 
   localMediaStream: MediaStream | null
   setLocalMediaStream: (stream: MediaStream | null) => void
+
+  remoteMediaStream: MediaStream | null
+  setRemoteMediaStream: (stream: MediaStream | null) => void
 }
 
 export default create<MediaCallStore>((set, get) => ({
@@ -43,5 +46,16 @@ export default create<MediaCallStore>((set, get) => ({
     }
 
     set({ localMediaStream: stream })
+  },
+
+  remoteMediaStream: null,
+  setRemoteMediaStream: (stream) => {
+    if (!stream) {
+      get()
+        .remoteMediaStream?.getTracks()
+        .forEach((track) => track.stop())
+    }
+
+    set({ remoteMediaStream: stream })
   },
 }))

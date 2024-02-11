@@ -12,10 +12,11 @@ function FetchUser() {
   const { fetchUser } = useUserStore((state) => ({ fetchUser: state.fetchUser }))
   const setPeer = usePeerStore((state) => state.setPeer)
   const socket = useSocketStore((state) => state.socket)
-  const { setIncomingCall, setCurrentCall, currentCall } = useMediaCallStore((state) => ({
+  const { setIncomingCall, setCurrentCall, currentCall, setRemoteMediaStream } = useMediaCallStore((state) => ({
     setIncomingCall: state.setIncomingCall,
     setCurrentCall: state.setCurrentCall,
     currentCall: state.currentCall,
+    setRemoteMediaStream: state.setRemoteMediaStream,
   }))
 
   const currentCallRef = useRef(currentCall)
@@ -37,16 +38,20 @@ function FetchUser() {
 
         newPeer.on('open', () => {
           newPeer.on('call', (incomingCall) => {
-            incomingCall.on('close', () => {
-              setCurrentCall(null)
-            })
-
             if (currentCallRef.current) {
               socketRef.current?.emit('notification', {
                 to: incomingCall.peer,
                 type: 'NOTI_CALLEE_IN_CALL',
               })
             } else {
+              incomingCall.on('close', () => {
+                setCurrentCall(null)
+              })
+
+              incomingCall.on('stream', (remoteStream) => {
+                setRemoteMediaStream(remoteStream)
+              })
+
               setIncomingCall(incomingCall)
             }
           })
