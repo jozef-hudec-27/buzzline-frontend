@@ -7,7 +7,7 @@ type MediaCallStore = {
   incomingCall: Call
   setIncomingCall: (call: Call) => void
 
-  outComingCall: Call
+  outcomingCall: Call
   setOutcomingCall: (call: Call) => void
 
   currentCall: Call
@@ -21,13 +21,13 @@ export default create<MediaCallStore>((set, get) => ({
   incomingCall: null,
   setIncomingCall: (call) => set({ incomingCall: call }),
 
-  outComingCall: null,
-  setOutcomingCall: (call) => set({ outComingCall: call }),
+  outcomingCall: null,
+  setOutcomingCall: (call) => set({ outcomingCall: call }),
 
   currentCall: null,
   setCurrentCall: (call) => {
     if (call) {
-      set({ currentCall: call, outComingCall: null, incomingCall: null })
+      set({ currentCall: call, outcomingCall: null, incomingCall: null })
     } else {
       set({ currentCall: call })
     }

@@ -39,11 +39,11 @@ function DashBoard() {
     removeUser: state.removeUser,
   }))
   const addRemovedMessage = useRemovedMessagesStore((state) => state.addRemovedMessage)
-  const { incomingCall, setIncomingCall, outComingCall, setOutcomingCall, setLocalMediaStream } = useMediaCallStore(
+  const { incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setLocalMediaStream } = useMediaCallStore(
     (state) => ({
       incomingCall: state.incomingCall,
       setIncomingCall: state.setIncomingCall,
-      outComingCall: state.outComingCall,
+      outcomingCall: state.outcomingCall,
       setOutcomingCall: state.setOutcomingCall,
       setLocalMediaStream: state.setLocalMediaStream,
     })
@@ -111,22 +111,18 @@ function DashBoard() {
             return updatedChats
           })
           break
-        case 'NOTI_CALLEE_IN_CALL':
+        case 'NOTI_CALLEE_IN_CALL': // Calling someone who is already in a different call
           toast('User is in another call', { icon: '❌' })
           break
-        case 'NOTI_INCOMING_CALL_CLOSE':
+        case 'NOTI_INCOMING_CALL_CLOSE': // Caller closed their call
           if (incomingCall && incomingCall.peer === data.from) {
-            incomingCall.close()
             setIncomingCall(null)
-            toast('Call declined by caller', { icon: '❌' })
           }
           break
-        case 'NOTI_OUTCOMING_CALL_DECLINE':
-          if (outComingCall && outComingCall.peer === data.from) {
-            outComingCall.close()
+        case 'NOTI_OUTCOMING_CALL_DECLINE': // Callee declined our call
+          if (outcomingCall && outcomingCall.peer === data.from) {
             setOutcomingCall(null)
             setLocalMediaStream(null)
-            toast('Call declined by callee', { icon: '❌' })
           }
           break
       }
@@ -162,7 +158,7 @@ function DashBoard() {
       scket.off('notification')
       scket.off('onlineStatus')
     }
-  }, [chat, user, hasFetched, typingUsers, incomingCall, outComingCall])
+  }, [chat, user, hasFetched, typingUsers, incomingCall, outcomingCall])
 
   return (
     <div className="flex flex-col sm:flex-row h-[100vh] ">

@@ -42,7 +42,6 @@ function FetchUser() {
             })
 
             if (currentCallRef.current) {
-              incomingCall.close()
               socketRef.current?.emit('notification', {
                 to: incomingCall.peer,
                 type: 'NOTI_CALLEE_IN_CALL',

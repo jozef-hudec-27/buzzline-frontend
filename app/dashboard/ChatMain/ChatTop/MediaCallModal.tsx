@@ -16,14 +16,39 @@ function MediaCallModal() {
   const [isOpen, setIsOpen] = useState(true)
   const [friend, setFriend] = useState<User | null>(null)
 
-  const { incomingCall, setIncomingCall, outComingCall, setOutcomingCall, setCurrentCall, setLocalMediaStream } =
+  const { incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setCurrentCall, setLocalMediaStream } =
     useMediaCallStore()
   const chats = useChatsStore((state) => state.chats)
   const socket = useSocketStore((state) => state.socket)
   const user = useUserStore((state) => state.user)
 
+  function closeOutcomingCall() {
+    setLocalMediaStream(null)
+    socket?.emit('notification', {
+      from: user._id,
+      to: outcomingCall?.peer,
+      type: 'NOTI_INCOMING_CALL_CLOSE',
+    })
+    setOutcomingCall(null)
+  }
+
+  function declineIncomingCall() {
+    socket?.emit('notification', {
+      from: user._id,
+      to: incomingCall?.peer,
+      type: 'NOTI_OUTCOMING_CALL_DECLINE',
+    })
+    setIncomingCall(null)
+  }
+
+  async function answerIncomingCall() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    incomingCall?.answer(stream)
+    setCurrentCall(incomingCall)
+  }
+
   useEffect(() => {
-    const call = incomingCall || outComingCall
+    const call = incomingCall || outcomingCall
 
     if (call) {
       chats.forEach((chat) => {
@@ -37,11 +62,11 @@ function MediaCallModal() {
     } else {
       setIsOpen(false)
     }
-  }, [incomingCall, outComingCall, chats])
+  }, [incomingCall, outcomingCall, chats])
 
   return (
     friend && (
-      <Modal isOpen={isOpen} setIsOpen={() => 1}>
+      <Modal isOpen={isOpen} setIsOpen={function () {}}>
         <Avatar src={friend.avatarUrl} size={48} alt={`${friend.firstName} ${friend.lastName}`} />
 
         <p>
@@ -53,49 +78,16 @@ function MediaCallModal() {
         <div className="flex">
           {incomingCall ? (
             <>
-              <button
-                className="bg-red-500 text-white"
-                aria-label="Decline call"
-                onClick={() => {
-                  incomingCall.close()
-                  socket?.emit('notification', {
-                    from: user._id,
-                    to: incomingCall.peer,
-                    type: 'NOTI_OUTCOMING_CALL_DECLINE',
-                  })
-                  setIncomingCall(null)
-                }}
-              >
+              <button className="bg-red-500 text-white" aria-label="Decline call" onClick={declineIncomingCall}>
                 <X size={24} aria-hidden />
               </button>
 
-              <button
-                className="bg-online text-white"
-                aria-label="Accept call"
-                onClick={async () => {
-                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-                  incomingCall.answer(stream)
-                  setCurrentCall(incomingCall)
-                }}
-              >
+              <button className="bg-online text-white" aria-label="Accept call" onClick={answerIncomingCall}>
                 <TelephoneFill size={24} aria-hidden />
               </button>
             </>
           ) : (
-            <button
-              className="bg-red-500 text-white"
-              aria-label="Close call"
-              onClick={() => {
-                outComingCall?.close()
-                setLocalMediaStream(null)
-                socket?.emit('notification', {
-                  from: user._id,
-                  to: outComingCall?.peer,
-                  type: 'NOTI_INCOMING_CALL_CLOSE',
-                })
-                setOutcomingCall(null)
-              }}
-            >
+            <button className="bg-red-500 text-white" aria-label="Close call" onClick={closeOutcomingCall}>
               <X size={24} aria-hidden />
             </button>
           )}
