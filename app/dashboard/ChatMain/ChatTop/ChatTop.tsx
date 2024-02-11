@@ -1,8 +1,10 @@
 import { TelephoneFill, CameraVideoFill, ThreeDots } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import usePeerStore from '@/app/zustand/peerStore'
+import useMediaCallStore from '@/app/zustand/mediaCallStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils'
@@ -11,9 +13,39 @@ function ChatTop() {
   const { isOnline } = useOnlineUsersStore()
   const chat = useCurrentChatStore((state) => state.chat)
   const peer = usePeerStore((state) => state.peer)
+  const { setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream } = useMediaCallStore((state) => ({
+    setOutcomingCall: state.setOutcomingCall,
+    currentCall: state.currentCall,
+    setCurrentCall: state.setCurrentCall,
+    setLocalMediaStream: state.setLocalMediaStream,
+  }))
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))
+
+  async function callUser(video: boolean, remotePeerId: string) {
+    if (currentCall) return
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video })
+      setLocalMediaStream(stream)
+
+      const call = peer?.call(remotePeerId, stream)
+
+      call?.on('close', () => {
+        setCurrentCall(null)
+        stream.getTracks().forEach((track) => track.stop())
+      })
+
+      call?.on('stream', (remoteStream) => {
+        setCurrentCall(call)
+      })
+
+      if (call) setOutcomingCall(call)
+    } catch {
+      toast(`Please allow the microphone ${video ? 'and camera' : ''} access.`, { icon: '❌' })
+    }
+  }
 
   return (
     <div className="px-[12px] py-[10px] flex items-center justify-between border-b border-black-10 shadow">
@@ -32,18 +64,17 @@ function ChatTop() {
           className="chat-icon"
           aria-label="Audio call"
           title="Audio Call"
-          onClick={async () => {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-
-            if (peer) {
-              const call = peer.call(chat.users[0]._id, stream)
-            }
-          }}
+          onClick={() => callUser(false, chat.users[0]._id)}
         >
           <TelephoneFill size={20} aria-hidden />
         </button>
 
-        <button className="chat-icon" aria-label="Video call" title="Video Call">
+        <button
+          className="chat-icon"
+          aria-label="Video call"
+          title="Video Call"
+          onClick={() => callUser(true, chat.users[0]._id)}
+        >
           <CameraVideoFill size={20} aria-hidden />
         </button>
 

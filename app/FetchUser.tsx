@@ -6,11 +6,17 @@ import { toast } from 'react-hot-toast'
 import useUserStore from './zustand/userStore'
 import usePeerStore from './zustand/peerStore'
 import useSocketStore from './zustand/socketStore'
+import useMediaCallStore from './zustand/mediaCallStore'
 
 function FetchUser() {
   const { fetchUser } = useUserStore((state) => ({ fetchUser: state.fetchUser }))
-  const { setPeer, currentCall } = usePeerStore((state) => ({ setPeer: state.setPeer, currentCall: state.currentCall }))
+  const setPeer = usePeerStore((state) => state.setPeer)
   const socket = useSocketStore((state) => state.socket)
+  const { setIncomingCall, setCurrentCall, currentCall } = useMediaCallStore((state) => ({
+    setIncomingCall: state.setIncomingCall,
+    setCurrentCall: state.setCurrentCall,
+    currentCall: state.currentCall,
+  }))
 
   const currentCallRef = useRef(currentCall)
   const socketRef = useRef(socket)
@@ -31,6 +37,10 @@ function FetchUser() {
 
         newPeer.on('open', () => {
           newPeer.on('call', (incomingCall) => {
+            incomingCall.on('close', () => {
+              setCurrentCall(null)
+            })
+
             if (currentCallRef.current) {
               incomingCall.close()
               socketRef.current?.emit('notification', {
@@ -38,7 +48,7 @@ function FetchUser() {
                 type: 'NOTI_CALLEE_IN_CALL',
               })
             } else {
-              toast(`Incoming call from ${incomingCall.peer}`, { icon: '📞' })
+              setIncomingCall(incomingCall)
             }
           })
         })

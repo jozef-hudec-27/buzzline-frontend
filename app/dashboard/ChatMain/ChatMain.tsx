@@ -9,7 +9,7 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 
 import ChatEmpty from './ChatEmpty'
-import ChatTop from './ChatTop'
+import ChatTop from './ChatTop/ChatTop'
 import ChatBottom from './ChatBottom/ChatBottom'
 import ChatThread from './ChatThread/ChatThread'
 import api from '@/app/api/axiosInstance'
