@@ -51,7 +51,7 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
         >
           <ChatFill size={32} aria-hidden />
 
-          {hasUnreadMessages && <div className="unread-messages-panel-dot" aria-label="Unread messages"></div>}
+          {hasUnreadMessages && <div className="left-panel__unread-messages-dot" aria-label="Unread messages"></div>}
         </button>
 
         <button
@@ -101,13 +101,13 @@ const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
           }
           menuClassName="mobile-menu"
         >
-          <MenuItem onClick={() => setShowAboutMeModal(true)} className="mobile-menu-item">
+          <MenuItem onClick={() => setShowAboutMeModal(true)} className="mobile-menu__item">
             About me
           </MenuItem>
           <MenuItem
             onClick={() => logoutMutation.mutate()}
             disabled={logoutMutation.isPending || logoutMutation.isSuccess}
-            className="mobile-menu-item"
+            className="mobile-menu__item"
           >
             Log out
           </MenuItem>

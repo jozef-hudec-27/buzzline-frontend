@@ -57,7 +57,7 @@ function ChatTop() {
         <div className="min-w-[36px] min-h-[36px] relative">
           <Avatar src={chat.users[0].avatarUrl} alt={chatName} size={36} />
 
-          {online && <div className="online-dot" aria-label="Online"></div>}
+          {online && <div className="user-online-dot" aria-label="Online"></div>}
         </div>
 
         <p>{restrictLength(chatName, 50)}</p>
@@ -65,7 +65,7 @@ function ChatTop() {
 
       <div className="flex items-center gap-[24px]">
         <button
-          className="chat-icon"
+          className="chat__icon-btn"
           aria-label="Audio call"
           title="Audio Call"
           onClick={() => callUser(false, chat.users[0]._id)}
@@ -74,7 +74,7 @@ function ChatTop() {
         </button>
 
         <button
-          className="chat-icon"
+          className="chat__icon-btn"
           aria-label="Video call"
           title="Video Call"
           onClick={() => callUser(true, chat.users[0]._id)}
@@ -82,7 +82,7 @@ function ChatTop() {
           <CameraVideoFill size={20} aria-hidden />
         </button>
 
-        {/* <button className="chat-icon" aria-label="Options">
+        {/* <button className="chat__icon-btn" aria-label="Options">
           <ThreeDots size={20} aria-hidden />
         </button> */}
       </div>

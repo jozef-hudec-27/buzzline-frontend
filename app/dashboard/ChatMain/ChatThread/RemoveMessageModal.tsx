@@ -21,7 +21,7 @@ function RemoveMessageModal({ isOpen, setIsOpen, message }: RemoveMessageModalPr
 
           <div className="flex flex-col sm:flex-row gap-[8px] mt-[12px]">
             <button
-              className="btn primary flex-1"
+              className="btn btn--primary flex-1"
               onClick={() => {
                 socket?.emit('messageRemove', { chat: message.chat, messageId: message._id })
                 setIsOpen(false)
@@ -29,7 +29,10 @@ function RemoveMessageModal({ isOpen, setIsOpen, message }: RemoveMessageModalPr
             >
               Yes, remove
             </button>
-            <button className="btn primary !bg-transparent !text-black-100 flex-1" onClick={() => setIsOpen(false)}>
+            <button
+              className="btn btn--primary !bg-transparent !text-black-100 flex-1"
+              onClick={() => setIsOpen(false)}
+            >
               No, take me back
             </button>
           </div>

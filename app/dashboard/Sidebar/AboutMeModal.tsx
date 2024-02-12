@@ -49,12 +49,12 @@ function AboutMeModal({ isOpen, setIsOpen }: ModalProps) {
         <Avatar src={previewUrl || user.avatarUrl} alt="My avatar" size={200} cls="shadow-lg w-[200px] h-[200px]" />
 
         <div className="flex gap-[16px]">
-          <button className="btn primary" onClick={() => fileInputRef.current?.click()} disabled={!!file}>
+          <button className="btn btn--primary" onClick={() => fileInputRef.current?.click()} disabled={!!file}>
             Upload image
           </button>
 
           <button
-            className={`btn primary ${updateAvatarMutation.isPending ? 'cursor-wait' : ''}`}
+            className={`btn btn--primary ${updateAvatarMutation.isPending ? 'cursor-wait' : ''}`}
             disabled={!file || updateAvatarMutation.isPending}
             onClick={() => {
               if (!file) return
@@ -67,7 +67,7 @@ function AboutMeModal({ isOpen, setIsOpen }: ModalProps) {
         </div>
 
         <button
-          className="btn primary flex items-center gap-[8px]"
+          className="btn btn--primary flex items-center gap-[8px]"
           aria-label="Copy chat token to clipboard"
           onClick={async () => {
             try {

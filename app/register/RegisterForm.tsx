@@ -141,7 +141,7 @@ function RegisterForm(props: RegisterFormProps) {
 
       <div className="w-fit mt-[12px] flex items-center gap-[24px]">
         <button
-          className={`btn primary ${registerMutation.isPending ? 'cursor-wait' : ''}`}
+          className={`btn btn--primary ${registerMutation.isPending ? 'cursor-wait' : ''}`}
           disabled={registerMutation.isPending || registerMutation.isSuccess}
         >
           {props.page === 0 ? 'Continue' : 'Sign up'}

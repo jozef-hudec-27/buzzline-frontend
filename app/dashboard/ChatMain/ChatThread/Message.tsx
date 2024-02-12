@@ -90,7 +90,7 @@ function Message({ initialMsg, i }: MessageProps) {
       )}
 
       <div
-        className={`message ${msgBelongsToUser(msg, user) ? 'own' : 'other'} ${
+        className={`message ${msgBelongsToUser(msg, user) ? 'message--own' : 'message--other'} ${
           msg.imageUrl || msg.content === '👍' ? '!bg-white' : ''
         } ${msg.content === '👍' ? 'text-[64px]' : ''}`}
         id={`tooltip-${msg._id}`}

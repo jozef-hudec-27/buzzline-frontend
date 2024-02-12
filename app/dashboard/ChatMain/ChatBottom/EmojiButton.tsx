@@ -32,7 +32,7 @@ function EmojiButton({ setMessage }: EmojiButtonProps) {
     >
       <button
         type="button"
-        className="chat-icon relative"
+        className="chat__icon-btn relative"
         aria-label="Choose an emoji"
         title="Choose an emoji"
         onClick={() => setShowEmojiPicker((prev) => !prev)}

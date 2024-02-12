@@ -132,9 +132,9 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
 
           return (
             <p key={`typing-${userId}`} className="text-[13px]">
-              {userFirstName} is typing<span className="typing-dot">.</span>
-              <span className="typing-dot">.</span>
-              <span className="typing-dot">.</span>✍️
+              {userFirstName} is typing<span className="chat__typing-dot">.</span>
+              <span className="chat__typing-dot">.</span>
+              <span className="chat__typing-dot">.</span>✍️
             </p>
           )
         })}

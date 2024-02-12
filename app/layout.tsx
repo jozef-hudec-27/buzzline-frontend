@@ -5,7 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import ReactQueryProvider from './ReactQueryProvider'
 import FetchUser from './FetchUser'
 
-import './globals.css'
+import '../styles/globals.scss'
 import 'react-h5-audio-player/lib/styles.css'
 
 const inter = Inter({ subsets: ['latin'] })

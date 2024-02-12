@@ -82,7 +82,7 @@ function LoginForm(props: LoginFormProps) {
 
       <div className="w-fit mt-[12px] flex items-center gap-[24px]">
         <button
-          className={`btn primary ${loginMutation.isPending ? 'cursor-wait' : ''}`}
+          className={`btn btn--primary ${loginMutation.isPending ? 'cursor-wait' : ''}`}
           disabled={loginMutation.isPending || loginMutation.isSuccess}
         >
           Log in

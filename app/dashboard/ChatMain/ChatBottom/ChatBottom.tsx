@@ -123,7 +123,7 @@ function ChatBottom() {
       ) : (
         <>
           <button
-            className="chat-icon"
+            className="chat__icon-btn"
             aria-label="Record a voice clip"
             title="Record a voice clip"
             onClick={startRecording}
@@ -132,7 +132,7 @@ function ChatBottom() {
           </button>
 
           <button
-            className="chat-icon"
+            className="chat__icon-btn"
             aria-label="Send an image"
             title="Send an image"
             onClick={() => imageInput.current?.click()}
@@ -162,7 +162,7 @@ function ChatBottom() {
           </form>
 
           <button
-            className="chat-icon"
+            className="chat__icon-btn"
             aria-label="Send a like"
             title="Send a like"
             onClick={() => socket?.emit('message', { chat: chat._id, content: '👍' })}

@@ -64,7 +64,7 @@ function NewChatModal({ isOpen, setIsOpen }: ModalProps) {
           />
 
           <button
-            className={`btn primary ${newChatMutation.isPending ? 'cursor-wait' : ''}`}
+            className={`btn btn--primary ${newChatMutation.isPending ? 'cursor-wait' : ''}`}
             disabled={!chatToken || newChatMutation.isPending}
           >
             Submit

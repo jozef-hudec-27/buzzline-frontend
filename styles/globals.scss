@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Remove 'X' from search inputs */
+// Remove X icon from search input
 input[type='search']::-webkit-search-decoration,
 input[type='search']::-webkit-search-cancel-button,
 input[type='search']::-webkit-search-results-button,
@@ -51,6 +51,10 @@ a {
   @apply text-secondary;
 }
 
+.rhap_controls-section .rhap_additional-controls {
+  @apply hidden;
+}
+
 .gradient-text {
   @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent pb-[6px] mb-[-6px];
 }
@@ -61,13 +65,13 @@ a {
 
 .btn {
   @apply rounded-full px-[16px] py-[12px] font-semibold;
+
+  &--primary {
+    @apply text-white bg-primary hover:bg-primary-dark focus:bg-primary-dark disabled:bg-black-75 disabled:text-black-50;
+  }
 }
 
-.btn.primary {
-  @apply text-white bg-primary hover:bg-primary-dark focus:bg-primary-dark disabled:bg-black-75 disabled:text-black-50;
-}
-
-.chat-icon {
+.chat__icon-btn {
   @apply text-secondary hover:opacity-75;
 }
 
@@ -77,100 +81,90 @@ a {
 
 .message {
   @apply px-[16px] py-[10px] rounded-[24px] break-all w-fit max-w-[640px];
+
+  &--own {
+    @apply text-white bg-secondary;
+
+    .rhap_container {
+      @apply bg-secondary shadow-none;
+
+      svg {
+        @apply text-white;
+      }
+    }
+
+    .rhap_time {
+      @apply text-white;
+    }
+
+    .rhap_volume-indicator,
+    .rhap_progress-indicator {
+      @apply bg-white;
+    }
+
+    .rhap_volume-bar,
+    .rhap_progress-bar {
+      @apply bg-black-25;
+    }
+
+    .rhap_progress-filled {
+      @apply bg-black-50;
+    }
+  }
+
+  &--other {
+    @apply bg-black-10;
+
+    .rhap_container {
+      @apply bg-black-10 shadow-none;
+
+      svg {
+        @apply text-black-75;
+      }
+    }
+
+    .rhap_time {
+      @apply text-black-75;
+    }
+
+    .rhap_volume-indicator,
+    .rhap_progress-indicator {
+      @apply bg-black-75;
+    }
+
+    .rhap_volume-bar,
+    .rhap_progress-bar {
+      @apply bg-black-25;
+    }
+
+    .rhap_progress-filled {
+      @apply bg-black-75;
+    }
+  }
 }
 
-.message.own {
-  @apply text-white bg-secondary;
-}
-
-.message.other {
-  @apply bg-black-10;
-}
-
-.online-dot {
+.user-online-dot {
   @apply absolute right-0 bottom-[5px] w-[10px] h-[10px] rounded-full bg-online border border-white;
-}
-
-.unread-messages-panel-dot {
-  @apply absolute right-[4px] bottom-[6px] w-[10px] h-[10px] rounded-full bg-secondary border border-white;
 }
 
 .left-panel {
   @apply px-[12px] py-[16px] sm:w-[90px] lg:w-[360px] flex flex-row sm:flex-col gap-[22px] border-b sm:border-b-0 sm:border-r border-black-10 sm:h-[100vh];
+
+  &__unread-messages-dot {
+    @apply absolute right-[4px] bottom-[6px] w-[10px] h-[10px] rounded-full bg-secondary border border-white;
+  }
 }
 
 .ReactModal__Overlay {
-  @apply !bg-[rgb(23,3,22,0.5)];
+  background-color: rgb(23, 3, 22, 0.5) !important;
 }
 
 .mobile-menu {
   @apply sm:hidden rounded-[8px] bg-white border border-black-10 shadow-md px-[16px] py-[8px] w-[196px] z-10;
-}
 
-.mobile-menu-item {
-  @apply text-black-75 text-[18px] font-semibold hover:bg-black-5 w-full p-[16px] rounded-[8px];
-}
-
-/* MESSAGE VOICE CLIP */
-
-.rhap_additional-controls {
-  @apply !hidden;
-}
-
-.message.own .rhap_container {
-  @apply bg-secondary shadow-none;
-}
-
-.message.own .rhap_container svg {
-  @apply text-white;
-}
-
-.message.own .rhap_time {
-  @apply text-white;
-}
-
-.message.own .rhap_volume-indicator,
-.message.own .rhap_progress-indicator {
-  @apply bg-white;
-}
-
-.message.own .rhap_volume-bar,
-.message.own .rhap_progress-bar {
-  @apply bg-black-25;
-}
-
-.message.own .rhap_progress-filled {
-  @apply bg-black-50;
-}
-
-.rhap_additional-controls {
-  @apply !hidden;
-}
-
-.message.other .rhap_container {
-  @apply bg-black-10 shadow-none;
-}
-
-.message.other .rhap_container svg {
-  @apply text-black-75;
-}
-
-.message.other .rhap_time {
-  @apply text-black-75;
-}
-
-.message.other .rhap_volume-indicator,
-.message.other .rhap_progress-indicator {
-  @apply bg-black-75;
-}
-
-.message.other .rhap_volume-bar,
-.message.other .rhap_progress-bar {
-  @apply bg-black-25;
-}
-
-.message.other .rhap_progress-filled {
-  @apply bg-black-75;
+  &__item {
+    @apply text-black-75 text-[18px] font-semibold hover:bg-black-5 w-full p-[16px] rounded-[8px];
+  }
 }
 
 @keyframes typingDotAnimate {
@@ -185,18 +179,18 @@ a {
   }
 }
 
-.typing-dot {
+.chat__typing-dot {
   opacity: 0;
-}
 
-.typing-dot:nth-child(1) {
-  animation: typingDotAnimate 1s infinite;
-}
+  &:nth-child(1) {
+    animation: typingDotAnimate 1s infinite;
+  }
 
-.typing-dot:nth-child(2) {
-  animation: typingDotAnimate 1s 0.33s infinite;
-}
+  &:nth-child(2) {
+    animation: typingDotAnimate 1s 0.33s infinite;
+  }
 
-.typing-dot:nth-child(3) {
-  animation: typingDotAnimate 1s 0.66s infinite;
+  &:nth-child(3) {
+    animation: typingDotAnimate 1s 0.66s infinite;
+  }
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import useUserStore from '@/app/zustand/userStore'
@@ -54,7 +53,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
       <div className="min-w-[48px] min-h-[48px] relative">
         <Avatar src={chat.users[0].avatarUrl} alt={chatName} size={48} />
 
-        {online && <div className="online-dot" aria-label="Online"></div>}
+        {online && <div className="user-online-dot" aria-label="Online"></div>}
       </div>
 
       <div className="w-full flex items-center justify-between">
@@ -69,8 +68,16 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
             >
               {chat.newestMessage.sender === user._id && <p>You:</p>}
 
-              <p className={chat.newestMessage.isRemoved || chat.newestMessage.voiceClipUrl || chat.newestMessage.imageUrl ? 'italic' : ''}>
-                {chat.newestMessage.isRemoved ? 'Message removed'  : chat.newestMessage.voiceClipUrl
+              <p
+                className={
+                  chat.newestMessage.isRemoved || chat.newestMessage.voiceClipUrl || chat.newestMessage.imageUrl
+                    ? 'italic'
+                    : ''
+                }
+              >
+                {chat.newestMessage.isRemoved
+                  ? 'Message removed'
+                  : chat.newestMessage.voiceClipUrl
                   ? 'Voice clip'
                   : chat.newestMessage.imageUrl
                   ? 'Image'

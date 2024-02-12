@@ -44,7 +44,7 @@ const Chats = memo(function () {
         <Search size={16} className="text-black-25" />
 
         <input
-          type="Search"
+          type="search"
           placeholder="Search BuzzLine"
           className="text-black-75 placeholder:text-black-50 outline-none bg-black-5"
           value={search}

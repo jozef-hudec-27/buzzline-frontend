@@ -71,7 +71,7 @@ function VoiceClipRecording({
   return (
     <>
       <button
-        className="chat-icon"
+        className="chat__icon-btn"
         aria-label="Cancel recording"
         onClick={() => {
           if (!finishedRecording) recordingCancelled.current = true
@@ -85,7 +85,7 @@ function VoiceClipRecording({
 
       <div className="py-[12px] px-[24px] flex-1 flex items-center justify-between rounded-full bg-secondary">
         <button
-          className="chat-icon bg-white rounded-full"
+          className="chat__icon-btn bg-white rounded-full"
           aria-label={
             finishedRecording ? (previewPlaying ? 'Pause voice clip' : 'Play my voice clip') : 'Finish recording'
           }
@@ -125,7 +125,7 @@ function VoiceClipRecording({
       </div>
 
       <button
-        className="chat-icon"
+        className="chat__icon-btn"
         aria-label="Send voice clip"
         onClick={(e) => {
           const sendVoiceClipBtn = e.currentTarget
