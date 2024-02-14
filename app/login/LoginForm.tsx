@@ -5,8 +5,14 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
-import api from '@/app/api/axiosInstance'
 import useUserStore from '../zustand/userStore'
+import usePeerStore from '../zustand/peerStore'
+import useMediaCallStore from '../zustand/mediaCallStore'
+import useSocketStore from '../zustand/socketStore'
+
+import api from '@/app/api/axiosInstance'
+import { handleIncomingCall } from '@/app/mediaCallUtils'
+import useStef from '@/app/hooks/useStef'
 
 import { LoginFormState } from '@/app/types'
 import { AxiosError } from 'axios'
@@ -19,8 +25,21 @@ type LoginFormProps = {
 
 function LoginForm(props: LoginFormProps) {
   const router = useRouter()
+
   const fetchUser = useUserStore((state) => state.fetchUser)
+  const initPeer = usePeerStore((state) => state.initPeer)
+  const socket = useSocketStore((state) => state.socket)
+  const { setCurrentCall, currentCall, setRemoteMediaStream, setIncomingCall } = useMediaCallStore((state) => ({
+    setCurrentCall: state.setCurrentCall,
+    currentCall: state.currentCall,
+    setRemoteMediaStream: state.setRemoteMediaStream,
+    setIncomingCall: state.setIncomingCall,
+  }))
+
   const { formState, setFormState } = props
+
+  const currentCallStef = useStef(currentCall)
+  const socketStef = useStef(socket)
 
   const changeState = <T extends LoginFormState>(key: keyof T, value: string) => {
     // @ts-ignore
@@ -32,10 +51,14 @@ function LoginForm(props: LoginFormProps) {
       document.getElementById('form-errors')?.replaceChildren() // Clear form errors
       return await api().post('/auth/login', user)
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const accessToken: string = data?.data?.accessToken
       localStorage.setItem('accessToken', accessToken)
-      fetchUser()
+      const user = await fetchUser()
+      const peer = await initPeer(user._id)
+      peer.on('open', () =>
+        handleIncomingCall(peer, socketStef, currentCallStef, setCurrentCall, setRemoteMediaStream, setIncomingCall)
+      )
       router.replace('/')
     },
     onError: (error: AxiosError) => {

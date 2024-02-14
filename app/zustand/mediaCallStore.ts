@@ -1,7 +1,6 @@
-import { MediaConnection } from 'peerjs'
 import { create } from 'zustand'
 
-type Call = MediaConnection | null
+import { Call } from '../types'
 
 type MediaCallStore = {
   incomingCall: Call

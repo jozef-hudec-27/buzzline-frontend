@@ -1,63 +1,37 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { toast } from 'react-hot-toast'
+import { useEffect } from 'react'
 
 import useUserStore from './zustand/userStore'
 import usePeerStore from './zustand/peerStore'
-import useSocketStore from './zustand/socketStore'
 import useMediaCallStore from './zustand/mediaCallStore'
+import useSocketStore from './zustand/socketStore'
+
+import useStef from './hooks/useStef'
+import { handleIncomingCall } from './mediaCallUtils'
 
 function FetchUser() {
   const { fetchUser } = useUserStore((state) => ({ fetchUser: state.fetchUser }))
-  const setPeer = usePeerStore((state) => state.setPeer)
-  const socket = useSocketStore((state) => state.socket)
-  const { setIncomingCall, setCurrentCall, currentCall, setRemoteMediaStream } = useMediaCallStore((state) => ({
-    setIncomingCall: state.setIncomingCall,
+  const initPeer = usePeerStore((state) => state.initPeer)
+  const { setCurrentCall, currentCall, setRemoteMediaStream, setIncomingCall } = useMediaCallStore((state) => ({
     setCurrentCall: state.setCurrentCall,
     currentCall: state.currentCall,
     setRemoteMediaStream: state.setRemoteMediaStream,
+    setIncomingCall: state.setIncomingCall,
   }))
+  const socket = useSocketStore((state) => state.socket)
 
-  const currentCallRef = useRef(currentCall)
-  const socketRef = useRef(socket)
-
-  useEffect(() => {
-    currentCallRef.current = currentCall
-    socketRef.current = socket
-  }, [currentCall, socket])
+  const currentCallStef = useStef(currentCall)
+  const socketStef = useStef(socket)
 
   useEffect(() => {
     const fn = async () => {
-      // Importing PeerJs dynamically to avoid SSR issues
-      const PeerJs = (await import('peerjs')).default
-
       try {
-        const userFetched = await fetchUser()
-        const newPeer = new PeerJs(userFetched._id)
-
-        newPeer.on('open', () => {
-          newPeer.on('call', (incomingCall) => {
-            if (currentCallRef.current) {
-              socketRef.current?.emit('notification', {
-                to: incomingCall.peer,
-                type: 'NOTI_CALLEE_IN_CALL',
-              })
-            } else {
-              incomingCall.on('close', () => {
-                setCurrentCall(null)
-              })
-
-              incomingCall.on('stream', (remoteStream) => {
-                setRemoteMediaStream(remoteStream)
-              })
-
-              setIncomingCall(incomingCall)
-            }
-          })
-        })
-
-        setPeer(newPeer)
+        const user = await fetchUser()
+        const peer = await initPeer(user._id)
+        peer.on('open', () =>
+          handleIncomingCall(peer, socketStef, currentCallStef, setCurrentCall, setRemoteMediaStream, setIncomingCall)
+        )
       } catch {}
     }
 

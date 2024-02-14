@@ -1,3 +1,5 @@
+import { MediaConnection } from 'peerjs'
+
 // Fields of register form
 export type RegisterFormState = {
   firstName: string
@@ -36,6 +38,7 @@ export type Message = {
   createdAt: string
 }
 
+// Newest message in chat
 export type NewestMessage = {
   _id: string
   content: string
@@ -47,6 +50,7 @@ export type NewestMessage = {
   sender: string
 }
 
+// Chat object for index page
 export type ChatIndex = {
   _id: string
   isGroup: boolean
@@ -54,9 +58,13 @@ export type ChatIndex = {
   newestMessage?: NewestMessage
 }
 
+// Chat object for show page
 export type ChatShow = {
   _id: string
   isGroup: boolean
   users: User[]
   newestMessage?: NewestMessage
 }
+
+// Media call object
+export type Call = MediaConnection | null
