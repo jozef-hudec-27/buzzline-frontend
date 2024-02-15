@@ -20,17 +20,11 @@ type ChatMainProps = {
 }
 
 const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) {
-  const user = useUserStore((state) => state.user)
-  const socket = useSocketStore((state) => state.socket)
+  const [user] = useUserStore((state) => [state.user])
+  const [socket] = useSocketStore((state) => [state.socket])
   const { chat, isLoading: chatLoading } = useCurrentChatStore()
-  const {
-    fetchMessages,
-    setMessages,
-    messages,
-    isLoading: messagesLoading,
-    initialLoading,
-  } = useCurrentChatMessagesStore()
-  const setChats = useChatsStore((state) => state.setChats)
+  const { fetchMessages, setMessages, isLoading: messagesLoading, initialLoading } = useCurrentChatMessagesStore()
+  const [setChats] = useChatsStore((state) => [state.setChats])
 
   const [nextMessagesPage, setNextMessagesPage] = useState<null | number>(null)
 

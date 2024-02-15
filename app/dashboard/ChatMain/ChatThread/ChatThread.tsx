@@ -14,7 +14,7 @@ function ChatThread({ fetchOlderMessages, initialLoading }: ChatThreadProps) {
     return <div className="flex-1 flex justify-center items-center">Loading messages...</div>
   }
 
-  const messages = useCurrentChatMessagesStore((state) => state.messages)
+  const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
 
   const threadRef = useRef<HTMLDivElement>(null)
 

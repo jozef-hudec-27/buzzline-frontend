@@ -11,7 +11,7 @@ import { AxiosError } from 'axios'
 import { ChatIndex } from '@/app/types'
 
 function NewChatModal({ isOpen, setIsOpen }: ModalProps) {
-  const setChats = useChatsStore((state) => state.setChats)
+  const [setChats] = useChatsStore((state) => [state.setChats])
 
   const [chatToken, setChatToken] = useState('')
 

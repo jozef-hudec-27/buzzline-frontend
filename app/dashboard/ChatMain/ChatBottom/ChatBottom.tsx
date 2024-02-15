@@ -12,8 +12,8 @@ import EmojiButton from './EmojiButton'
 import VoiceClipRecording from './VoiceClipRecording'
 
 function ChatBottom() {
-  const socket = useSocketStore((state) => state.socket)
-  const chat = useCurrentChatStore((state) => state.chat)
+  const [socket] = useSocketStore((state) => [state.socket])
+  const [chat] = useCurrentChatStore((state) => [state.chat])
 
   const [message, setMessage] = useState('')
 

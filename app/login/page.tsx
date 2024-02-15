@@ -13,10 +13,7 @@ import { LoginFormState } from '@/app/types'
 
 function LoginPage() {
   const router = useRouter()
-  const { isLoggedIn, isLoading } = useUserStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    isLoading: state.isLoading,
-  }))
+  const [isLoggedIn, isLoading] = useUserStore((state) => [state.isLoggedIn, state.isLoading])
 
   const [formState, setFormState] = useState<LoginFormState>({ email: '', password: '' })
 

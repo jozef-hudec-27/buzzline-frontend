@@ -26,15 +26,15 @@ type LoginFormProps = {
 function LoginForm(props: LoginFormProps) {
   const router = useRouter()
 
-  const fetchUser = useUserStore((state) => state.fetchUser)
-  const initPeer = usePeerStore((state) => state.initPeer)
-  const socket = useSocketStore((state) => state.socket)
-  const { setCurrentCall, currentCall, setRemoteMediaStream, setIncomingCall } = useMediaCallStore((state) => ({
-    setCurrentCall: state.setCurrentCall,
-    currentCall: state.currentCall,
-    setRemoteMediaStream: state.setRemoteMediaStream,
-    setIncomingCall: state.setIncomingCall,
-  }))
+  const [fetchUser] = useUserStore((state) => [state.fetchUser])
+  const [initPeer] = usePeerStore((state) => [state.initPeer])
+  const [socket] = useSocketStore((state) => [state.socket])
+  const [setCurrentCall, currentCall, setRemoteMediaStream, setIncomingCall] = useMediaCallStore((state) => [
+    state.setCurrentCall,
+    state.currentCall,
+    state.setRemoteMediaStream,
+    state.setIncomingCall,
+  ])
 
   const { formState, setFormState } = props
 

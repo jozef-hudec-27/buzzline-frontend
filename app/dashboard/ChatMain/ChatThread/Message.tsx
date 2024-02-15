@@ -18,9 +18,9 @@ type MessageProps = {
 }
 
 function Message({ initialMsg, i }: MessageProps) {
-  const user = useUserStore((state) => state.user)
-  const removedMessages = useRemovedMessagesStore((state) => state.removedMessages)
-  const messages = useCurrentChatMessagesStore((state) => state.messages)
+  const [user] = useUserStore((state) => [state.user])
+  const [removedMessages] = useRemovedMessagesStore((state) => [state.removedMessages])
+  const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
 
   const [msg, setMsg] = useState<Message>(initialMsg)
   const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null)

@@ -21,7 +21,7 @@ function VoiceClipRecording({
   recordingCancelled,
   stopRecording,
 }: VoiceClipRecordingProps) {
-  const socket = useSocketStore((state) => state.socket)
+  const [socket] = useSocketStore((state) => [state.socket])
 
   const [finishedRecording, setFinishedRecording] = useState(false)
   const [previewPlaying, setPreviewPlaying] = useState(false)

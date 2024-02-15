@@ -16,8 +16,8 @@ type SidebarProps = {
 }
 
 const Sidebar = memo(function ({ leftPanel, setLeftPanel }: SidebarProps) {
-  const user = useUserStore((state) => state.user)
-  const chats = useChatsStore((state) => state.chats)
+  const [user] = useUserStore((state) => [state.user])
+  const [chats] = useChatsStore((state) => [state.chats])
 
   const [showAboutMeModal, setShowAboutMeModal] = useState(false)
 

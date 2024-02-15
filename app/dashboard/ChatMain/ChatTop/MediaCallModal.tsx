@@ -30,9 +30,9 @@ function MediaCallModal() {
     setLocalMediaStream,
     remoteMediaStream,
   } = useMediaCallStore()
-  const chats = useChatsStore((state) => state.chats)
-  const socket = useSocketStore((state) => state.socket)
-  const user = useUserStore((state) => state.user)
+  const [chats] = useChatsStore((state) => [state.chats])
+  const [socket] = useSocketStore((state) => [state.socket])
+  const [user] = useUserStore((state) => [state.user])
 
   function closeOutcomingCall() {
     setLocalMediaStream(null)

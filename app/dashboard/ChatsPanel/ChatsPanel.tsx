@@ -9,7 +9,7 @@ import Chat from './Chat'
 import { ChatIndex } from '@/app/types'
 
 const Chats = memo(function () {
-  const { chats, isLoading: chatsLoading } = useChatsStore()
+  const [chats, chatsLoading] = useChatsStore((state) => [state.chats, state.isLoading])
 
   const [search, setSearch] = useState('')
   const [showNewChatModal, setShowNewChatModal] = useState(false)

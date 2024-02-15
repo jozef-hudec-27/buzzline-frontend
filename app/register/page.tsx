@@ -12,10 +12,7 @@ import { RegisterFormState } from '@/app/types'
 
 function RegisterPage() {
   const router = useRouter()
-  const { isLoggedIn, isLoading } = useUserStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    isLoading: state.isLoading,
-  }))
+  const [isLoggedIn, isLoading] = useUserStore((state) => [state.isLoggedIn, state.isLoading])
 
   useEffect(() => {
     if (isLoggedIn && !isLoading) {

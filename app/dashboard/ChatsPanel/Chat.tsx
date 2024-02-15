@@ -18,10 +18,10 @@ type ChatProps = {
 }
 
 function Chat({ chat, hideNewestMessage }: ChatProps) {
-  const user = useUserStore((state) => state.user)
-  const fetchChat = useCurrentChatStore((state) => state.fetchChat)
-  const setChats = useChatsStore((state) => state.setChats)
-  const { isOnline } = useOnlineUsersStore()
+  const [user] = useUserStore((state) => [state.user])
+  const [fetchChat] = useCurrentChatStore((state) => [state.fetchChat])
+  const [setChats] = useChatsStore((state) => [state.setChats])
+  const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
 
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 

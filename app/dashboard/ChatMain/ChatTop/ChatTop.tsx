@@ -11,17 +11,18 @@ import { restrictLength } from '@/app/utils'
 import { accessUserMediaCatchHandler } from '@/app/mediaCallUtils'
 
 function ChatTop() {
-  const { isOnline } = useOnlineUsersStore()
-  const chat = useCurrentChatStore((state) => state.chat)
-  const peer = usePeerStore((state) => state.peer)
-  const { setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream } =
-    useMediaCallStore((state) => ({
-      setOutcomingCall: state.setOutcomingCall,
-      currentCall: state.currentCall,
-      setCurrentCall: state.setCurrentCall,
-      setLocalMediaStream: state.setLocalMediaStream,
-      setRemoteMediaStream: state.setRemoteMediaStream,
-    }))
+  const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
+  const [chat] = useCurrentChatStore((state) => [state.chat])
+  const [peer] = usePeerStore((state) => [state.peer])
+  const [setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream] = useMediaCallStore(
+    (state) => [
+      state.setOutcomingCall,
+      state.currentCall,
+      state.setCurrentCall,
+      state.setLocalMediaStream,
+      state.setRemoteMediaStream,
+    ]
+  )
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))

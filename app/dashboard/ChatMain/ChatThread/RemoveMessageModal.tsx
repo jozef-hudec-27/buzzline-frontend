@@ -9,7 +9,7 @@ type RemoveMessageModalProps = ModalProps & {
 }
 
 function RemoveMessageModal({ isOpen, setIsOpen, message }: RemoveMessageModalProps) {
-  const socket = useSocketStore((state) => state.socket)
+  const [socket] = useSocketStore((state) => [state.socket])
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} contentLabel="Remove message modal">

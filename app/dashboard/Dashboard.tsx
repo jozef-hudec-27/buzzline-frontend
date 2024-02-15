@@ -22,31 +22,25 @@ import MediaCallModal from './ChatMain/ChatTop/MediaCallModal'
 import { Message } from '@/app/types'
 
 function DashBoard() {
-  const { addMessage, removeMessage } = useCurrentChatMessagesStore((state) => ({
-    addMessage: state.addMessage,
-    removeMessage: state.removeMessage,
-  }))
+  const [addMessage, removeMessage] = useCurrentChatMessagesStore((state) => [state.addMessage, state.removeMessage])
   const { socket, setSocket } = useSocketStore()
-  const user = useUserStore((state) => state.user)
-  const chat = useCurrentChatStore((state) => state.chat)
-  const { fetchChats, setChats, hasFetched } = useChatsStore((state) => ({
-    fetchChats: state.fetchChats,
-    setChats: state.setChats,
-    hasFetched: state.hasFetched,
-  }))
-  const { addUser, removeUser } = useOnlineUsersStore((state) => ({
-    addUser: state.addUser,
-    removeUser: state.removeUser,
-  }))
-  const addRemovedMessage = useRemovedMessagesStore((state) => state.addRemovedMessage)
-  const { incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setLocalMediaStream } = useMediaCallStore(
-    (state) => ({
-      incomingCall: state.incomingCall,
-      setIncomingCall: state.setIncomingCall,
-      outcomingCall: state.outcomingCall,
-      setOutcomingCall: state.setOutcomingCall,
-      setLocalMediaStream: state.setLocalMediaStream,
-    })
+  const [user] = useUserStore((state) => [state.user])
+  const [chat] = useCurrentChatStore((state) => [state.chat])
+  const [fetchChats, setChats, hasFetched] = useChatsStore((state) => [
+    state.fetchChats,
+    state.setChats,
+    state.hasFetched,
+  ])
+  const [addUser, removeUser] = useOnlineUsersStore((state) => [state.addUser, state.removeUser])
+  const [addRemovedMessage] = useRemovedMessagesStore((state) => [state.addRemovedMessage])
+  const [incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setLocalMediaStream] = useMediaCallStore(
+    (state) => [
+      state.incomingCall,
+      state.setIncomingCall,
+      state.outcomingCall,
+      state.setOutcomingCall,
+      state.setLocalMediaStream,
+    ]
   )
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
