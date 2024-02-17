@@ -17,7 +17,7 @@ import ChatsPanel from './ChatsPanel/ChatsPanel'
 import PeoplePanel from './PeoplePanel/PeoplePanel'
 import ChatMain from './ChatMain/ChatMain'
 import Sidebar from './Sidebar/Sidebar'
-import MediaCallModal from './ChatMain/ChatTop/MediaCallModal'
+import MediaCallModal from './ChatMain/ChatTop/MediaCallModal/MediaCallModal'
 
 import { Message } from '@/app/types'
 
