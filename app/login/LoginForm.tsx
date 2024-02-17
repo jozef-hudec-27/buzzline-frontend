@@ -29,12 +29,15 @@ function LoginForm(props: LoginFormProps) {
   const [fetchUser] = useUserStore((state) => [state.fetchUser])
   const [initPeer] = usePeerStore((state) => [state.initPeer])
   const [socket] = useSocketStore((state) => [state.socket])
-  const [setCurrentCall, currentCall, setRemoteMediaStream, setIncomingCall] = useMediaCallStore((state) => [
-    state.setCurrentCall,
-    state.currentCall,
-    state.setRemoteMediaStream,
-    state.setIncomingCall,
-  ])
+  const [setCurrentCall, currentCall, setLocalMediaStream, setRemoteMediaStream, setIncomingCall] = useMediaCallStore(
+    (state) => [
+      state.setCurrentCall,
+      state.currentCall,
+      state.setLocalMediaStream,
+      state.setRemoteMediaStream,
+      state.setIncomingCall,
+    ]
+  )
 
   const { formState, setFormState } = props
 
@@ -57,7 +60,15 @@ function LoginForm(props: LoginFormProps) {
       const user = await fetchUser()
       const peer = await initPeer(user._id)
       peer.on('open', () =>
-        handleIncomingCall(peer, socketStef, currentCallStef, setCurrentCall, setRemoteMediaStream, setIncomingCall)
+        handleIncomingCall(
+          peer,
+          socketStef,
+          currentCallStef,
+          setCurrentCall,
+          setLocalMediaStream,
+          setRemoteMediaStream,
+          setIncomingCall
+        )
       )
       router.replace('/')
     },

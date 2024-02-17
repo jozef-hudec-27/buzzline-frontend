@@ -38,7 +38,8 @@ function ChatTop() {
 
       call?.on('close', () => {
         setCurrentCall(null)
-        stream.getTracks().forEach((track) => track.stop())
+        setLocalMediaStream(null)
+        setRemoteMediaStream(null)
       })
 
       call?.on('stream', (remoteStream) => {

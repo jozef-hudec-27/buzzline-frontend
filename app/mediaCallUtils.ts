@@ -23,6 +23,7 @@ export function handleIncomingCall(
   socketStef: MutableRefObject<Socket | null>,
   currentCallStef: MutableRefObject<Call>,
   setCurrentCall: (call: Call) => void,
+  setLocalMediaStream: (stream: MediaStream | null) => void,
   setRemoteMediaStream: (stream: MediaStream | null) => void,
   setIncomingCall: (call: Call) => void
 ) {
@@ -35,6 +36,8 @@ export function handleIncomingCall(
     } else {
       incomingCall.on('close', () => {
         setCurrentCall(null)
+        setLocalMediaStream(null)
+        setRemoteMediaStream(null)
       })
 
       incomingCall.on('stream', (remoteStream) => {

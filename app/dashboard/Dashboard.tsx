@@ -115,6 +115,7 @@ function DashBoard() {
           break
         case 'NOTI_CALLEE_IN_CALL': // Calling someone who is already in a different call
           toast('User is in another call', { icon: '❌' })
+          setLocalMediaStream(null)
           setOutcomingCall(null)
           break
         case 'NOTI_INCOMING_CALL_CLOSE': // Caller closed their call
