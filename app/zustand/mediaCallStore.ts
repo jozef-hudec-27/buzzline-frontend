@@ -15,8 +15,16 @@ type MediaCallStore = {
   localMediaStream: MediaStream | null
   setLocalMediaStream: (stream: MediaStream | null) => void
 
+  localMicMuted: boolean
+  localVideoMuted: boolean
+  setLocalDeviceMuted: (device: 'audio' | 'video', muted: boolean) => void
+
   remoteMediaStream: MediaStream | null
   setRemoteMediaStream: (stream: MediaStream | null) => void
+
+  remoteMicMuted: boolean
+  remoteVideoMuted: boolean
+  setRemoteDeviceMuted: (device: 'audio' | 'video', muted: boolean) => void
 }
 
 export default create<MediaCallStore>((set, get) => ({
@@ -47,6 +55,12 @@ export default create<MediaCallStore>((set, get) => ({
     set({ localMediaStream: stream })
   },
 
+  localMicMuted: false,
+  localVideoMuted: false,
+  setLocalDeviceMuted: (device, muted) => {
+    set(device === 'audio' ? { localMicMuted: muted } : { localVideoMuted: muted })
+  },
+
   remoteMediaStream: null,
   setRemoteMediaStream: (stream) => {
     if (!stream) {
@@ -56,5 +70,11 @@ export default create<MediaCallStore>((set, get) => ({
     }
 
     set({ remoteMediaStream: stream })
+  },
+
+  remoteMicMuted: false,
+  remoteVideoMuted: false,
+  setRemoteDeviceMuted: (device, muted) => {
+    set(device === 'audio' ? { remoteMicMuted: muted } : { remoteVideoMuted: muted })
   },
 }))

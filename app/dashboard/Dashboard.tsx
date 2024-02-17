@@ -33,15 +33,23 @@ function DashBoard() {
   ])
   const [addUser, removeUser] = useOnlineUsersStore((state) => [state.addUser, state.removeUser])
   const [addRemovedMessage] = useRemovedMessagesStore((state) => [state.addRemovedMessage])
-  const [incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setLocalMediaStream] = useMediaCallStore(
-    (state) => [
-      state.incomingCall,
-      state.setIncomingCall,
-      state.outcomingCall,
-      state.setOutcomingCall,
-      state.setLocalMediaStream,
-    ]
-  )
+  const [
+    currentCall,
+    incomingCall,
+    setIncomingCall,
+    outcomingCall,
+    setOutcomingCall,
+    setLocalMediaStream,
+    setRemoteDeviceMuted,
+  ] = useMediaCallStore((state) => [
+    state.currentCall,
+    state.incomingCall,
+    state.setIncomingCall,
+    state.outcomingCall,
+    state.setOutcomingCall,
+    state.setLocalMediaStream,
+    state.setRemoteDeviceMuted,
+  ])
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
   const [typingUsers, setTypingUsers] = useState<string[]>([])
@@ -107,6 +115,7 @@ function DashBoard() {
           break
         case 'NOTI_CALLEE_IN_CALL': // Calling someone who is already in a different call
           toast('User is in another call', { icon: '❌' })
+          setOutcomingCall(null)
           break
         case 'NOTI_INCOMING_CALL_CLOSE': // Caller closed their call
           if (incomingCall && incomingCall.peer === data.from) {
@@ -117,6 +126,12 @@ function DashBoard() {
           if (outcomingCall && outcomingCall.peer === data.from) {
             setOutcomingCall(null)
             setLocalMediaStream(null)
+          }
+          break
+        case 'NOTI_DEVICE_MUTE_TOGGLE': // Calle muted or unmuted their device
+          if (currentCall && currentCall.peer === data.from) {
+            const { kind, enabled } = data.device
+            setRemoteDeviceMuted(kind, !enabled)
           }
           break
       }
@@ -152,7 +167,7 @@ function DashBoard() {
       scket.off('notification')
       scket.off('onlineStatus')
     }
-  }, [chat, user, hasFetched, typingUsers, incomingCall, outcomingCall])
+  }, [chat, user, hasFetched, typingUsers, currentCall, incomingCall, outcomingCall])
 
   return (
     <div className="flex flex-col sm:flex-row h-[100vh] ">

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, use } from 'react'
-import { TelephoneFill, CameraVideoFill, X } from 'react-bootstrap-icons'
+import { useState, useEffect, useRef } from 'react'
+import { TelephoneFill, CameraVideoFill, CameraVideoOffFill, X, MicFill, MicMuteFill } from 'react-bootstrap-icons'
 
 import useMediaCallStore from '@/app/zustand/mediaCallStore'
 import useChatsStore from '@/app/zustand/chatsStore'
@@ -29,6 +29,12 @@ function MediaCallModal() {
     localMediaStream,
     setLocalMediaStream,
     remoteMediaStream,
+    localMicMuted,
+    localVideoMuted,
+    setLocalDeviceMuted,
+    remoteMicMuted,
+    remoteVideoMuted,
+    setRemoteDeviceMuted,
   } = useMediaCallStore()
   const [chats] = useChatsStore((state) => [state.chats])
   const [socket] = useSocketStore((state) => [state.socket])
@@ -93,24 +99,122 @@ function MediaCallModal() {
     const remoteVideo = remoteVideoRef.current
 
     if (localMediaStream && localVideo && !localVideo.srcObject) {
+      localMediaStream.getTracks().forEach((track) => {
+        setLocalDeviceMuted(track.kind as 'audio' | 'video', !track.enabled)
+      })
+
       localVideo.srcObject = localMediaStream
       localVideo.play()
     }
 
     if (remoteMediaStream && remoteVideo && !remoteVideo.srcObject) {
+      remoteMediaStream.getTracks().forEach((track) => {
+        setRemoteDeviceMuted(track.kind as 'audio' | 'video', !track.enabled)
+      })
+
       remoteVideo.srcObject = remoteMediaStream
       remoteVideo.play()
     }
   }, [localMediaStream, remoteMediaStream])
 
+  function toggleLocalDeviceMuted(kind: 'audio' | 'video') {
+    if (!localMediaStream) return
+
+    localMediaStream.getTracks().forEach((track) => {
+      if (track.kind !== kind) return
+
+      const enabled = !track.enabled
+      track.enabled = enabled
+
+      socket?.emit('notification', {
+        from: user._id,
+        to: friend?._id,
+        type: 'NOTI_DEVICE_MUTE_TOGGLE',
+        device: { kind, enabled },
+      })
+
+      setLocalDeviceMuted(kind, !enabled)
+    })
+  }
+
   return (
     friend && (
-      <Modal isOpen={isOpen} setIsOpen={function () {}}>
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={function () {}}
+        contentLabel={
+          currentCall
+            ? `Call with ${friend.firstName} modal`
+            : incomingCall
+            ? `Calling ${friend.firstName} modal`
+            : `Incoming call from ${friend.firstName} modal`
+        }
+        cls={currentCall ? '!w-full !bg-transparent' : undefined}
+      >
         {currentCall ? (
           <>
-            <div className="flex">
-              <video className="w-[400px] h-[300px]" ref={localVideoRef}></video>
-              <video className="w-[400px] h-[300px]" ref={remoteVideoRef}></video>
+            <div>
+              <div className="w-fit relative mx-auto">
+                {remoteMicMuted && (
+                  <MicMuteFill
+                    className="absolute top-[16px] left-[16px] text-white"
+                    size={16}
+                    aria-label={`${friend.firstName}'s microphone is muted`}
+                  />
+                )}
+
+                <div className="absolute top-[16px] right-[16px]">
+                  <video
+                    className={`w-[320px] h-auto rounded-[8px] border-[2px] border-primary ${
+                      localVideoMuted && 'hidden'
+                    }`}
+                    ref={localVideoRef}
+                  ></video>
+                </div>
+
+                <div className="bg-[rgb(0,0,0,0.8)]">
+                  <video className="w-[960px] h-[540px]" ref={remoteVideoRef}></video>
+                  {remoteVideoMuted && (
+                    <img
+                      className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full"
+                      src={friend.avatarUrl}
+                      alt={`${friend.firstName} ${friend.lastName} avatar`}
+                    />
+                  )}
+                </div>
+
+                <div className="absolute left-1/2 -translate-x-1/2 px-[20px] py-[12px] rounded-full bottom-[12px] flex justify-center items-center gap-[20px] bg-[rgb(0,0,0,0.6)]">
+                  <button
+                    className="p-[6px] bg-white rounded-full hover:opacity-90 focus:opacity-90"
+                    onClick={() => toggleLocalDeviceMuted('audio')}
+                    aria-label={`${localMicMuted ? 'un' : ''}mute microphone`}
+                  >
+                    {!localMicMuted ? (
+                      <MicFill className="text-primary" size={20} aria-hidden />
+                    ) : (
+                      <MicMuteFill className="text-primary" size={20} aria-hidden />
+                    )}
+                  </button>
+                  <button
+                    className="p-[6px] bg-white rounded-full hover:opacity-90 focus:opacity-90"
+                    onClick={() => toggleLocalDeviceMuted('video')}
+                    aria-label={`${localMicMuted ? 'un' : ''}mute camera`}
+                  >
+                    {!localVideoMuted ? (
+                      <CameraVideoFill className="text-primary" size={20} aria-hidden />
+                    ) : (
+                      <CameraVideoOffFill className="text-primary" size={20} aria-hidden />
+                    )}
+                  </button>
+                  <button
+                    className="p-[6px] bg-red-500 rounded-full hover:opacity-90 focus:opacity-90"
+                    onClick={() => currentCall.close()}
+                    aria-label="Close call"
+                  >
+                    <X className="text-white" size={20} aria-hidden />
+                  </button>
+                </div>
+              </div>
             </div>
           </>
         ) : (
