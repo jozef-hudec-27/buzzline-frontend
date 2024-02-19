@@ -18,6 +18,13 @@ export default create<PeerStore>((set, get) => ({
     const PeerJs = (await import('peerjs')).default
     const peer = new PeerJs(peerId)
     set({ peer })
+
+    window.addEventListener('beforeunload', (e) => {
+      if (!peer.destroyed) peer.destroy()
+
+      e.preventDefault()
+    })
+
     return peer
   },
 }))

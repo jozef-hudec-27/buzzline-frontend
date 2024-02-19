@@ -1,67 +1,20 @@
 import { useState, useEffect } from 'react'
-import { TelephoneFill, CameraVideoFill, X } from 'react-bootstrap-icons'
 
 import useMediaCallStore from '@/app/zustand/mediaCallStore'
 import useChatsStore from '@/app/zustand/chatsStore'
-import useSocketStore from '@/app/zustand/socketStore'
-import useUserStore from '@/app/zustand/userStore'
 
 import CurrentCall from './CurrentCall'
+import ComingCall from './ComingCall'
 import Modal from '@/app/components/Modal/Modal'
-import Avatar from '@/app/components/avatar/Avatar'
-import { accessUserMediaCatchHandler } from '@/app/mediaCallUtils'
 
 import { User } from '@/app/types'
 
 function MediaCallModal() {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [friend, setFriend] = useState<User | null>(null)
 
-  const {
-    incomingCall,
-    setIncomingCall,
-    outcomingCall,
-    setOutcomingCall,
-    currentCall,
-    setCurrentCall,
-    setLocalMediaStream,
-  } = useMediaCallStore()
+  const { incomingCall, outcomingCall, currentCall } = useMediaCallStore()
   const [chats] = useChatsStore((state) => [state.chats])
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [user] = useUserStore((state) => [state.user])
-
-  function closeOutcomingCall() {
-    setLocalMediaStream(null)
-    socket?.emit('notification', {
-      from: user._id,
-      to: outcomingCall?.peer,
-      type: 'NOTI_INCOMING_CALL_CLOSE',
-    })
-    setOutcomingCall(null)
-  }
-
-  function declineIncomingCall() {
-    socket?.emit('notification', {
-      from: user._id,
-      to: incomingCall?.peer,
-      type: 'NOTI_OUTCOMING_CALL_DECLINE',
-    })
-    setIncomingCall(null)
-  }
-
-  async function answerIncomingCall() {
-    const isVideoCall = !!incomingCall?.metadata?.video
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideoCall })
-      incomingCall?.answer(stream)
-      setLocalMediaStream(stream)
-      setCurrentCall(incomingCall)
-    } catch (e) {
-      accessUserMediaCatchHandler(e, isVideoCall)
-      declineIncomingCall()
-    }
-  }
 
   useEffect(() => {
     const call = incomingCall || outcomingCall || currentCall
@@ -84,6 +37,22 @@ function MediaCallModal() {
     }
   }, [incomingCall, outcomingCall, currentCall, friend, chats])
 
+  useEffect(() => {
+    const ringtoneAudio = document.getElementById('ringtone-audio') as HTMLAudioElement
+    if (!ringtoneAudio) return
+
+    ringtoneAudio.currentTime = 0
+
+    const play = isOpen && !currentCall
+
+    if (play) {
+      ringtoneAudio.play().catch(function () {})
+    } else {
+      ringtoneAudio.pause()
+      ringtoneAudio.currentTime = 999 // finish audio track
+    }
+  }, [currentCall, isOpen])
+
   return (
     friend && (
       <Modal
@@ -96,51 +65,9 @@ function MediaCallModal() {
             ? `Calling ${friend.firstName} modal`
             : `Incoming call from ${friend.firstName} modal`
         }
-        cls={currentCall ? '!w-full !bg-transparent' : undefined}
+        cls={currentCall ? '!w-full !bg-transparent' : '!lg:w-1/3'}
       >
-        {currentCall ? (
-          <CurrentCall friend={friend} />
-        ) : (
-          <>
-            <Avatar src={friend.avatarUrl} size={48} alt={`${friend.firstName} ${friend.lastName}`} />
-
-            <p>
-              {incomingCall
-                ? `${friend.firstName} ${friend.lastName} is calling you`
-                : `Calling ${friend.firstName} ${friend.lastName}`}
-            </p>
-
-            <div className="flex">
-              {incomingCall ? (
-                <>
-                  <button
-                    className="bg-red-500 text-white"
-                    aria-label={`Decline ${incomingCall.metadata?.video ? 'video' : 'audio'} call`}
-                    onClick={declineIncomingCall}
-                  >
-                    <X size={24} aria-hidden />
-                  </button>
-
-                  <button
-                    className="bg-online text-white"
-                    aria-label={`Accept ${incomingCall.metadata?.video ? 'video' : 'audio'} call`}
-                    onClick={answerIncomingCall}
-                  >
-                    {incomingCall.metadata?.video ? (
-                      <CameraVideoFill size={24} aria-hidden />
-                    ) : (
-                      <TelephoneFill size={24} aria-hidden />
-                    )}
-                  </button>
-                </>
-              ) : (
-                <button className="bg-red-500 text-white" aria-label="Close call" onClick={closeOutcomingCall}>
-                  <X size={24} aria-hidden />
-                </button>
-              )}
-            </div>
-          </>
-        )}
+        {currentCall ? <CurrentCall friend={friend} /> : <ComingCall friend={friend} />}
       </Modal>
     )
   )

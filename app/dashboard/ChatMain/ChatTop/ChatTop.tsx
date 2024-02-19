@@ -5,36 +5,41 @@ import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import usePeerStore from '@/app/zustand/peerStore'
 import useMediaCallStore from '@/app/zustand/mediaCallStore'
+import useSocketStore from '@/app/zustand/socketStore'
 
+import useStef from '@/app/hooks/useStef'
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils'
-import { accessUserMediaCatchHandler } from '@/app/mediaCallUtils'
+import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/mediaCallUtils'
 
 function ChatTop() {
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
   const [chat] = useCurrentChatStore((state) => [state.chat])
   const [peer] = usePeerStore((state) => [state.peer])
-  const [setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream] = useMediaCallStore(
-    (state) => [
+  const [outcomingCall, setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream] =
+    useMediaCallStore((state) => [
+      state.outcomingCall,
       state.setOutcomingCall,
       state.currentCall,
       state.setCurrentCall,
       state.setLocalMediaStream,
       state.setRemoteMediaStream,
-    ]
-  )
+    ])
+  const [socket] = useSocketStore((state) => [state.socket])
+
+  const outcomingCallStef = useStef(outcomingCall)
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))
 
   async function callUser(video: boolean, remotePeerId: string) {
-    if (currentCall) return
+    if (currentCall || !peer) return
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video })
       setLocalMediaStream(stream)
 
-      const call = peer?.call(remotePeerId, stream, { metadata: { video } })
+      const call = peer.call(remotePeerId, stream, { metadata: { video } })
 
       call?.on('close', () => {
         setCurrentCall(null)
@@ -47,7 +52,21 @@ function ChatTop() {
         setRemoteMediaStream(remoteStream)
       })
 
-      if (call) setOutcomingCall(call)
+      if (call) {
+        setOutcomingCall(call)
+
+        setTimeout(() => {
+          if (call.open || call !== outcomingCallStef.current) return
+          closeOutcomingCall({
+            paramsType: 'val',
+            userId: peer.id,
+            socket,
+            outcomingCall: call,
+            setOutcomingCall,
+            setLocalMediaStream,
+          })
+        }, 30000)
+      }
     } catch (e) {
       accessUserMediaCatchHandler(e, video)
     }

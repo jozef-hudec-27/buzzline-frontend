@@ -100,7 +100,7 @@ function DashBoard() {
         case 'NOTI_MESSAGE':
           if (data.message?.sender?._id !== user._id && data.from !== chat?._id) {
             const notiAudio = document.getElementById('noti-audio') as HTMLAudioElement
-            notiAudio?.play()
+            notiAudio?.play().catch(function () {})
           }
 
           // Update chats panel
@@ -186,8 +186,8 @@ function DashBoard() {
 
       <ChatMain typingUsers={typingUsers} setTypingUsers={setTypingUsers} />
 
-      <audio src="assets/sounds/noti.wav" className="hidden" id="noti-audio"></audio>
-
+      <audio src="assets/sounds/message-notification.mp3" className="hidden" id="noti-audio"></audio>
+      <audio src="assets/sounds/call-ringtone.mp3" className="hidden" id="ringtone-audio"></audio>
       <MediaCallModal />
     </div>
   )

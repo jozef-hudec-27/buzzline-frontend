@@ -195,6 +195,15 @@ a {
   }
 }
 
+@mixin call__action($padding) {
+  padding: $padding;
+  @apply rounded-full hover:opacity-90 focus:opacity-90 text-white;
+}
+
 .current-call__action {
-  @apply p-[6px] rounded-full hover:opacity-90 focus:opacity-90;
+  @include call__action(6px);
+}
+
+.coming-call__action {
+  @include call__action(8px);
 }

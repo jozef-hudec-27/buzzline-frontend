@@ -48,3 +48,27 @@ export function handleIncomingCall(
     }
   })
 }
+
+type CloseOutcomingCallParams = {
+  userId: string
+  setOutcomingCall: (call: Call) => void
+  setLocalMediaStream: (stream: MediaStream | null) => void
+} & (
+  | { paramsType: 'val'; socket: Socket | null; outcomingCall: Call }
+  | { paramsType: 'ref'; socketStef: MutableRefObject<Socket | null>; outcomingCallStef: MutableRefObject<Call> }
+)
+
+export function closeOutcomingCall(params: CloseOutcomingCallParams) {
+  const { paramsType, userId, setOutcomingCall, setLocalMediaStream } = params
+
+  const s = paramsType === 'val' ? params.socket : params.socketStef.current
+  const oc = paramsType === 'val' ? params.outcomingCall : params.outcomingCallStef.current
+
+  setLocalMediaStream(null)
+  s?.emit('notification', {
+    from: userId,
+    to: oc?.peer,
+    type: 'NOTI_INCOMING_CALL_CLOSE',
+  })
+  setOutcomingCall(null)
+}

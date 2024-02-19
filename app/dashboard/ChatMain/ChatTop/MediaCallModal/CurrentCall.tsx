@@ -140,7 +140,7 @@ function CurrentCall({ friend }: { friend: User }) {
             onClick={() => currentCall.close()}
             aria-label="Close call"
           >
-            <X className="text-white" size={20} aria-hidden />
+            <X size={20} aria-hidden />
           </button>
         </div>
       </div>
