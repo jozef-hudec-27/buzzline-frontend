@@ -7,7 +7,6 @@ import usePeerStore from './zustand/peerStore'
 import useMediaCallStore from './zustand/mediaCallStore'
 import useSocketStore from './zustand/socketStore'
 
-import useStef from './hooks/useStef'
 import { handleIncomingCall, closeOutcomingCall } from './mediaCallUtils'
 
 function FetchUser() {
@@ -15,26 +14,24 @@ function FetchUser() {
   const [initPeer] = usePeerStore((state) => [state.initPeer])
   const [
     setCurrentCall,
-    currentCall,
+    currentCallRef,
     setLocalMediaStream,
     setRemoteMediaStream,
     setIncomingCall,
+    incomingCallRef,
     setOutcomingCall,
-    outcomingCall,
+    outcomingCallRef,
   ] = useMediaCallStore((state) => [
     state.setCurrentCall,
-    state.currentCall,
+    state.currentCallRef,
     state.setLocalMediaStream,
     state.setRemoteMediaStream,
     state.setIncomingCall,
+    state.incomingCallRef,
     state.setOutcomingCall,
-    state.outcomingCall,
+    state.outcomingCallRef,
   ])
-  const [socket] = useSocketStore((state) => [state.socket])
-
-  const currentCallStef = useStef(currentCall)
-    const socketStef = useStef(socket)
-    const outcomingCallStef = useStef(outcomingCall)
+  const [socketRef] = useSocketStore((state) => [state.socketRef])
 
   useEffect(() => {
     const fn = async () => {
@@ -43,12 +40,12 @@ function FetchUser() {
         const peer = await initPeer(user._id)
 
         peer.on('disconnected', () => {
-          if (!outcomingCallStef.current) return
+          if (!outcomingCallRef.current) return
           closeOutcomingCall({
             paramsType: 'ref',
             userId: user._id,
-            socketStef,
-            outcomingCallStef,
+            socketRef,
+            outcomingCallRef,
             setOutcomingCall,
             setLocalMediaStream,
           })
@@ -57,12 +54,14 @@ function FetchUser() {
         peer.on('open', () =>
           handleIncomingCall(
             peer,
-            socketStef,
-            currentCallStef,
+            socketRef,
+            currentCallRef,
             setCurrentCall,
             setLocalMediaStream,
             setRemoteMediaStream,
-            setIncomingCall
+            incomingCallRef,
+            setIncomingCall,
+            outcomingCallRef
           )
         )
       } catch (e) {

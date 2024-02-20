@@ -20,14 +20,12 @@ function MediaCallModal() {
     const call = incomingCall || outcomingCall || currentCall
 
     if (call) {
-      if (!friend) {
-        for (let i = 0; i < chats.length; i++) {
-          const u = chats[i].users.find((u) => u._id === call.peer)
+      for (let i = 0; i < chats.length; i++) {
+        const u = chats[i].users.find((u) => u._id === call.peer)
 
-          if (u) {
-            setFriend(u)
-            break
-          }
+        if (u) {
+          setFriend(u)
+          break
         }
       }
 

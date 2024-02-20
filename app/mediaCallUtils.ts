@@ -20,16 +20,18 @@ export function accessUserMediaCatchHandler(e: any, video = false) {
 
 export function handleIncomingCall(
   peer: Peer,
-  socketStef: MutableRefObject<Socket | null>,
-  currentCallStef: MutableRefObject<Call>,
+  socketRef: MutableRefObject<Socket | null>,
+  currentCallRef: MutableRefObject<Call>,
   setCurrentCall: (call: Call) => void,
   setLocalMediaStream: (stream: MediaStream | null) => void,
   setRemoteMediaStream: (stream: MediaStream | null) => void,
-  setIncomingCall: (call: Call) => void
+  incomingCallRef: MutableRefObject<Call>,
+  setIncomingCall: (call: Call) => void,
+  outcomingCallRef: MutableRefObject<Call>
 ) {
   peer.on('call', (incomingCall) => {
-    if (currentCallStef.current) {
-      socketStef.current?.emit('notification', {
+    if (currentCallRef.current || outcomingCallRef.current || incomingCallRef.current) {
+      socketRef.current?.emit('notification', {
         to: incomingCall.peer,
         type: 'NOTI_CALLEE_IN_CALL',
       })
@@ -55,14 +57,14 @@ type CloseOutcomingCallParams = {
   setLocalMediaStream: (stream: MediaStream | null) => void
 } & (
   | { paramsType: 'val'; socket: Socket | null; outcomingCall: Call }
-  | { paramsType: 'ref'; socketStef: MutableRefObject<Socket | null>; outcomingCallStef: MutableRefObject<Call> }
+  | { paramsType: 'ref'; socketRef: MutableRefObject<Socket | null>; outcomingCallRef: MutableRefObject<Call> }
 )
 
 export function closeOutcomingCall(params: CloseOutcomingCallParams) {
   const { paramsType, userId, setOutcomingCall, setLocalMediaStream } = params
 
-  const s = paramsType === 'val' ? params.socket : params.socketStef.current
-  const oc = paramsType === 'val' ? params.outcomingCall : params.outcomingCallStef.current
+  const s = paramsType === 'val' ? params.socket : params.socketRef.current
+  const oc = paramsType === 'val' ? params.outcomingCall : params.outcomingCallRef.current
 
   setLocalMediaStream(null)
   s?.emit('notification', {

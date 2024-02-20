@@ -21,8 +21,6 @@ export default create<PeerStore>((set, get) => ({
 
     window.addEventListener('beforeunload', (e) => {
       if (!peer.destroyed) peer.destroy()
-
-      e.preventDefault()
     })
 
     return peer

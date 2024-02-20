@@ -12,7 +12,6 @@ import useSocketStore from '../zustand/socketStore'
 
 import api from '@/app/api/axiosInstance'
 import { handleIncomingCall, closeOutcomingCall } from '@/app/mediaCallUtils'
-import useStef from '@/app/hooks/useStef'
 
 import { LoginFormState } from '@/app/types'
 import { AxiosError } from 'axios'
@@ -28,30 +27,28 @@ function LoginForm(props: LoginFormProps) {
 
   const [fetchUser] = useUserStore((state) => [state.fetchUser])
   const [initPeer] = usePeerStore((state) => [state.initPeer])
-  const [socket] = useSocketStore((state) => [state.socket])
+  const [socketRef] = useSocketStore((state) => [state.socketRef])
   const [
     setCurrentCall,
-    currentCall,
+    currentCallRef,
     setLocalMediaStream,
     setRemoteMediaStream,
     setIncomingCall,
+    incomingCallRef,
     setOutcomingCall,
-    outcomingCall,
+    outcomingCallRef,
   ] = useMediaCallStore((state) => [
     state.setCurrentCall,
-    state.currentCall,
+    state.currentCallRef,
     state.setLocalMediaStream,
     state.setRemoteMediaStream,
     state.setIncomingCall,
+    state.incomingCallRef,
     state.setOutcomingCall,
-    state.outcomingCall,
+    state.outcomingCallRef,
   ])
 
   const { formState, setFormState } = props
-
-  const currentCallStef = useStef(currentCall)
-  const socketStef = useStef(socket)
-  const outcomingCallStef = useStef(outcomingCall)
 
   const changeState = <T extends LoginFormState>(key: keyof T, value: string) => {
     // @ts-ignore
@@ -70,12 +67,12 @@ function LoginForm(props: LoginFormProps) {
       const peer = await initPeer(user._id)
 
       peer.on('disconnected', () => {
-        if (!outcomingCallStef.current) return
+        if (!outcomingCallRef.current) return
         closeOutcomingCall({
           paramsType: 'ref',
           userId: user._id,
-          socketStef,
-          outcomingCallStef,
+          socketRef,
+          outcomingCallRef,
           setOutcomingCall,
           setLocalMediaStream,
         })
@@ -84,12 +81,14 @@ function LoginForm(props: LoginFormProps) {
       peer.on('open', () =>
         handleIncomingCall(
           peer,
-          socketStef,
-          currentCallStef,
+          socketRef,
+          currentCallRef,
           setCurrentCall,
           setLocalMediaStream,
           setRemoteMediaStream,
-          setIncomingCall
+          incomingCallRef,
+          setIncomingCall,
+          outcomingCallRef
         )
       )
 

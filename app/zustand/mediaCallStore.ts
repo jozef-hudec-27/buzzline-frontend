@@ -1,16 +1,20 @@
 import { create } from 'zustand'
 
 import { Call } from '../types'
+import { MutableRefObject } from 'react'
 
 type MediaCallStore = {
   incomingCall: Call
   setIncomingCall: (call: Call) => void
+  incomingCallRef: MutableRefObject<Call>
 
   outcomingCall: Call
   setOutcomingCall: (call: Call) => void
+  outcomingCallRef: MutableRefObject<Call>
 
   currentCall: Call
   setCurrentCall: (call: Call) => void
+  currentCallRef: MutableRefObject<Call>
 
   localMediaStream: MediaStream | null
   setLocalMediaStream: (stream: MediaStream | null) => void
@@ -29,19 +33,32 @@ type MediaCallStore = {
 
 export default create<MediaCallStore>((set, get) => ({
   incomingCall: null,
-  setIncomingCall: (call) => set({ incomingCall: call }),
+  setIncomingCall: (call) => {
+    set({ incomingCall: call })
+    get().incomingCallRef.current = call
+  },
+  incomingCallRef: { current: null },
 
   outcomingCall: null,
-  setOutcomingCall: (call) => set({ outcomingCall: call }),
+  setOutcomingCall: (call) => {
+    set({ outcomingCall: call })
+    get().outcomingCallRef.current = call
+  },
+  outcomingCallRef: { current: null },
 
   currentCall: null,
   setCurrentCall: (call) => {
+    get().currentCallRef.current = call
+
     if (call) {
-      set({ currentCall: call, outcomingCall: null, incomingCall: null })
+      set({ currentCall: call })
+      get().setIncomingCall(null)
+      get().setOutcomingCall(null)
     } else {
       set({ currentCall: call })
     }
   },
+  currentCallRef: { current: null },
 
   localMediaStream: null,
   setLocalMediaStream: (stream) => {

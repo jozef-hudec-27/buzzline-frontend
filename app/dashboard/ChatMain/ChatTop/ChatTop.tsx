@@ -7,7 +7,6 @@ import usePeerStore from '@/app/zustand/peerStore'
 import useMediaCallStore from '@/app/zustand/mediaCallStore'
 import useSocketStore from '@/app/zustand/socketStore'
 
-import useStef from '@/app/hooks/useStef'
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils'
 import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/mediaCallUtils'
@@ -16,9 +15,9 @@ function ChatTop() {
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
   const [chat] = useCurrentChatStore((state) => [state.chat])
   const [peer] = usePeerStore((state) => [state.peer])
-  const [outcomingCall, setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream] =
+  const [outcomingCallRef, setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream] =
     useMediaCallStore((state) => [
-      state.outcomingCall,
+      state.outcomingCallRef,
       state.setOutcomingCall,
       state.currentCall,
       state.setCurrentCall,
@@ -26,8 +25,6 @@ function ChatTop() {
       state.setRemoteMediaStream,
     ])
   const [socket] = useSocketStore((state) => [state.socket])
-
-  const outcomingCallStef = useStef(outcomingCall)
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))
@@ -56,7 +53,7 @@ function ChatTop() {
         setOutcomingCall(call)
 
         setTimeout(() => {
-          if (call.open || call !== outcomingCallStef.current) return
+          if (call.open || call !== outcomingCallRef.current) return
           closeOutcomingCall({
             paramsType: 'val',
             userId: peer.id,
