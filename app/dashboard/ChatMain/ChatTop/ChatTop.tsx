@@ -8,8 +8,8 @@ import useMediaCallStore from '@/app/zustand/mediaCallStore'
 import useSocketStore from '@/app/zustand/socketStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
-import { restrictLength } from '@/app/utils'
-import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/mediaCallUtils'
+import { restrictLength } from '@/app/utils/utils'
+import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/utils/mediaCallUtils'
 
 function ChatTop() {
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])

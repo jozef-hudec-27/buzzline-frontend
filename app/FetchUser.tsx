@@ -7,7 +7,7 @@ import usePeerStore from './zustand/peerStore'
 import useMediaCallStore from './zustand/mediaCallStore'
 import useSocketStore from './zustand/socketStore'
 
-import { handleIncomingCall, closeOutcomingCall } from './mediaCallUtils'
+import { configurePeer } from './utils/peerUtils'
 
 function FetchUser() {
   const [fetchUser] = useUserStore((state) => [state.fetchUser])
@@ -39,31 +39,19 @@ function FetchUser() {
         const user = await fetchUser()
         const peer = await initPeer(user._id)
 
-        peer.on('disconnected', () => {
-          if (!outcomingCallRef.current) return
-          closeOutcomingCall({
-            paramsType: 'ref',
-            userId: user._id,
-            socketRef,
-            outcomingCallRef,
-            setOutcomingCall,
-            setLocalMediaStream,
-          })
+        configurePeer({
+          peer,
+          userId: user._id,
+          socketRef,
+          currentCallRef,
+          setCurrentCall,
+          setLocalMediaStream,
+          setRemoteMediaStream,
+          incomingCallRef,
+          setIncomingCall,
+          outcomingCallRef,
+          setOutcomingCall,
         })
-
-        peer.on('open', () =>
-          handleIncomingCall(
-            peer,
-            socketRef,
-            currentCallRef,
-            setCurrentCall,
-            setLocalMediaStream,
-            setRemoteMediaStream,
-            incomingCallRef,
-            setIncomingCall,
-            outcomingCallRef
-          )
-        )
       } catch (e) {
         console.log(e)
       }

@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast'
 import { Peer } from 'peerjs'
 import { Socket } from 'socket.io-client'
 import { MutableRefObject } from 'react'
-import { Call } from './types'
+import { Call } from '../types'
 
 export function accessUserMediaCatchHandler(e: any, video = false) {
   switch (e.name) {

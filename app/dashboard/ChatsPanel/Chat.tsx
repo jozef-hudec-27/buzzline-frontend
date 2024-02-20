@@ -8,7 +8,7 @@ import useChatsStore from '@/app/zustand/chatsStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
-import { restrictLength, timeSince, randomInt } from '@/app/utils'
+import { restrictLength, timeSince, randomInt } from '@/app/utils/utils'
 
 import { ChatIndex } from '@/app/types'
 

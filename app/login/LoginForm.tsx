@@ -11,7 +11,7 @@ import useMediaCallStore from '../zustand/mediaCallStore'
 import useSocketStore from '../zustand/socketStore'
 
 import api from '@/app/api/axiosInstance'
-import { handleIncomingCall, closeOutcomingCall } from '@/app/mediaCallUtils'
+import { configurePeer } from '../utils/peerUtils'
 
 import { LoginFormState } from '@/app/types'
 import { AxiosError } from 'axios'
@@ -66,31 +66,19 @@ function LoginForm(props: LoginFormProps) {
       const user = await fetchUser()
       const peer = await initPeer(user._id)
 
-      peer.on('disconnected', () => {
-        if (!outcomingCallRef.current) return
-        closeOutcomingCall({
-          paramsType: 'ref',
-          userId: user._id,
-          socketRef,
-          outcomingCallRef,
-          setOutcomingCall,
-          setLocalMediaStream,
-        })
+      configurePeer({
+        peer,
+        userId: user._id,
+        socketRef,
+        currentCallRef,
+        setCurrentCall,
+        setLocalMediaStream,
+        setRemoteMediaStream,
+        incomingCallRef,
+        setIncomingCall,
+        outcomingCallRef,
+        setOutcomingCall,
       })
-
-      peer.on('open', () =>
-        handleIncomingCall(
-          peer,
-          socketRef,
-          currentCallRef,
-          setCurrentCall,
-          setLocalMediaStream,
-          setRemoteMediaStream,
-          incomingCallRef,
-          setIncomingCall,
-          outcomingCallRef
-        )
-      )
 
       router.replace('/')
     },

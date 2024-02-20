@@ -5,7 +5,7 @@ import useSocketStore from '@/app/zustand/socketStore'
 import useUserStore from '@/app/zustand/userStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
-import { accessUserMediaCatchHandler, closeOutcomingCall as closeMyCall } from '@/app/mediaCallUtils'
+import { accessUserMediaCatchHandler, closeOutcomingCall as closeMyCall } from '@/app/utils/mediaCallUtils'
 
 import { User } from '@/app/types'
 
