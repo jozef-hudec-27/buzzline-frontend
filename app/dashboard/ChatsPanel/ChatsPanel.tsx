@@ -1,7 +1,7 @@
 import { Search, PersonFillAdd } from 'react-bootstrap-icons'
 import { memo, useState } from 'react'
 
-import useChatsStore from '../../zustand/chatsStore'
+import useChatsStore from '@/app/zustand/chatsStore'
 
 import NewChatModal from './NewChatModal'
 import Chat from './Chat'

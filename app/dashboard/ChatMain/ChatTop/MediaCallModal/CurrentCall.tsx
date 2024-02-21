@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { MicFill, MicMuteFill, CameraVideoFill, CameraVideoOffFill, X } from 'react-bootstrap-icons'
 
-import useMediaCallStore from '@/app/zustand/mediaCallStore'
-import useSocketStore from '@/app/zustand/socketStore'
 import useUserStore from '@/app/zustand/userStore'
+import useSocketStore from '@/app/zustand/socketStore'
+import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
+import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { accessUserMediaCatchHandler } from '@/app/utils/mediaCallUtils'
@@ -14,6 +15,9 @@ function CurrentCall({ friend }: { friend: User }) {
   const localVideoRef = useRef<HTMLVideoElement>(null)
   const remoteVideoRef = useRef<HTMLVideoElement>(null)
 
+  const [user] = useUserStore((state) => [state.user])
+  const [socket] = useSocketStore((state) => [state.socket])
+  const [currentCall] = useMediaCallStore((state) => [state.currentCall])
   const [
     localMediaStream,
     localMicMuted,
@@ -23,8 +27,7 @@ function CurrentCall({ friend }: { friend: User }) {
     remoteMicMuted,
     remoteVideoMuted,
     setRemoteDeviceMuted,
-    currentCall,
-  ] = useMediaCallStore((state) => [
+  ] = useMediaStreamStore((state) => [
     state.localMediaStream,
     state.localMicMuted,
     state.localVideoMuted,
@@ -33,10 +36,7 @@ function CurrentCall({ friend }: { friend: User }) {
     state.remoteMicMuted,
     state.remoteVideoMuted,
     state.setRemoteDeviceMuted,
-    state.currentCall,
   ])
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [user] = useUserStore((state) => [state.user])
 
   function initStream(
     stream: MediaStream | null,

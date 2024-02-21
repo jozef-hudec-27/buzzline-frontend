@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
 import useUserStore from '../zustand/userStore'
-import usePeerStore from '../zustand/peerStore'
-import useMediaCallStore from '../zustand/mediaCallStore'
 import useSocketStore from '../zustand/socketStore'
+import usePeerStore from '../zustand/webrtc/peerStore'
+import useMediaCallStore from '../zustand/webrtc/mediaCallStore'
+import useMediaStreamStore from '../zustand/webrtc/mediaStreamStore'
 
 import api from '@/app/api/axiosInstance'
 import { configurePeer } from '../utils/peerUtils'
@@ -26,26 +27,20 @@ function LoginForm(props: LoginFormProps) {
   const router = useRouter()
 
   const [fetchUser] = useUserStore((state) => [state.fetchUser])
-  const [initPeer] = usePeerStore((state) => [state.initPeer])
   const [socketRef] = useSocketStore((state) => [state.socketRef])
-  const [
-    setCurrentCall,
-    currentCallRef,
-    setLocalMediaStream,
-    setRemoteMediaStream,
-    setIncomingCall,
-    incomingCallRef,
-    setOutcomingCall,
-    outcomingCallRef,
-  ] = useMediaCallStore((state) => [
-    state.setCurrentCall,
-    state.currentCallRef,
+  const [initPeer] = usePeerStore((state) => [state.initPeer])
+  const [setCurrentCall, currentCallRef, setIncomingCall, incomingCallRef, setOutcomingCall, outcomingCallRef] =
+    useMediaCallStore((state) => [
+      state.setCurrentCall,
+      state.currentCallRef,
+      state.setIncomingCall,
+      state.incomingCallRef,
+      state.setOutcomingCall,
+      state.outcomingCallRef,
+    ])
+  const [setLocalMediaStream, setRemoteMediaStream] = useMediaStreamStore((state) => [
     state.setLocalMediaStream,
     state.setRemoteMediaStream,
-    state.setIncomingCall,
-    state.incomingCallRef,
-    state.setOutcomingCall,
-    state.outcomingCallRef,
   ])
 
   const { formState, setFormState } = props

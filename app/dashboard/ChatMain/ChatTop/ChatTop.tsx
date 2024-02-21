@@ -1,11 +1,12 @@
 import { TelephoneFill, CameraVideoFill, ThreeDots } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 
+import useSocketStore from '@/app/zustand/socketStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
-import usePeerStore from '@/app/zustand/peerStore'
-import useMediaCallStore from '@/app/zustand/mediaCallStore'
-import useSocketStore from '@/app/zustand/socketStore'
+import usePeerStore from '@/app/zustand/webrtc/peerStore'
+import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
+import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils/utils'
@@ -13,27 +14,21 @@ import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/utils/med
 import { configurePeerConnection } from '@/app/utils/peerUtils'
 
 function ChatTop() {
+  const [socket] = useSocketStore((state) => [state.socket])
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
   const [chat] = useCurrentChatStore((state) => [state.chat])
   const [peer] = usePeerStore((state) => [state.peer])
-  const [
-    outcomingCallRef,
-    setOutcomingCall,
-    currentCall,
-    setCurrentCall,
-    setLocalMediaStream,
-    setRemoteMediaStream,
-    setRemoteDeviceMuted,
-  ] = useMediaCallStore((state) => [
+  const [outcomingCallRef, setOutcomingCall, currentCall, setCurrentCall] = useMediaCallStore((state) => [
     state.outcomingCallRef,
     state.setOutcomingCall,
     state.currentCall,
     state.setCurrentCall,
+  ])
+  const [setLocalMediaStream, setRemoteMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
     state.setLocalMediaStream,
     state.setRemoteMediaStream,
     state.setRemoteDeviceMuted,
   ])
-  const [socket] = useSocketStore((state) => [state.socket])
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))

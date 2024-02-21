@@ -1,8 +1,9 @@
 import { CameraVideoFill, TelephoneFill, X } from 'react-bootstrap-icons'
 
-import useMediaCallStore from '@/app/zustand/mediaCallStore'
-import useSocketStore from '@/app/zustand/socketStore'
 import useUserStore from '@/app/zustand/userStore'
+import useSocketStore from '@/app/zustand/socketStore'
+import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
+import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { accessUserMediaCatchHandler, closeOutcomingCall as closeMyCall } from '@/app/utils/mediaCallUtils'
@@ -11,17 +12,21 @@ import { configurePeerConnection } from '@/app/utils/peerUtils'
 import { User } from '@/app/types'
 
 function ComingCall({ friend }: { friend: User }) {
-  const {
-    incomingCall,
-    setIncomingCall,
-    outcomingCall,
-    setOutcomingCall,
-    setCurrentCall,
-    setLocalMediaStream,
-    setRemoteDeviceMuted,
-  } = useMediaCallStore()
-  const [socket] = useSocketStore((state) => [state.socket])
   const [user] = useUserStore((state) => [state.user])
+  const [socket] = useSocketStore((state) => [state.socket])
+  const [incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setCurrentCall] = useMediaCallStore(
+    (state) => [
+      state.incomingCall,
+      state.setIncomingCall,
+      state.outcomingCall,
+      state.setOutcomingCall,
+      state.setCurrentCall,
+    ]
+  )
+  const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
+    state.setLocalMediaStream,
+    state.setRemoteDeviceMuted,
+  ])
 
   function closeOutcomingCall() {
     closeMyCall({ paramsType: 'val', userId: user._id, socket, outcomingCall, setOutcomingCall, setLocalMediaStream })

@@ -5,13 +5,14 @@ import { io } from 'socket.io-client'
 import toast from 'react-hot-toast'
 
 import useUserStore from '../zustand/userStore'
-import useCurrentChatStore from '../zustand/currentChatStore'
-import useChatsStore from '../zustand/chatsStore'
 import useSocketStore from '../zustand/socketStore'
+import useChatsStore from '../zustand/chatsStore'
+import useCurrentChatStore from '../zustand/currentChatStore'
 import useCurrentChatMessagesStore from '../zustand/currentChatMessagesStore'
 import useOnlineUsersStore from '../zustand/onlineUsersStore'
 import useRemovedMessagesStore from '../zustand/removedMessagesStore'
-import useMediaCallStore from '../zustand/mediaCallStore'
+import useMediaCallStore from '../zustand/webrtc/mediaCallStore'
+import useMediaStreamStore from '../zustand/webrtc/mediaStreamStore'
 
 import ChatsPanel from './ChatsPanel/ChatsPanel'
 import PeoplePanel from './PeoplePanel/PeoplePanel'
@@ -23,7 +24,7 @@ import { Message } from '@/app/types'
 
 function DashBoard() {
   const [addMessage, removeMessage] = useCurrentChatMessagesStore((state) => [state.addMessage, state.removeMessage])
-  const { socket, setSocket } = useSocketStore()
+  const [socket, setSocket] = useSocketStore((state) => [state.socket, state.setSocket])
   const [user] = useUserStore((state) => [state.user])
   const [chat] = useCurrentChatStore((state) => [state.chat])
   const [fetchChats, setChats, hasFetched] = useChatsStore((state) => [
@@ -33,20 +34,14 @@ function DashBoard() {
   ])
   const [addUser, removeUser] = useOnlineUsersStore((state) => [state.addUser, state.removeUser])
   const [addRemovedMessage] = useRemovedMessagesStore((state) => [state.addRemovedMessage])
-  const [
-    currentCall,
-    incomingCall,
-    setIncomingCall,
-    outcomingCall,
-    setOutcomingCall,
-    setLocalMediaStream,
-    setRemoteDeviceMuted,
-  ] = useMediaCallStore((state) => [
+  const [currentCall, incomingCall, setIncomingCall, outcomingCall, setOutcomingCall] = useMediaCallStore((state) => [
     state.currentCall,
     state.incomingCall,
     state.setIncomingCall,
     state.outcomingCall,
     state.setOutcomingCall,
+  ])
+  const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
     state.setLocalMediaStream,
     state.setRemoteDeviceMuted,
   ])
