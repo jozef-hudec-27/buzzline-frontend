@@ -68,3 +68,5 @@ export type ChatShow = {
 
 // Media call object
 export type Call = MediaConnection | null
+
+export type MediaStreamTrack = 'audio' | 'video'

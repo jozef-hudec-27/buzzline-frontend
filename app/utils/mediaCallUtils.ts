@@ -5,10 +5,15 @@ import { Socket } from 'socket.io-client'
 import { MutableRefObject } from 'react'
 import { Call } from '../types'
 
-export function accessUserMediaCatchHandler(e: any, video = false) {
+export function accessUserMediaCatchHandler(e: any, video = false, onlyOne = false) {
   switch (e.name) {
     case 'NotAllowedError':
-      toast(`Please allow the microphone ${video ? 'and camera' : ''} access.`, { icon: '❌' })
+      toast(
+        `Please allow the ${!(video && onlyOne) ? 'microphone' : ''} ${
+          video ? `${!onlyOne ? 'and' : ''} camera` : ''
+        } access.`,
+        { icon: '❌' }
+      )
       break
     case 'NotReadableError': // Media already in use
       toast('Could not access microphone or camera.', { icon: '❌' })

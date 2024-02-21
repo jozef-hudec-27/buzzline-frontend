@@ -6,8 +6,9 @@ import useSocketStore from '@/app/zustand/socketStore'
 import useUserStore from '@/app/zustand/userStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
+import { accessUserMediaCatchHandler } from '@/app/utils/mediaCallUtils'
 
-import { User } from '@/app/types'
+import { User, MediaStreamTrack } from '@/app/types'
 
 function CurrentCall({ friend }: { friend: User }) {
   const localVideoRef = useRef<HTMLVideoElement>(null)
@@ -37,35 +38,35 @@ function CurrentCall({ friend }: { friend: User }) {
   const [socket] = useSocketStore((state) => [state.socket])
   const [user] = useUserStore((state) => [state.user])
 
+  function initStream(
+    stream: MediaStream | null,
+    video: HTMLVideoElement | null,
+    setDeviceMuted: (device: MediaStreamTrack, muted: boolean) => void
+  ) {
+    if (stream && video && !video.srcObject) {
+      ;['audio', 'video'].forEach((kind) => {
+        const track = stream.getTracks().find((t) => t.kind === kind)
+        setDeviceMuted(kind as MediaStreamTrack, !track?.enabled)
+      })
+
+      video.srcObject = stream
+      video.play()
+    }
+  }
+
   useEffect(() => {
     const localVideo = localVideoRef.current
     const remoteVideo = remoteVideoRef.current
 
-    if (localMediaStream && localVideo && !localVideo.srcObject) {
-      localMediaStream.getTracks().forEach((track) => {
-        setLocalDeviceMuted(track.kind as 'audio' | 'video', !track.enabled)
-      })
-
-      localVideo.srcObject = localMediaStream
-      localVideo.play()
-    }
-
-    if (remoteMediaStream && remoteVideo && !remoteVideo.srcObject) {
-      remoteMediaStream.getTracks().forEach((track) => {
-        setRemoteDeviceMuted(track.kind as 'audio' | 'video', !track.enabled)
-      })
-
-      remoteVideo.srcObject = remoteMediaStream
-      remoteVideo.play()
-    }
+    initStream(localMediaStream, localVideo, setLocalDeviceMuted)
+    initStream(remoteMediaStream, remoteVideo, setRemoteDeviceMuted)
   }, [localMediaStream, remoteMediaStream])
 
-  function toggleLocalDeviceMuted(kind: 'audio' | 'video') {
+  function toggleLocalDeviceMuted(kind: MediaStreamTrack) {
     if (!localMediaStream) return
+    const track = localMediaStream.getTracks().find((t) => t.kind === kind)
 
-    localMediaStream.getTracks().forEach((track) => {
-      if (track.kind !== kind) return
-
+    if (track) {
       const enabled = !track.enabled
       track.enabled = enabled
 
@@ -77,7 +78,23 @@ function CurrentCall({ friend }: { friend: User }) {
       })
 
       setLocalDeviceMuted(kind, !enabled)
-    })
+    } else {
+      const getTrack = async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ [kind]: true })
+        const newTrack = stream.getTracks()[0]
+        return newTrack
+      }
+
+      getTrack()
+        .then((track) => {
+          localMediaStream.addTrack(track)
+          setLocalDeviceMuted(kind, !track.enabled)
+          // @ts-ignore
+          window.callUpgrade = true
+          currentCall?.peerConnection.addTrack(track, localMediaStream) // triggers the negotiationneeded event
+        })
+        .catch((e) => accessUserMediaCatchHandler(e, kind === 'video', true))
+    }
   }
 
   return (

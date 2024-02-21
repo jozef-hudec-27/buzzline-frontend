@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-import { Call } from '../types'
+import { Call, MediaStreamTrack } from '../types'
 import { MutableRefObject } from 'react'
 
 type MediaCallStore = {
@@ -21,14 +21,14 @@ type MediaCallStore = {
 
   localMicMuted: boolean
   localVideoMuted: boolean
-  setLocalDeviceMuted: (device: 'audio' | 'video', muted: boolean) => void
+  setLocalDeviceMuted: (device: MediaStreamTrack, muted: boolean) => void
 
   remoteMediaStream: MediaStream | null
   setRemoteMediaStream: (stream: MediaStream | null) => void
 
   remoteMicMuted: boolean
   remoteVideoMuted: boolean
-  setRemoteDeviceMuted: (device: 'audio' | 'video', muted: boolean) => void
+  setRemoteDeviceMuted: (device: MediaStreamTrack, muted: boolean) => void
 }
 
 export default create<MediaCallStore>((set, get) => ({

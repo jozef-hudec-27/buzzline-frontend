@@ -10,20 +10,29 @@ import useSocketStore from '@/app/zustand/socketStore'
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils/utils'
 import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/utils/mediaCallUtils'
+import { configurePeerConnection } from '@/app/utils/peerUtils'
 
 function ChatTop() {
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
   const [chat] = useCurrentChatStore((state) => [state.chat])
   const [peer] = usePeerStore((state) => [state.peer])
-  const [outcomingCallRef, setOutcomingCall, currentCall, setCurrentCall, setLocalMediaStream, setRemoteMediaStream] =
-    useMediaCallStore((state) => [
-      state.outcomingCallRef,
-      state.setOutcomingCall,
-      state.currentCall,
-      state.setCurrentCall,
-      state.setLocalMediaStream,
-      state.setRemoteMediaStream,
-    ])
+  const [
+    outcomingCallRef,
+    setOutcomingCall,
+    currentCall,
+    setCurrentCall,
+    setLocalMediaStream,
+    setRemoteMediaStream,
+    setRemoteDeviceMuted,
+  ] = useMediaCallStore((state) => [
+    state.outcomingCallRef,
+    state.setOutcomingCall,
+    state.currentCall,
+    state.setCurrentCall,
+    state.setLocalMediaStream,
+    state.setRemoteMediaStream,
+    state.setRemoteDeviceMuted,
+  ])
   const [socket] = useSocketStore((state) => [state.socket])
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
@@ -38,32 +47,34 @@ function ChatTop() {
 
       const call = peer.call(remotePeerId, stream, { metadata: { video } })
 
-      call?.on('close', () => {
+      if (!call) return
+
+      call.on('close', () => {
         setCurrentCall(null)
         setLocalMediaStream(null)
         setRemoteMediaStream(null)
       })
 
-      call?.on('stream', (remoteStream) => {
+      call.on('stream', (remoteStream) => {
         setCurrentCall(call)
         setRemoteMediaStream(remoteStream)
       })
 
-      if (call) {
-        setOutcomingCall(call)
+      configurePeerConnection({ pc: call.peerConnection, socket, from: peer.id, to: call.peer, setRemoteDeviceMuted })
 
-        setTimeout(() => {
-          if (call.open || call !== outcomingCallRef.current) return
-          closeOutcomingCall({
-            paramsType: 'val',
-            userId: peer.id,
-            socket,
-            outcomingCall: call,
-            setOutcomingCall,
-            setLocalMediaStream,
-          })
-        }, 30000)
-      }
+      setOutcomingCall(call)
+
+      setTimeout(() => {
+        if (call.open || call !== outcomingCallRef.current) return
+        closeOutcomingCall({
+          paramsType: 'val',
+          userId: peer.id,
+          socket,
+          outcomingCall: call,
+          setOutcomingCall,
+          setLocalMediaStream,
+        })
+      }, 30000)
     } catch (e) {
       accessUserMediaCatchHandler(e, video)
     }

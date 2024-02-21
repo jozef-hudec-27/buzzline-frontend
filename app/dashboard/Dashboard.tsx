@@ -95,7 +95,7 @@ function DashBoard() {
       toast(data, { icon: '❌' })
     })
 
-    scket.on('notification', (data) => {
+    scket.on('notification', async (data) => {
       switch (data.type) {
         case 'NOTI_MESSAGE':
           if (data.message?.sender?._id !== user._id && data.from !== chat?._id) {
@@ -129,11 +129,31 @@ function DashBoard() {
             setLocalMediaStream(null)
           }
           break
-        case 'NOTI_DEVICE_MUTE_TOGGLE': // Calle muted or unmuted their device
+        case 'NOTI_DEVICE_MUTE_TOGGLE': // Remote peer muted or unmuted their device
           if (currentCall && currentCall.peer === data.from) {
             const { kind, enabled } = data.device
             setRemoteDeviceMuted(kind, !enabled)
           }
+          break
+        case 'NOTI_OFFER':
+          if (!currentCall) return
+
+          const pc = currentCall.peerConnection
+          await pc.setRemoteDescription(new RTCSessionDescription(data.offer))
+          const answer = await pc.createAnswer()
+          await pc.setLocalDescription(answer)
+          socket?.emit('notification', {
+            type: 'NOTI_ANSWER',
+            from: user._id,
+            to: currentCall.peer,
+            answer,
+          })
+          break
+        case 'NOTI_ANSWER':
+          if (!currentCall) return
+
+          const pc2 = currentCall.peerConnection
+          pc2.setRemoteDescription(new RTCSessionDescription(data.answer))
           break
       }
     })

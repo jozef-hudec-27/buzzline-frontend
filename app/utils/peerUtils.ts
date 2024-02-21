@@ -3,7 +3,7 @@ import { closeOutcomingCall, handleIncomingCall } from './mediaCallUtils'
 import { Peer } from 'peerjs'
 import { Socket } from 'socket.io-client'
 import { MutableRefObject } from 'react'
-import { Call } from '../types'
+import { Call, MediaStreamTrack } from '../types'
 
 type ConfigurePeerParams = {
   peer: Peer
@@ -59,4 +59,42 @@ export function configurePeer(params: ConfigurePeerParams) {
       outcomingCallRef
     )
   )
+}
+
+type ConfigurePeerConnectionParams = {
+  pc: RTCPeerConnection
+  socket: Socket | null
+  from: string
+  to: string
+  setRemoteDeviceMuted: (kind: MediaStreamTrack, muted: boolean) => void
+}
+
+export function configurePeerConnection(params: ConfigurePeerConnectionParams) {
+  const { pc, socket, from, to, setRemoteDeviceMuted } = params
+
+  if (!pc) return
+
+  pc.addEventListener('negotiationneeded', async () => {
+    // @ts-ignore
+    if (window.callUpgrade) {
+      // @ts-ignore
+      window.callUpgrade = false
+
+      // Upgrading the call from audio to video
+      const offer = await pc.createOffer()
+      await pc.setLocalDescription(offer)
+      socket?.emit('notification', {
+        type: 'NOTI_OFFER',
+        from,
+        to,
+        offer,
+      })
+    }
+  })
+
+  pc.addEventListener('track', (event) => {
+    const newTrack = event.track
+    // Show/hide remote peer's avatar
+    setRemoteDeviceMuted(newTrack.kind as MediaStreamTrack, !newTrack.enabled)
+  })
 }
