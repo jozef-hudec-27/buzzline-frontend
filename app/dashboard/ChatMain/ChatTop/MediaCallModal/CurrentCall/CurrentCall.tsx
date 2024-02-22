@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { MicFill, MicMuteFill, CameraVideoFill, CameraVideoOffFill, X } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 
 import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
 import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
 import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 
+import LocalVideo from './LocalVideo'
 import Avatar from '@/app/components/avatar/Avatar'
 import { accessUserMediaCatchHandler } from '@/app/utils/mediaCallUtils'
 
@@ -54,12 +56,23 @@ function CurrentCall({ friend }: { friend: User }) {
     }
   }
 
+  function showCameraTip() {
+    if (localStorage.getItem('cameraTipShown')) return
+
+    toast('Pro tip: You can hide your camera by clicking on it.', { icon: '📹', duration: 8000 })
+    localStorage.setItem('cameraTipShown', 'true')
+  }
+
   useEffect(() => {
     const localVideo = localVideoRef.current
     const remoteVideo = remoteVideoRef.current
 
     initStream(localMediaStream, localVideo, setLocalDeviceMuted)
     initStream(remoteMediaStream, remoteVideo, setRemoteDeviceMuted)
+
+    if (localMediaStream?.getVideoTracks().length) {
+      showCameraTip()
+    }
   }, [localMediaStream, remoteMediaStream])
 
   function toggleLocalDeviceMuted(kind: MediaStreamTrack) {
@@ -92,6 +105,10 @@ function CurrentCall({ friend }: { friend: User }) {
           // @ts-ignore
           window.callUpgrade = true
           currentCall?.peerConnection.addTrack(track, localMediaStream) // triggers the negotiationneeded event
+
+          if (kind === 'video') {
+            showCameraTip()
+          }
         })
         .catch((e) => accessUserMediaCatchHandler(e, kind === 'video', true))
     }
@@ -101,22 +118,19 @@ function CurrentCall({ friend }: { friend: User }) {
     currentCall && (
       <div className="w-fit relative mx-auto">
         {remoteMicMuted && (
-          <MicMuteFill
-            className="absolute top-[16px] left-[16px] text-white"
-            size={16}
+          <span
+            className="absolute top-[16px] left-[16px] z-10"
             aria-label={`${friend.firstName}'s microphone is muted`}
-          />
+            title={`${friend.firstName}'s microphone is muted`}
+          >
+            <MicMuteFill className="text-white" size={16} />
+          </span>
         )}
 
-        <div className="absolute top-[16px] right-[16px]">
-          <video
-            className={`w-[320px] h-auto rounded-[8px] border-[2px] border-primary ${localVideoMuted && 'hidden'}`}
-            ref={localVideoRef}
-          ></video>
-        </div>
+        <LocalVideo videoRef={localVideoRef} />
 
-        <div className="bg-[rgb(0,0,0,0.8)]">
-          <video className="w-[960px] h-[540px]" ref={remoteVideoRef}></video>
+        <div className="bg-[rgb(0,0,0)] rounded-[8px]">
+          <video className="w-[960px] h-[540px] rounded-[8px]" ref={remoteVideoRef}></video>
           {remoteVideoMuted && (
             <>
               <Avatar
@@ -134,30 +148,33 @@ function CurrentCall({ friend }: { friend: User }) {
             className="current-call__action bg-white"
             onClick={() => toggleLocalDeviceMuted('audio')}
             aria-label={`${localMicMuted ? 'un' : ''}mute microphone`}
+            title={`${localMicMuted ? 'Unmute' : 'Mute'} microphone`}
           >
             {!localMicMuted ? (
-              <MicFill className="text-primary" size={20} aria-hidden />
+              <MicFill className="text-primary" size={24} aria-hidden />
             ) : (
-              <MicMuteFill className="text-primary" size={20} aria-hidden />
+              <MicMuteFill className="text-primary" size={24} aria-hidden />
             )}
           </button>
           <button
             className="current-call__action bg-white"
             onClick={() => toggleLocalDeviceMuted('video')}
-            aria-label={`${localMicMuted ? 'un' : ''}mute camera`}
+            aria-label={`${localVideoMuted ? 'un' : ''}mute camera`}
+            title={`${localVideoMuted ? 'Unmute' : 'Mute'} camera`}
           >
             {!localVideoMuted ? (
-              <CameraVideoFill className="text-primary" size={20} aria-hidden />
+              <CameraVideoFill className="text-primary" size={24} aria-hidden />
             ) : (
-              <CameraVideoOffFill className="text-primary" size={20} aria-hidden />
+              <CameraVideoOffFill className="text-primary" size={24} aria-hidden />
             )}
           </button>
           <button
             className="current-call__action bg-red-500"
             onClick={() => currentCall.close()}
             aria-label="Close call"
+            title="Close call"
           >
-            <X size={20} aria-hidden />
+            <X size={24} aria-hidden />
           </button>
         </div>
       </div>

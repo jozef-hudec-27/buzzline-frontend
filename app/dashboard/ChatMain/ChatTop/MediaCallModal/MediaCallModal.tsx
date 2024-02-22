@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 
-import CurrentCall from './CurrentCall'
+import CurrentCall from './CurrentCall/CurrentCall'
 import ComingCall from './ComingCall'
 import Modal from '@/app/components/Modal/Modal'
 
@@ -67,7 +67,7 @@ function MediaCallModal() {
             ? `Calling ${friend.firstName} modal`
             : `Incoming call from ${friend.firstName} modal`
         }
-        cls={currentCall ? '!w-full !bg-transparent' : '!lg:w-1/3'}
+        cls={currentCall ? '!w-full !bg-transparent !p-[16px]' : ''}
       >
         {currentCall ? <CurrentCall friend={friend} /> : <ComingCall friend={friend} />}
       </Modal>
