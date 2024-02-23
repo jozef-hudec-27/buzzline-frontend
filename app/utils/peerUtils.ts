@@ -83,8 +83,8 @@ export function configurePeerConnection(params: ConfigurePeerConnectionParams) {
       // Upgrading the call from audio to video
       const offer = await pc.createOffer()
       await pc.setLocalDescription(offer)
-      socket?.emit('notification', {
-        type: 'NOTI_OFFER',
+      socket?.emit('dm', {
+        type: 'DM_SDP_OFFER',
         from,
         to,
         offer,

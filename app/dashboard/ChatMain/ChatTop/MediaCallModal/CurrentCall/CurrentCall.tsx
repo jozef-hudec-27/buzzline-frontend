@@ -83,10 +83,10 @@ function CurrentCall({ friend }: { friend: User }) {
       const enabled = !track.enabled
       track.enabled = enabled
 
-      socket?.emit('notification', {
+      socket?.emit('dm', {
         from: user._id,
         to: friend?._id,
-        type: 'NOTI_DEVICE_MUTE_TOGGLE',
+        type: 'DM_DEVICE_MUTE_TOGGLE',
         device: { kind, enabled },
       })
 

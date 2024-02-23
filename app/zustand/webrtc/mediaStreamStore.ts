@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { MediaStreamTrack } from '@/app/types'
 
 type SetMediaStreamFn = (stream: MediaStream | null) => void
-type SetDeviceMutedFn = (device: MediaStreamTrack, muted: boolean) => void
+export type SetDeviceMutedFn = (device: MediaStreamTrack, muted: boolean) => void
 
 type MediaStreamStore = {
   localMediaStream: MediaStream | null

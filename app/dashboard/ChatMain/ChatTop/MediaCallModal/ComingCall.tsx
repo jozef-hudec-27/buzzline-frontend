@@ -33,10 +33,10 @@ function ComingCall({ friend }: { friend: User }) {
   }
 
   function declineIncomingCall() {
-    socket?.emit('notification', {
+    socket?.emit('dm', {
       from: user._id,
       to: incomingCall?.peer,
-      type: 'NOTI_OUTCOMING_CALL_DECLINE',
+      type: 'DM_OUTCOMING_CALL_DECLINE',
     })
     setIncomingCall(null)
   }

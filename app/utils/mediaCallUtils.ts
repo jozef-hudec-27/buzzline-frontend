@@ -36,9 +36,10 @@ export function handleIncomingCall(
 ) {
   peer.on('call', (incomingCall) => {
     if (currentCallRef.current || outcomingCallRef.current || incomingCallRef.current) {
-      socketRef.current?.emit('notification', {
+      socketRef.current?.emit('dm', {
+        from: peer.id,
         to: incomingCall.peer,
-        type: 'NOTI_CALLEE_IN_CALL',
+        type: 'DM_CALLEE_IN_CALL',
       })
     } else {
       incomingCall.on('close', () => {
@@ -72,10 +73,10 @@ export function closeOutcomingCall(params: CloseOutcomingCallParams) {
   const oc = paramsType === 'val' ? params.outcomingCall : params.outcomingCallRef.current
 
   setLocalMediaStream(null)
-  s?.emit('notification', {
+  s?.emit('dm', {
     from: userId,
     to: oc?.peer,
-    type: 'NOTI_INCOMING_CALL_CLOSE',
+    type: 'DM_INCOMING_CALL_CLOSE',
   })
   setOutcomingCall(null)
 }
