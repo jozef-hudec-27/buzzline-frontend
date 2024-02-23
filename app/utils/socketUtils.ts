@@ -16,9 +16,10 @@ import {
   DMSDPAnswer,
   Call,
 } from '../types'
+import { MessagesResponse } from '../zustand/currentChatMessagesStore'
 import { SetDeviceMutedFn } from '../zustand/webrtc/mediaStreamStore'
 import { Socket } from 'socket.io-client'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, MutableRefObject } from 'react'
 
 type SocketOnMessageParams = {
   scket: Socket
@@ -228,6 +229,57 @@ export function socketOnOnlineStatus(params: SocketOnOnlineStatus) {
   })
 }
 
+type SocketOnConnectParams = {
+  scket: Socket
+  disconnectedRef: MutableRefObject<boolean>
+  setSocketDisconnected: (disconnected: boolean) => void
+  fetchChats: () => void
+  chat: ChatShow
+  setMessages: (updater: (prevMessages: Message[]) => Message[]) => void
+  fetchMessages: (chatId: string, page?: number | undefined, initial?: boolean | undefined) => Promise<MessagesResponse>
+}
+
+export function socketOnConnect(params: SocketOnConnectParams) {
+  const { scket, disconnectedRef, setSocketDisconnected, fetchChats, chat, setMessages, fetchMessages } = params
+
+  scket.on('connect', () => {
+    if (!disconnectedRef.current) return
+
+    //   If there was a network error and we're back online
+    toast.success('We are back online', { position: 'bottom-left' })
+    disconnectedRef.current = false
+    setSocketDisconnected(false)
+    fetchChats()
+
+    if (Object.keys(chat).length) {
+      scket.emit('joinRoom', chat._id)
+
+      const updateMessages = async () => {
+        const response = await fetchMessages(chat._id)
+        setMessages(() => response.docs.reverse())
+      }
+
+      updateMessages()
+    }
+  })
+}
+
+type SocketOnDisconnectType = {
+  scket: Socket
+  disconnectedRef: MutableRefObject<boolean>
+  setSocketDisconnected: (disconnected: boolean) => void
+}
+
+export function socketOnDisconnect(params: SocketOnDisconnectType) {
+  const { scket, disconnectedRef, setSocketDisconnected } = params
+
+  scket.on('disconnect', () => {
+    toast.error('You are offline', { position: 'bottom-left' })
+    disconnectedRef.current = true
+    setSocketDisconnected(true)
+  })
+}
+
 export function socketRemoveListeners({ scket }: { scket: Socket }) {
   scket.off('message')
   scket.off('typing')
@@ -235,4 +287,6 @@ export function socketRemoveListeners({ scket }: { scket: Socket }) {
   scket.off('error')
   scket.off('dm')
   scket.off('onlineStatus')
+  scket.off('connect')
+  scket.off('disconnect')
 }

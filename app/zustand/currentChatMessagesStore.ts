@@ -3,7 +3,7 @@ import api from '../api/axiosInstance'
 
 import { Message } from '@/app/types'
 
-type MessagesResponse = {
+export type MessagesResponse = {
   docs: Message[]
   totalDocs: number
   limit: number

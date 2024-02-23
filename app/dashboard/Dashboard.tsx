@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { io } from 'socket.io-client'
 
 import useUserStore from '../zustand/userStore'
@@ -18,6 +18,7 @@ import PeoplePanel from './PeoplePanel/PeoplePanel'
 import ChatMain from './ChatMain/ChatMain'
 import Sidebar from './Sidebar/Sidebar'
 import MediaCallModal from './ChatMain/ChatTop/MediaCallModal/MediaCallModal'
+import SocketDisconnectedModal from './SocketDisconnectedModal'
 import {
   socketOnMessage,
   socketOnMessageRemove,
@@ -25,12 +26,23 @@ import {
   socketOnError,
   socketOnOnlineStatus,
   socketOnTyping,
+  socketOnConnect,
+  socketOnDisconnect,
   socketRemoveListeners,
 } from '../utils/socketUtils'
 
 function DashBoard() {
-  const [addMessage, removeMessage] = useCurrentChatMessagesStore((state) => [state.addMessage, state.removeMessage])
-  const [socket, setSocket] = useSocketStore((state) => [state.socket, state.setSocket])
+  const [addMessage, removeMessage, fetchMessages, setMessages] = useCurrentChatMessagesStore((state) => [
+    state.addMessage,
+    state.removeMessage,
+    state.fetchMessages,
+    state.setMessages,
+  ])
+  const [socket, setSocket, setSocketDisconnected] = useSocketStore((state) => [
+    state.socket,
+    state.setSocket,
+    state.setSocketDisconnected,
+  ])
   const [user] = useUserStore((state) => [state.user])
   const [chat] = useCurrentChatStore((state) => [state.chat])
   const [fetchChats, setChats, hasFetched] = useChatsStore((state) => [
@@ -54,8 +66,13 @@ function DashBoard() {
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
   const [typingUsers, setTypingUsers] = useState<string[]>([])
+  const disconnectedRef = useRef(false)
 
   useEffect(() => {
+    if (socket && socket.disconnected) {
+      socket.connect()
+    }
+
     const scket =
       socket || io(process.env.NEXT_PUBLIC_BASE_URL || '', { query: { token: localStorage.getItem('accessToken') } })
 
@@ -78,6 +95,8 @@ function DashBoard() {
       outcomingCall,
     })
     socketOnOnlineStatus({ scket, user, addUser, removeUser, typingUsers, setTypingUsers })
+    socketOnConnect({ scket, disconnectedRef, setSocketDisconnected, fetchChats, chat, fetchMessages, setMessages })
+    socketOnDisconnect({ scket, disconnectedRef, setSocketDisconnected })
 
     setSocket(scket)
 
@@ -108,7 +127,9 @@ function DashBoard() {
 
       <audio src="assets/sounds/message-notification.mp3" className="hidden" id="noti-audio"></audio>
       <audio src="assets/sounds/call-ringtone.mp3" className="hidden" id="ringtone-audio"></audio>
+
       <MediaCallModal />
+      <SocketDisconnectedModal />
     </div>
   )
 }

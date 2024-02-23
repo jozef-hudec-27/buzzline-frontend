@@ -7,6 +7,9 @@ type SocketStore = {
   socket: Socket | null
   setSocket: (socket: Socket) => void
   socketRef: MutableRefObject<Socket | null>
+
+  socketDisconnected: boolean
+  setSocketDisconnected: (disconnected: boolean) => void
 }
 
 export default create<SocketStore>((set, get) => ({
@@ -16,4 +19,7 @@ export default create<SocketStore>((set, get) => ({
     get().socketRef.current = socket
   },
   socketRef: { current: null },
+
+  socketDisconnected: false,
+  setSocketDisconnected: (disconnected) => set({ socketDisconnected: disconnected }),
 }))

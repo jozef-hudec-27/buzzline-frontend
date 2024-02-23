@@ -38,7 +38,7 @@ export function timeSince(dateString: string): string {
     return Math.floor(interval) + 'm'
   }
 
-  return Math.floor(seconds) + ' s'
+  return Math.max(0, Math.floor(seconds)) + ' s'
 }
 
 export function randomInt(min: number, max: number): number {
