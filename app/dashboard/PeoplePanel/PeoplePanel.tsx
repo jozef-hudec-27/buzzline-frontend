@@ -5,7 +5,7 @@ import useChatsStore from '@/app/zustand/chatsStore'
 
 import Chat from '../ChatsPanel/Chat'
 
-import { ChatIndex } from '@/app/types'
+import { ChatIndex } from '@/app/types/globalTypes'
 
 const PeoplePanel = memo(function () {
   const [chats, chatsLoading] = useChatsStore((state) => [state.chats, state.isLoading])

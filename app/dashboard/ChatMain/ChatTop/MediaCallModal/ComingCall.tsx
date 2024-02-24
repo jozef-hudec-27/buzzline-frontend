@@ -9,7 +9,7 @@ import Avatar from '@/app/components/avatar/Avatar'
 import { accessUserMediaCatchHandler, closeOutcomingCall as closeMyCall } from '@/app/utils/mediaCallUtils'
 import { configurePeerConnection } from '@/app/utils/peerUtils'
 
-import { User } from '@/app/types'
+import { User } from '@/app/types/globalTypes'
 
 function ComingCall({ friend }: { friend: User }) {
   const [user] = useUserStore((state) => [state.user])

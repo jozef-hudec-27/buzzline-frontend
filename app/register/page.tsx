@@ -8,7 +8,7 @@ import useUserStore from '@/app/zustand/userStore'
 import Navbar from '../components/navbar/Navbar'
 import RegisterForm from './RegisterForm'
 
-import { RegisterFormState } from '@/app/types'
+import { RegisterFormState } from '../types/formTypes'
 
 function RegisterPage() {
   const router = useRouter()

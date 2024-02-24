@@ -7,7 +7,7 @@ import CurrentCall from './CurrentCall/CurrentCall'
 import ComingCall from './ComingCall'
 import Modal from '@/app/components/Modal/Modal'
 
-import { User } from '@/app/types'
+import { User } from '@/app/types/globalTypes'
 
 function MediaCallModal() {
   const [isOpen, setIsOpen] = useState(false)

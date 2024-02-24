@@ -11,7 +11,8 @@ import LocalVideo from './LocalVideo'
 import Avatar from '@/app/components/avatar/Avatar'
 import { accessUserMediaCatchHandler } from '@/app/utils/mediaCallUtils'
 
-import { User, MediaStreamTrack } from '@/app/types'
+import { User } from '@/app/types/globalTypes'
+import { MediaStreamTrack } from '@/app/types/mediaStreamTypes'
 
 function CurrentCall({ friend }: { friend: User }) {
   const localVideoRef = useRef<HTMLVideoElement>(null)

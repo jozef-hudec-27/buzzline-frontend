@@ -9,7 +9,7 @@ import useUserStore from '@/app/zustand/userStore'
 import Navbar from '../components/navbar/Navbar'
 import LoginForm from './LoginForm'
 
-import { LoginFormState } from '@/app/types'
+import { LoginFormState } from '../types/formTypes'
 
 function LoginPage() {
   const router = useRouter()

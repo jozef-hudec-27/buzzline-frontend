@@ -6,7 +6,7 @@ import useChatsStore from '@/app/zustand/chatsStore'
 import NewChatModal from './NewChatModal'
 import Chat from './Chat'
 
-import { ChatIndex } from '@/app/types'
+import { ChatIndex } from '@/app/types/globalTypes'
 
 const Chats = memo(function () {
   const [chats, chatsLoading] = useChatsStore((state) => [state.chats, state.isLoading])

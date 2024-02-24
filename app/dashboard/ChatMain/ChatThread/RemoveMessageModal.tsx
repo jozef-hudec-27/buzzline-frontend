@@ -2,7 +2,7 @@ import useSocketStore from '@/app/zustand/socketStore'
 
 import Modal, { ModalProps } from '@/app/components/Modal/Modal'
 
-import { Message } from '@/app/types'
+import { Message } from '@/app/types/globalTypes'
 
 type RemoveMessageModalProps = ModalProps & {
   message: Message

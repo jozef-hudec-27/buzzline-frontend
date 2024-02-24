@@ -1,22 +1,22 @@
 import { closeOutcomingCall, handleIncomingCall } from './mediaCallUtils'
 
 import { Peer } from 'peerjs'
-import { Socket } from 'socket.io-client'
-import { MutableRefObject } from 'react'
-import { Call, MediaStreamTrack } from '../types'
+import { MySocket, SocketRef } from '../types/socketTypes'
+import { CallRef, SetCallFn } from '../types/mediaCallTypes'
+import { SetMediaStreamFn, SetDeviceMutedFn, MediaStreamTrack } from '../types/mediaStreamTypes'
 
 type ConfigurePeerParams = {
   peer: Peer
   userId: string
-  socketRef: MutableRefObject<Socket | null>
-  currentCallRef: MutableRefObject<Call | null>
-  setCurrentCall: (call: Call) => void
-  setLocalMediaStream: (stream: MediaStream | null) => void
-  setRemoteMediaStream: (stream: MediaStream | null) => void
-  incomingCallRef: MutableRefObject<Call | null>
-  setIncomingCall: (call: Call) => void
-  outcomingCallRef: MutableRefObject<Call | null>
-  setOutcomingCall: (call: Call) => void
+  socketRef: SocketRef
+  currentCallRef: CallRef
+  setCurrentCall: SetCallFn
+  setLocalMediaStream: SetMediaStreamFn
+  setRemoteMediaStream: SetMediaStreamFn
+  incomingCallRef: CallRef
+  setIncomingCall: SetCallFn
+  outcomingCallRef: CallRef
+  setOutcomingCall: SetCallFn
 }
 
 export function configurePeer(params: ConfigurePeerParams) {
@@ -63,10 +63,10 @@ export function configurePeer(params: ConfigurePeerParams) {
 
 type ConfigurePeerConnectionParams = {
   pc: RTCPeerConnection
-  socket: Socket | null
+  socket: MySocket
   from: string
   to: string
-  setRemoteDeviceMuted: (kind: MediaStreamTrack, muted: boolean) => void
+  setRemoteDeviceMuted: SetDeviceMutedFn
 }
 
 export function configurePeerConnection(params: ConfigurePeerConnectionParams) {

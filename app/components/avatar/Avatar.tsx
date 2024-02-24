@@ -3,7 +3,7 @@ import Image from 'next/image'
 import defaultAvatar from '/public/assets/images/default-avatar.svg'
 
 type AvatarProps = {
-  src: string
+  src: string | undefined
   size: number
   alt: string
   cls?: string

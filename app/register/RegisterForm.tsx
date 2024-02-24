@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 
 import api from '@/app/api/axiosInstance'
 
-import { RegisterFormState } from '@/app/types'
+import { RegisterFormState } from '../types/formTypes'
 import { AxiosError } from 'axios'
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction } from 'react'
 

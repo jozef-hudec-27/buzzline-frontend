@@ -1,9 +1,9 @@
 import { toast } from 'react-hot-toast'
 
 import { Peer } from 'peerjs'
-import { Socket } from 'socket.io-client'
-import { MutableRefObject } from 'react'
-import { Call } from '../types'
+import { MySocket, SocketRef } from '../types/socketTypes'
+import { SetCallFn, MyCall, CallRef } from '../types/mediaCallTypes'
+import { SetMediaStreamFn } from '../types/mediaStreamTypes'
 
 export function accessUserMediaCatchHandler(e: any, video = false, onlyOne = false) {
   switch (e.name) {
@@ -25,14 +25,14 @@ export function accessUserMediaCatchHandler(e: any, video = false, onlyOne = fal
 
 export function handleIncomingCall(
   peer: Peer,
-  socketRef: MutableRefObject<Socket | null>,
-  currentCallRef: MutableRefObject<Call>,
-  setCurrentCall: (call: Call) => void,
-  setLocalMediaStream: (stream: MediaStream | null) => void,
-  setRemoteMediaStream: (stream: MediaStream | null) => void,
-  incomingCallRef: MutableRefObject<Call>,
-  setIncomingCall: (call: Call) => void,
-  outcomingCallRef: MutableRefObject<Call>
+  socketRef: SocketRef,
+  currentCallRef: CallRef,
+  setCurrentCall: SetCallFn,
+  setLocalMediaStream: SetMediaStreamFn,
+  setRemoteMediaStream: SetMediaStreamFn,
+  incomingCallRef: CallRef,
+  setIncomingCall: SetCallFn,
+  outcomingCallRef: CallRef
 ) {
   peer.on('call', (incomingCall) => {
     if (currentCallRef.current || outcomingCallRef.current || incomingCallRef.current) {
@@ -59,11 +59,11 @@ export function handleIncomingCall(
 
 type CloseOutcomingCallParams = {
   userId: string
-  setOutcomingCall: (call: Call) => void
-  setLocalMediaStream: (stream: MediaStream | null) => void
+  setOutcomingCall: SetCallFn
+  setLocalMediaStream: SetMediaStreamFn
 } & (
-  | { paramsType: 'val'; socket: Socket | null; outcomingCall: Call }
-  | { paramsType: 'ref'; socketRef: MutableRefObject<Socket | null>; outcomingCallRef: MutableRefObject<Call> }
+  | { paramsType: 'val'; socket: MySocket; outcomingCall: MyCall }
+  | { paramsType: 'ref'; socketRef: SocketRef; outcomingCallRef: CallRef }
 )
 
 export function closeOutcomingCall(params: CloseOutcomingCallParams) {

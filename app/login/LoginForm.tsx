@@ -14,7 +14,7 @@ import useMediaStreamStore from '../zustand/webrtc/mediaStreamStore'
 import api from '@/app/api/axiosInstance'
 import { configurePeer } from '../utils/peerUtils'
 
-import { LoginFormState } from '@/app/types'
+import { LoginFormState } from '../types/formTypes'
 import { AxiosError } from 'axios'
 import { ChangeEvent, ComponentPropsWithoutRef, Dispatch, FormEvent, SetStateAction } from 'react'
 

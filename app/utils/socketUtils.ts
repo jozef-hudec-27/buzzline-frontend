@@ -1,11 +1,19 @@
 import { toast } from 'react-hot-toast'
 
+import { User, Message, NewestMessage, ChatShow } from '../types/globalTypes'
+import { MyCall, SetCallFn } from '../types/mediaCallTypes'
+import { SetDeviceMutedFn, SetMediaStreamFn } from '../types/mediaStreamTypes'
 import {
-  User,
-  Message,
-  NewestMessage,
-  ChatShow,
-  ChatIndex,
+  AddMessageFn,
+  AddRemovedMessageFn,
+  FetchMessagesFn,
+  RemoveMessageFn,
+  SetMessagesFn,
+} from '../types/chatMessagesTypes'
+import { FetchChatsFn, SetChatsFn } from '../types/chatsTypes'
+import { AddOnlineUserFn, RemoveOnlineUserFn } from '../types/onlineUsersTypes'
+import {
+  SetSocketDisconnectedFn,
   DMData,
   DMMsgNoti,
   DMCalleeInCall,
@@ -14,10 +22,8 @@ import {
   DMSDPOffer,
   DMDeviceMuteToggle,
   DMSDPAnswer,
-  Call,
-} from '../types'
-import { MessagesResponse } from '../zustand/currentChatMessagesStore'
-import { SetDeviceMutedFn } from '../zustand/webrtc/mediaStreamStore'
+} from '../types/socketTypes'
+
 import { Socket } from 'socket.io-client'
 import { Dispatch, SetStateAction, MutableRefObject } from 'react'
 
@@ -25,7 +31,7 @@ type SocketOnMessageParams = {
   scket: Socket
   user: User
   chat: ChatShow
-  addMessage: (message: Message) => void
+  addMessage: AddMessageFn
 }
 
 export function socketOnMessage(params: SocketOnMessageParams) {
@@ -73,8 +79,8 @@ export function socketOnTyping(params: SocketOnTypingParams) {
 
 type SocketOnMessageRemoveParams = {
   scket: Socket
-  removeMessage: (messageId: string) => void
-  addRemovedMessage: (messageId: string) => void
+  removeMessage: RemoveMessageFn
+  addRemovedMessage: AddRemovedMessageFn
 }
 
 export function socketOnMessageRemove(params: SocketOnMessageRemoveParams) {
@@ -96,14 +102,14 @@ type SocketOnDMParams = {
   scket: Socket
   user: User
   chat: ChatShow
-  setChats: (updater: (prevChats: ChatIndex[]) => ChatIndex[]) => void
-  setLocalMediaStream: (stream: MediaStream | null) => void
+  setChats: SetChatsFn
+  setLocalMediaStream: SetMediaStreamFn
   setRemoteDeviceMuted: SetDeviceMutedFn
-  currentCall: Call
-  incomingCall: Call
-  setIncomingCall: (call: Call) => void
-  outcomingCall: Call
-  setOutcomingCall: (call: Call) => void
+  currentCall: MyCall
+  incomingCall: MyCall
+  setIncomingCall: SetCallFn
+  outcomingCall: MyCall
+  setOutcomingCall: SetCallFn
 }
 
 export function socketOnDM(params: SocketOnDMParams) {
@@ -203,8 +209,8 @@ export function socketOnDM(params: SocketOnDMParams) {
 type SocketOnOnlineStatus = {
   scket: Socket
   user: User
-  addUser: (userId: string) => void
-  removeUser: (userId: string) => void
+  addUser: AddOnlineUserFn
+  removeUser: RemoveOnlineUserFn
   typingUsers: string[]
   setTypingUsers: Dispatch<SetStateAction<string[]>>
 }
@@ -232,11 +238,11 @@ export function socketOnOnlineStatus(params: SocketOnOnlineStatus) {
 type SocketOnConnectParams = {
   scket: Socket
   disconnectedRef: MutableRefObject<boolean>
-  setSocketDisconnected: (disconnected: boolean) => void
-  fetchChats: () => void
+  setSocketDisconnected: SetSocketDisconnectedFn
+  fetchChats: FetchChatsFn
   chat: ChatShow
-  setMessages: (updater: (prevMessages: Message[]) => Message[]) => void
-  fetchMessages: (chatId: string, page?: number | undefined, initial?: boolean | undefined) => Promise<MessagesResponse>
+  setMessages: SetMessagesFn
+  fetchMessages: FetchMessagesFn
 }
 
 export function socketOnConnect(params: SocketOnConnectParams) {
@@ -267,7 +273,7 @@ export function socketOnConnect(params: SocketOnConnectParams) {
 type SocketOnDisconnectType = {
   scket: Socket
   disconnectedRef: MutableRefObject<boolean>
-  setSocketDisconnected: (disconnected: boolean) => void
+  setSocketDisconnected: SetSocketDisconnectedFn
 }
 
 export function socketOnDisconnect(params: SocketOnDisconnectType) {

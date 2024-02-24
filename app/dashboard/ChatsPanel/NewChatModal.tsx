@@ -8,7 +8,7 @@ import Modal, { ModalProps } from '@/app/components/Modal/Modal'
 import api from '@/app/api/axiosInstance'
 
 import { AxiosError } from 'axios'
-import { ChatIndex } from '@/app/types'
+import { ChatIndex } from '@/app/types/globalTypes'
 
 function NewChatModal({ isOpen, setIsOpen }: ModalProps) {
   const [setChats] = useChatsStore((state) => [state.setChats])

@@ -4,7 +4,7 @@ import { XCircleFill, PlayFill, StopFill, SendFill, PauseFill } from 'react-boot
 import useSocketStore from '@/app/zustand/socketStore'
 
 import { Dispatch, SetStateAction, MutableRefObject } from 'react'
-import { ChatShow } from '@/app/types'
+import { ChatShow } from '@/app/types/globalTypes'
 
 type VoiceClipRecordingProps = {
   chat: ChatShow

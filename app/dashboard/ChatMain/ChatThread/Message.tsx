@@ -9,7 +9,7 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 
-import { Message, User } from '@/app/types'
+import { Message, User } from '@/app/types/globalTypes'
 import RemoveMessageModal from './RemoveMessageModal'
 
 type MessageProps = {
