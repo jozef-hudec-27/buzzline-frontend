@@ -1,9 +1,10 @@
-import { Peer } from 'peerjs'
 import { create } from 'zustand'
 
+import { MyPeer, InitPeerFn } from '@/app/types/peerTypes'
+
 type PeerStore = {
-  peer: Peer | null
-  initPeer: (peerId: string) => Promise<Peer>
+  peer: MyPeer
+  initPeer: InitPeerFn
 }
 
 export default create<PeerStore>((set, get) => ({

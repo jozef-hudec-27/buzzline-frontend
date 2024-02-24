@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-import { Message } from '@/app/types'
+import { Message } from '../types/globalTypes'
 
 export type MessagesResponse = {
   docs: Message[]

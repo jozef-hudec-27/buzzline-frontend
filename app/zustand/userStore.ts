@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-import { User } from '@/app/types'
+import { User, SetUserFn, FetchUserFn } from '../types/userTypes'
 
 type UserStore = {
   user: User
-  setUser: (user: User) => void
+  setUser: SetUserFn
   isLoading: boolean
-  fetchUser: () => Promise<User>
+  fetchUser: FetchUserFn
   isLoggedIn: boolean
 }
 

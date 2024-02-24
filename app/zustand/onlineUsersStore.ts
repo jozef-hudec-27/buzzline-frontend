@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 
+import { UserList, AddOnlineUserFn, RemoveOnlineUserFn, IsUserOnlineFn } from '../types/onlineUsersTypes'
+
 type OnlineUsersStore = {
-  users: Set<string>
-  addUser: (userId: string) => void
-  removeUser: (userId: string) => void
-  isOnline: (userId: string) => boolean
+  users: UserList
+  addUser: AddOnlineUserFn
+  removeUser: RemoveOnlineUserFn
+  isOnline: IsUserOnlineFn
 }
 
 export default create<OnlineUsersStore>((set, get) => ({

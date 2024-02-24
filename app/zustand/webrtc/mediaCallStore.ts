@@ -1,22 +1,19 @@
 import { create } from 'zustand'
 
-import { Call } from '@/app/types'
-import { MutableRefObject } from 'react'
-
-type SetCallFn = (call: Call) => void
+import { MyCall, CallRef, SetCallFn } from '@/app/types/mediaCallTypes'
 
 type MediaCallStore = {
-  incomingCall: Call
+  incomingCall: MyCall
   setIncomingCall: SetCallFn
-  incomingCallRef: MutableRefObject<Call>
+  incomingCallRef: CallRef
 
-  outcomingCall: Call
+  outcomingCall: MyCall
   setOutcomingCall: SetCallFn
-  outcomingCallRef: MutableRefObject<Call>
+  outcomingCallRef: CallRef
 
-  currentCall: Call
+  currentCall: MyCall
   setCurrentCall: SetCallFn
-  currentCallRef: MutableRefObject<Call>
+  currentCallRef: CallRef
 }
 
 export default create<MediaCallStore>((set, get) => ({

@@ -1,19 +1,16 @@
 import { create } from 'zustand'
 
-import { MediaStreamTrack } from '@/app/types'
-
-type SetMediaStreamFn = (stream: MediaStream | null) => void
-export type SetDeviceMutedFn = (device: MediaStreamTrack, muted: boolean) => void
+import { MyMediaStream, SetMediaStreamFn, SetDeviceMutedFn } from '@/app/types/mediaStreamTypes'
 
 type MediaStreamStore = {
-  localMediaStream: MediaStream | null
+  localMediaStream: MyMediaStream
   setLocalMediaStream: SetMediaStreamFn
 
   localMicMuted: boolean
   localVideoMuted: boolean
   setLocalDeviceMuted: SetDeviceMutedFn
 
-  remoteMediaStream: MediaStream | null
+  remoteMediaStream: MyMediaStream
   setRemoteMediaStream: SetMediaStreamFn
 
   remoteMicMuted: boolean

@@ -1,14 +1,15 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-import { ChatIndex } from '@/app/types'
+import { ChatIndex } from '../types/globalTypes'
+import { SetChatsFn, FetchChatsFn } from '../types/chatsTypes'
 
 type ChatsStore = {
   chats: ChatIndex[]
-  setChats: (updater: (prevChats: ChatIndex[]) => ChatIndex[]) => void
+  setChats: SetChatsFn
   isLoading: boolean
   hasFetched: boolean
-  fetchChats: () => any
+  fetchChats: FetchChatsFn
 }
 
 export default create<ChatsStore>()((set) => ({

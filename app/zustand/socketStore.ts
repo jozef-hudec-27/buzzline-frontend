@@ -1,15 +1,14 @@
-import { Socket } from 'socket.io-client'
 import { create } from 'zustand'
 
-import { MutableRefObject } from 'react'
+import { MySocket, SetSocketFn, SocketRef, SetSocketDisconnectedFn } from '../types/socketTypes'
 
 type SocketStore = {
-  socket: Socket | null
-  setSocket: (socket: Socket) => void
-  socketRef: MutableRefObject<Socket | null>
+  socket: MySocket
+  setSocket: SetSocketFn
+  socketRef: SocketRef
 
   socketDisconnected: boolean
-  setSocketDisconnected: (disconnected: boolean) => void
+  setSocketDisconnected: SetSocketDisconnectedFn
 }
 
 export default create<SocketStore>((set, get) => ({

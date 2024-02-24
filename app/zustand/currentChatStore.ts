@@ -1,13 +1,14 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-import { ChatShow } from '@/app/types'
+import { ChatShow } from '../types/globalTypes'
+import { SetChatFn, FetchChatFn } from '../types/currentChatTypes'
 
 type CurrentChatStore = {
   chat: ChatShow
-  setChat: (chat: ChatShow) => void
+  setChat: SetChatFn
   isLoading: boolean
-  fetchChat: (chatId: string) => any
+  fetchChat: FetchChatFn
 }
 
 export default create<CurrentChatStore>()((set) => ({
