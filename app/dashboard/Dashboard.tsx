@@ -96,7 +96,15 @@ function DashBoard() {
     })
     socketOnOnlineStatus({ scket, user, addUser, removeUser, typingUsers, setTypingUsers })
     socketOnConnect({ scket, disconnectedRef, setSocketDisconnected, fetchChats, chat, fetchMessages, setMessages })
-    socketOnDisconnect({ scket, disconnectedRef, setSocketDisconnected })
+    socketOnDisconnect({
+      scket,
+      disconnectedRef,
+      setSocketDisconnected,
+      currentCall,
+      setIncomingCall,
+      setOutcomingCall,
+      setLocalMediaStream,
+    })
 
     setSocket(scket)
 

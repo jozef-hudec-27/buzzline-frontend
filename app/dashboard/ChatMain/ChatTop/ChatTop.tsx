@@ -10,7 +10,7 @@ import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength } from '@/app/utils/utils'
-import { accessUserMediaCatchHandler, closeOutcomingCall } from '@/app/utils/mediaCallUtils'
+import { accessUserMediaCatchHandler, closeOutcomingCall, addTrackToPeerConnection } from '@/app/utils/mediaCallUtils'
 import { configurePeerConnection } from '@/app/utils/peerUtils'
 
 function ChatTop() {
@@ -24,11 +24,14 @@ function ChatTop() {
     state.currentCall,
     state.setCurrentCall,
   ])
-  const [setLocalMediaStream, setRemoteMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
-    state.setLocalMediaStream,
-    state.setRemoteMediaStream,
-    state.setRemoteDeviceMuted,
-  ])
+  const [setLocalMediaStream, setRemoteMediaStream, setRemoteDeviceMuted, setLocalDeviceMuted] = useMediaStreamStore(
+    (state) => [
+      state.setLocalMediaStream,
+      state.setRemoteMediaStream,
+      state.setRemoteDeviceMuted,
+      state.setLocalDeviceMuted,
+    ]
+  )
 
   const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.users.some((user) => isOnline(user._id))
@@ -50,9 +53,23 @@ function ChatTop() {
         setRemoteMediaStream(null)
       })
 
+      // Callee answered the call
       call.on('stream', (remoteStream) => {
         setCurrentCall(call)
         setRemoteMediaStream(remoteStream)
+
+        // if there was an error (network) causing the stream to be inactive, re-add track
+        if (!stream.active) {
+          stream.getTracks().forEach((track) => stream.removeTrack(track))
+          addTrackToPeerConnection({ kind: 'audio', pc: call.peerConnection, stream, setLocalDeviceMuted })
+          setLocalMediaStream(stream)
+        }
+
+        socket?.emit('dm', {
+          type: 'DM_CALLER_CONNECTED',
+          from: peer.id,
+          to: call.peer,
+        })
       })
 
       configurePeerConnection({ pc: call.peerConnection, socket, from: peer.id, to: call.peer, setRemoteDeviceMuted })

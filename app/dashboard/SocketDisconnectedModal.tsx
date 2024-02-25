@@ -1,28 +1,30 @@
 import { useState, useEffect } from 'react'
 
 import useSocketStore from '../zustand/socketStore'
+import useMediaCallStore from '../zustand/webrtc/mediaCallStore'
 
 import Modal from '../components/Modal/Modal'
 
 function SocketDisconnectedModal() {
-  const socketDisconnected = useSocketStore((state) => state.socketDisconnected)
+  const [socketDisconnected] = useSocketStore((state) => [state.socketDisconnected])
+  const [currentCall] = useMediaCallStore((state) => [state.currentCall])
 
   const [showReloadBtn, setShowReloadBtn] = useState(false)
 
-    useEffect(() => {
-      if (socketDisconnected) {
-        const reloadTimeout = setTimeout(() => {
-          setShowReloadBtn(true)
-        }, 10000)
+  useEffect(() => {
+    if (socketDisconnected) {
+      const reloadTimeout = setTimeout(() => {
+        setShowReloadBtn(true)
+      }, 10000)
 
-        return () => {
-          clearTimeout(reloadTimeout)
-        }
+      return () => {
+        clearTimeout(reloadTimeout)
       }
-    }, [socketDisconnected])
+    }
+  }, [socketDisconnected])
 
   return (
-    <Modal isOpen={socketDisconnected} setIsOpen={function () {}}>
+    <Modal isOpen={socketDisconnected && !currentCall} setIsOpen={function () {}}>
       <div className="flex flex-col items-center gap-[24px]">
         <span className="text-6xl">⚠️</span>
 

@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast'
 import { Peer } from 'peerjs'
 import { MySocket, SocketRef } from '../types/socketTypes'
 import { SetCallFn, MyCall, CallRef } from '../types/mediaCallTypes'
-import { SetMediaStreamFn } from '../types/mediaStreamTypes'
+import { SetMediaStreamFn, MediaStreamTrack } from '../types/mediaStreamTypes'
 
 export function accessUserMediaCatchHandler(e: any, video = false, onlyOne = false) {
   switch (e.name) {
@@ -79,4 +79,34 @@ export function closeOutcomingCall(params: CloseOutcomingCallParams) {
     type: 'DM_INCOMING_CALL_CLOSE',
   })
   setOutcomingCall(null)
+}
+
+type AddTrackToPeerConnectionParams = {
+  kind: MediaStreamTrack
+  pc: RTCPeerConnection
+  stream: MediaStream
+  setLocalDeviceMuted: (kind: MediaStreamTrack, muted: boolean) => void
+  finishCb?: () => void
+}
+
+export function addTrackToPeerConnection(params: AddTrackToPeerConnectionParams) {
+  const { kind, pc, stream, setLocalDeviceMuted } = params
+
+  const getNewTrack = async () => {
+    const newStream = await navigator.mediaDevices.getUserMedia({ [kind]: true })
+    return newStream.getTracks()[0]
+  }
+
+  getNewTrack()
+    .then((track) => {
+      stream.addTrack(track)
+      setLocalDeviceMuted(kind, !track.enabled)
+
+      // @ts-ignore
+      window.addingTrack = true
+      pc.addTrack(track, stream) // triggers the negotiationneeded event
+
+      if (params.finishCb) params.finishCb()
+    })
+    .catch((e) => accessUserMediaCatchHandler(e, kind === 'video', true))
 }

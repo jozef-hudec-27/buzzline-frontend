@@ -22,6 +22,7 @@ import {
   DMSDPOffer,
   DMDeviceMuteToggle,
   DMSDPAnswer,
+  DMCallerConnected,
 } from '../types/socketTypes'
 
 import { Socket } from 'socket.io-client'
@@ -139,6 +140,7 @@ export function socketOnDM(params: SocketOnDMParams) {
           | DMDeviceMuteToggle
           | DMSDPOffer
           | DMSDPAnswer
+          | DMCallerConnected
         )
     ) => {
       switch (data.type) {
@@ -200,6 +202,10 @@ export function socketOnDM(params: SocketOnDMParams) {
 
           const pc2 = currentCall.peerConnection
           pc2.setRemoteDescription(new RTCSessionDescription(data.answer))
+          break
+        case 'DM_CALLER_CONNECTED':
+          //   @ts-ignore
+          window.clearTimeout(window.callerErrTimeout)
           break
       }
     }
@@ -274,15 +280,30 @@ type SocketOnDisconnectType = {
   scket: Socket
   disconnectedRef: MutableRefObject<boolean>
   setSocketDisconnected: SetSocketDisconnectedFn
+  currentCall: MyCall
+  setIncomingCall: SetCallFn
+  setOutcomingCall: SetCallFn
+  setLocalMediaStream: SetMediaStreamFn
 }
 
 export function socketOnDisconnect(params: SocketOnDisconnectType) {
-  const { scket, disconnectedRef, setSocketDisconnected } = params
+  const {
+    scket,
+    disconnectedRef,
+    setSocketDisconnected,
+    currentCall,
+    setIncomingCall,
+    setOutcomingCall,
+    setLocalMediaStream,
+  } = params
 
   scket.on('disconnect', () => {
     toast.error('You are offline', { position: 'bottom-left' })
     disconnectedRef.current = true
     setSocketDisconnected(true)
+    setIncomingCall(null)
+    setOutcomingCall(null)
+    if (!currentCall) setLocalMediaStream(null)
   })
 }
 

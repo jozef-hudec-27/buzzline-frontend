@@ -20,6 +20,7 @@ type DMType =
   | 'DM_DEVICE_MUTE_TOGGLE'
   | 'DM_SDP_OFFER'
   | 'DM_SDP_ANSWER'
+  | 'DM_CALLER_CONNECTED'
 
 export type DMData = {
   type: DMType
@@ -60,4 +61,8 @@ export type DMSDPOffer = {
 export type DMSDPAnswer = {
   type: 'DM_SDP_ANSWER'
   answer: RTCSessionDescriptionInit
+}
+
+export type DMCallerConnected = {
+  type: 'DM_CALLER_CONNECTED'
 }

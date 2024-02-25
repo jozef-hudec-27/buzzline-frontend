@@ -1,4 +1,5 @@
 import { CameraVideoFill, TelephoneFill, X } from 'react-bootstrap-icons'
+import { toast } from 'react-hot-toast'
 
 import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
@@ -14,15 +15,15 @@ import { User } from '@/app/types/globalTypes'
 function ComingCall({ friend }: { friend: User }) {
   const [user] = useUserStore((state) => [state.user])
   const [socket] = useSocketStore((state) => [state.socket])
-  const [incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, setCurrentCall] = useMediaCallStore(
-    (state) => [
+  const [incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, currentCallRef, setCurrentCall] =
+    useMediaCallStore((state) => [
       state.incomingCall,
       state.setIncomingCall,
       state.outcomingCall,
       state.setOutcomingCall,
+      state.currentCallRef,
       state.setCurrentCall,
-    ]
-  )
+    ])
   const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
     state.setLocalMediaStream,
     state.setRemoteDeviceMuted,
@@ -58,6 +59,15 @@ function ComingCall({ friend }: { friend: User }) {
         to: incomingCall?.peer,
         setRemoteDeviceMuted,
       })
+
+      //   If the caller doesn't join the call, they probably have network issues
+      const callerErrTimeout = window.setTimeout(() => {
+        if (currentCallRef.current !== incomingCall) return
+
+        toast.error('Issue: the caller may not join the call.', { position: 'bottom-left' })
+      }, 10000)
+      //   @ts-ignore
+      window.callerErrTimeout = callerErrTimeout
     } catch (e) {
       accessUserMediaCatchHandler(e, isVideoCall)
       declineIncomingCall()

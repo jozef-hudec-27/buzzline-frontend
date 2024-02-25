@@ -56,7 +56,7 @@ export function configurePeer(params: ConfigurePeerParams) {
       setRemoteMediaStream,
       incomingCallRef,
       setIncomingCall,
-      outcomingCallRef
+      outcomingCallRef,
     )
   )
 }
@@ -76,9 +76,9 @@ export function configurePeerConnection(params: ConfigurePeerConnectionParams) {
 
   pc.addEventListener('negotiationneeded', async () => {
     // @ts-ignore
-    if (window.callUpgrade) {
+    if (window.addingTrack) {
       // @ts-ignore
-      window.callUpgrade = false
+      window.addingTrack = false
 
       // Upgrading the call from audio to video
       const offer = await pc.createOffer()

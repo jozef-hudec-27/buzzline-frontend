@@ -9,7 +9,7 @@ import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 
 import LocalVideo from './LocalVideo'
 import Avatar from '@/app/components/avatar/Avatar'
-import { accessUserMediaCatchHandler } from '@/app/utils/mediaCallUtils'
+import { addTrackToPeerConnection } from '@/app/utils/mediaCallUtils'
 
 import { User } from '@/app/types/globalTypes'
 import { MediaStreamTrack } from '@/app/types/mediaStreamTypes'
@@ -93,25 +93,20 @@ function CurrentCall({ friend }: { friend: User }) {
 
       setLocalDeviceMuted(kind, !enabled)
     } else {
-      const getTrack = async () => {
-        const stream = await navigator.mediaDevices.getUserMedia({ [kind]: true })
-        const newTrack = stream.getTracks()[0]
-        return newTrack
-      }
+      const pc = currentCall?.peerConnection
+      if (!pc) return
 
-      getTrack()
-        .then((track) => {
-          localMediaStream.addTrack(track)
-          setLocalDeviceMuted(kind, !track.enabled)
-          // @ts-ignore
-          window.callUpgrade = true
-          currentCall?.peerConnection.addTrack(track, localMediaStream) // triggers the negotiationneeded event
-
+      addTrackToPeerConnection({
+        kind,
+        pc: currentCall?.peerConnection,
+        stream: localMediaStream,
+        setLocalDeviceMuted,
+        finishCb: () => {
           if (kind === 'video') {
             showCameraTip()
           }
-        })
-        .catch((e) => accessUserMediaCatchHandler(e, kind === 'video', true))
+        },
+      })
     }
   }
 
@@ -131,7 +126,7 @@ function CurrentCall({ friend }: { friend: User }) {
         <LocalVideo videoRef={localVideoRef} />
 
         <div className="bg-[rgb(0,0,0)] rounded-[8px]">
-          <video className="w-[960px] h-[540px] rounded-[8px]" ref={remoteVideoRef}></video>
+          <video id="remote-video" className="w-[960px] h-[540px] rounded-[8px]" ref={remoteVideoRef}></video>
           {remoteVideoMuted && (
             <>
               <Avatar
