@@ -4,9 +4,11 @@ import { Peer } from 'peerjs'
 import { MySocket, SocketRef } from '../types/socketTypes'
 import { CallRef, SetCallFn } from '../types/mediaCallTypes'
 import { SetMediaStreamFn, SetDeviceMutedFn, MediaStreamTrack } from '../types/mediaStreamTypes'
+import { KillPeerFn } from '../types/peerTypes'
 
 type ConfigurePeerParams = {
   peer: Peer
+  killPeer: KillPeerFn
   userId: string
   socketRef: SocketRef
   currentCallRef: CallRef
@@ -22,6 +24,7 @@ type ConfigurePeerParams = {
 export function configurePeer(params: ConfigurePeerParams) {
   const {
     peer,
+    killPeer,
     userId,
     socketRef,
     currentCallRef,
@@ -35,6 +38,8 @@ export function configurePeer(params: ConfigurePeerParams) {
   } = params
 
   peer.on('disconnected', () => {
+    killPeer()
+
     if (!outcomingCallRef.current) return
     closeOutcomingCall({
       paramsType: 'ref',
@@ -44,6 +49,10 @@ export function configurePeer(params: ConfigurePeerParams) {
       setOutcomingCall,
       setLocalMediaStream,
     })
+  })
+
+  peer.on('error', (err) => {
+    if (err.type !== 'peer-unavailable') killPeer()
   })
 
   peer.on('open', () =>
@@ -56,7 +65,7 @@ export function configurePeer(params: ConfigurePeerParams) {
       setRemoteMediaStream,
       incomingCallRef,
       setIncomingCall,
-      outcomingCallRef,
+      outcomingCallRef
     )
   )
 }

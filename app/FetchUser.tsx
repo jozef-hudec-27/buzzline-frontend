@@ -12,7 +12,7 @@ import { configurePeer } from './utils/peerUtils'
 
 function FetchUser() {
   const [fetchUser] = useUserStore((state) => [state.fetchUser])
-  const [initPeer] = usePeerStore((state) => [state.initPeer])
+  const [initPeer, killPeer] = usePeerStore((state) => [state.initPeer, state.killPeer])
   const [socketRef] = useSocketStore((state) => [state.socketRef])
   const [setCurrentCall, currentCallRef, setIncomingCall, incomingCallRef, setOutcomingCall, outcomingCallRef] =
     useMediaCallStore((state) => [
@@ -36,6 +36,7 @@ function FetchUser() {
 
         configurePeer({
           peer,
+          killPeer,
           userId: user._id,
           socketRef,
           currentCallRef,

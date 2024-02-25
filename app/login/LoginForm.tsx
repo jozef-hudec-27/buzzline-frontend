@@ -28,7 +28,7 @@ function LoginForm(props: LoginFormProps) {
 
   const [fetchUser] = useUserStore((state) => [state.fetchUser])
   const [socketRef] = useSocketStore((state) => [state.socketRef])
-  const [initPeer] = usePeerStore((state) => [state.initPeer])
+  const [initPeer, killPeer] = usePeerStore((state) => [state.initPeer, state.killPeer])
   const [setCurrentCall, currentCallRef, setIncomingCall, incomingCallRef, setOutcomingCall, outcomingCallRef] =
     useMediaCallStore((state) => [
       state.setCurrentCall,
@@ -63,6 +63,7 @@ function LoginForm(props: LoginFormProps) {
 
       configurePeer({
         peer,
+        killPeer,
         userId: user._id,
         socketRef,
         currentCallRef,

@@ -1,10 +1,11 @@
 import { create } from 'zustand'
 
-import { MyPeer, InitPeerFn } from '@/app/types/peerTypes'
+import { MyPeer, InitPeerFn, KillPeerFn } from '@/app/types/peerTypes'
 
 type PeerStore = {
   peer: MyPeer
   initPeer: InitPeerFn
+  killPeer: KillPeerFn
 }
 
 export default create<PeerStore>((set, get) => ({
@@ -25,5 +26,12 @@ export default create<PeerStore>((set, get) => ({
     })
 
     return peer
+  },
+  killPeer: () => {
+    const peer = get().peer
+    if (peer) {
+      peer.destroy()
+      set({ peer: null })
+    }
   },
 }))

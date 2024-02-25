@@ -37,7 +37,7 @@ function ChatTop() {
   const online = chat.users.some((user) => isOnline(user._id))
 
   async function callUser(video: boolean, remotePeerId: string) {
-    if (currentCall || !peer) return
+    if (currentCall || !peer || peer.disconnected) return
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video })
@@ -108,8 +108,9 @@ function ChatTop() {
         <button
           className="chat__icon-btn"
           aria-label="Audio call"
-          title="Audio Call"
+          title={`Audio Call${!peer || peer.disconnected ? ' Not Available' : ''}`}
           onClick={() => callUser(false, chat.users[0]._id)}
+          disabled={!peer || peer.disconnected}
         >
           <TelephoneFill size={20} aria-hidden />
         </button>
@@ -117,8 +118,9 @@ function ChatTop() {
         <button
           className="chat__icon-btn"
           aria-label="Video call"
-          title="Video Call"
+          title={`Video Call${!peer || peer.disconnected ? ' Not Available' : ''}`}
           onClick={() => callUser(true, chat.users[0]._id)}
+          disabled={!peer || peer.disconnected}
         >
           <CameraVideoFill size={20} aria-hidden />
         </button>
