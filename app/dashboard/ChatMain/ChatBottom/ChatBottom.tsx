@@ -13,9 +13,7 @@ import VoiceClipRecording from './VoiceClipRecording'
 
 function ChatBottom() {
   const [socket] = useSocketStore((state) => [state.socket])
-  const [chat] = useCurrentChatStore((state) => [state.chat])
-
-  const [message, setMessage] = useState('')
+  const [chat, message, setMessage] = useCurrentChatStore((state) => [state.chat, state.message, state.setMessage])
 
   //   Voice clip recording
   const [isRecordingVoiceClip, setIsRecordingVoiceClip] = useState(false)
@@ -154,7 +152,7 @@ function ChatBottom() {
                   return toast('Maximum message length is 500 characters.', { icon: '❌' })
                 }
 
-                setMessage(newMsg)
+                setMessage(() => newMsg)
               }}
             />
 

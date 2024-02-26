@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import useUserStore from '@/app/zustand/userStore'
+import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
@@ -19,7 +20,13 @@ type ChatProps = {
 
 function Chat({ chat, hideNewestMessage }: ChatProps) {
   const [user] = useUserStore((state) => [state.user])
-  const [fetchChat] = useCurrentChatStore((state) => [state.fetchChat])
+  const [socket] = useSocketStore((state) => [state.socket])
+  const [fetchChat, currentChat, message, setMessage] = useCurrentChatStore((state) => [
+    state.fetchChat,
+    state.chat,
+    state.message,
+    state.setMessage,
+  ])
   const [setChats] = useChatsStore((state) => [state.setChats])
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
 
@@ -42,11 +49,18 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
     <button
       className="p-[6px] flex flex-col lg:flex-row items-center gap-0 lg:gap-[10px] rounded-[8px] hover:bg-black-5 focus:bg-black-5 outline-none cursor-pointer"
       onClick={(e) => {
+        if (chat._id === currentChat._id) return
+
         fetchChat(chat._id)
 
         if (randomInt(1, 5) > 3) {
           // Rerender ChatsPanel to update newestMessage
           setChats((prevChats) => prevChats)
+        }
+
+        if (currentChat && message) {
+          socket?.emit('typing', { chat: currentChat._id, isTyping: false })
+          setMessage('')
         }
       }}
     >

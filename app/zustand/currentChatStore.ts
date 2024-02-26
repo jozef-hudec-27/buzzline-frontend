@@ -2,13 +2,15 @@ import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
 import { ChatShow } from '../types/globalTypes'
-import { SetChatFn, FetchChatFn } from '../types/currentChatTypes'
+import { SetChatFn, FetchChatFn, SetMessageFn } from '../types/currentChatTypes'
 
 type CurrentChatStore = {
   chat: ChatShow
   setChat: SetChatFn
   isLoading: boolean
   fetchChat: FetchChatFn
+  message: string
+  setMessage: SetMessageFn
 }
 
 export default create<CurrentChatStore>()((set) => ({
@@ -24,5 +26,15 @@ export default create<CurrentChatStore>()((set) => ({
     } catch (err: unknown) {
       set({ isLoading: false })
     }
+  },
+  message: '',
+  setMessage: (updater) => {
+    set((state) => {
+      if (typeof updater === 'function') {
+        return { message: updater(state.message) }
+      }
+
+      return { message: updater }
+    })
   },
 }))

@@ -4,8 +4,10 @@ import Picker from '@emoji-mart/react'
 import { Popover } from 'react-tiny-popover'
 import { EmojiSmileFill } from 'react-bootstrap-icons'
 
+import { SetMessageFn } from '@/app/types/currentChatTypes'
+
 type EmojiButtonProps = {
-  setMessage: React.Dispatch<React.SetStateAction<string>>
+  setMessage: SetMessageFn
 }
 
 function EmojiButton({ setMessage }: EmojiButtonProps) {
