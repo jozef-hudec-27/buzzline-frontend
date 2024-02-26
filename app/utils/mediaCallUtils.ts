@@ -23,17 +23,31 @@ export function accessUserMediaCatchHandler(e: any, video = false, onlyOne = fal
   }
 }
 
-export function handleIncomingCall(
-  peer: Peer,
-  socketRef: SocketRef,
-  currentCallRef: CallRef,
-  setCurrentCall: SetCallFn,
-  setLocalMediaStream: SetMediaStreamFn,
-  setRemoteMediaStream: SetMediaStreamFn,
-  incomingCallRef: CallRef,
-  setIncomingCall: SetCallFn,
+type HandleIncomingCallParams = {
+  peer: Peer
+  socketRef: SocketRef
+  currentCallRef: CallRef
+  setCurrentCall: SetCallFn
+  setLocalMediaStream: SetMediaStreamFn
+  setRemoteMediaStream: SetMediaStreamFn
+  incomingCallRef: CallRef
+  setIncomingCall: SetCallFn
   outcomingCallRef: CallRef
-) {
+}
+
+export function handleIncomingCall(params: HandleIncomingCallParams) {
+  const {
+    peer,
+    socketRef,
+    currentCallRef,
+    setCurrentCall,
+    setLocalMediaStream,
+    setRemoteMediaStream,
+    incomingCallRef,
+    setIncomingCall,
+    outcomingCallRef,
+  } = params
+
   peer.on('call', (incomingCall) => {
     if (currentCallRef.current || outcomingCallRef.current || incomingCallRef.current) {
       socketRef.current?.emit('dm', {

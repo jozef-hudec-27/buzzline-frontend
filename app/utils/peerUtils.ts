@@ -56,7 +56,7 @@ export function configurePeer(params: ConfigurePeerParams) {
   })
 
   peer.on('open', () =>
-    handleIncomingCall(
+    handleIncomingCall({
       peer,
       socketRef,
       currentCallRef,
@@ -65,8 +65,8 @@ export function configurePeer(params: ConfigurePeerParams) {
       setRemoteMediaStream,
       incomingCallRef,
       setIncomingCall,
-      outcomingCallRef
-    )
+      outcomingCallRef,
+    })
   )
 }
 

@@ -23,6 +23,7 @@ function ChatBottom() {
   const recordedChunks = useRef<Blob[]>([])
 
   const imageInput = useRef<HTMLInputElement | null>(null)
+  const removeMsgTipShownRef = useRef(!!localStorage.getItem('removeMsgTipShown'))
 
   useEffect(() => {
     const audio = document.getElementById('voice-clip-preview') as HTMLAudioElement
@@ -98,10 +99,19 @@ function ChatBottom() {
     }
   }
 
+  const showMsgRemoveTip = () => {
+    if (removeMsgTipShownRef.current) return
+
+    toast('Pro tip: You can remove a message by clicking and holding it.', { icon: '🗑️', duration: 8000 })
+    removeMsgTipShownRef.current = true
+    localStorage.setItem('removeMsgTipShown', 'true')
+  }
+
   const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!message.length || message.length > 500) return
+    showMsgRemoveTip()
 
     socket?.emit('message', { chat: chat._id, content: message })
 
