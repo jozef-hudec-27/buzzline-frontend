@@ -2,7 +2,14 @@ import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
 import { Message } from '../types/globalTypes'
-import { SetMessagesFn, AddMessageFn, RemoveMessageFn, FetchMessagesFn } from '../types/chatMessagesTypes'
+import {
+  SetMessagesFn,
+  AddMessageFn,
+  RemoveMessageFn,
+  FetchMessagesFn,
+  MessageToRemove,
+  SetMessageToRemoveFn,
+} from '../types/chatMessagesTypes'
 
 export type MessagesResponse = {
   docs: Message[]
@@ -22,6 +29,8 @@ type CurrentChatMessagesStore = {
   setMessages: SetMessagesFn
   addMessage: AddMessageFn
   removeMessage: RemoveMessageFn
+  messageToRemove: MessageToRemove
+  setMessageToRemove: SetMessageToRemoveFn
   isLoading: boolean
   initialLoading: boolean
   fetchMessages: FetchMessagesFn
@@ -57,6 +66,8 @@ export default create<CurrentChatMessagesStore>()((set, get) => ({
       }
     }
   },
+  messageToRemove: null,
+  setMessageToRemove: (message) => set({ messageToRemove: message }),
   isLoading: false,
   initialLoading: false,
   fetchMessages: async (chatId, page = 1, initial = false) => {

@@ -3,7 +3,7 @@ import ReactModal from 'react-modal'
 
 export type ModalProps = PropsWithChildren<{
   isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>> | ((open: boolean) => void)
   contentLabel?: string
   cls?: string
 }>

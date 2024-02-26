@@ -9,6 +9,7 @@ import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 import Avatar from '@/app/components/avatar/Avatar'
 import { accessUserMediaCatchHandler, closeOutcomingCall as closeMyCall } from '@/app/utils/mediaCallUtils'
 import { configurePeerConnection } from '@/app/utils/peerUtils'
+import { restrictLength } from '@/app/utils/utils'
 
 import { User } from '@/app/types/globalTypes'
 
@@ -80,7 +81,7 @@ function ComingCall({ friend }: { friend: User }) {
 
       <div className="flex flex-col items-center gap-[4px]">
         <p className="text-3xl text-black-100 font-bold">
-          {friend.firstName} {friend.lastName}
+          {restrictLength(`${friend.firstName} ${friend.lastName}`, 50)}
         </p>
 
         <p>{incomingCall ? `is calling you...` : `you're calling...`}</p>

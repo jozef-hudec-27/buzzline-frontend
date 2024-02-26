@@ -19,6 +19,7 @@ import ChatMain from './ChatMain/ChatMain'
 import Sidebar from './Sidebar/Sidebar'
 import MediaCallModal from './ChatMain/ChatTop/MediaCallModal/MediaCallModal'
 import SocketDisconnectedModal from './SocketDisconnectedModal'
+import RemoveMessageModal from './ChatMain/ChatThread/RemoveMessageModal'
 import {
   socketOnMessage,
   socketOnMessageRemove,
@@ -138,6 +139,7 @@ function DashBoard() {
 
       <MediaCallModal />
       <SocketDisconnectedModal />
+      <RemoveMessageModal />
     </div>
   )
 }

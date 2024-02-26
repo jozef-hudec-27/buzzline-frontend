@@ -10,7 +10,6 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import Avatar from '@/app/components/avatar/Avatar'
 
 import { Message, User } from '@/app/types/globalTypes'
-import RemoveMessageModal from './RemoveMessageModal'
 
 type MessageProps = {
   initialMsg: Message
@@ -20,11 +19,13 @@ type MessageProps = {
 function Message({ initialMsg, i }: MessageProps) {
   const [user] = useUserStore((state) => [state.user])
   const [removedMessages] = useRemovedMessagesStore((state) => [state.removedMessages])
-  const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
+  const [messages, setMessageToRemove] = useCurrentChatMessagesStore((state) => [
+    state.messages,
+    state.setMessageToRemove,
+  ])
 
   const [msg, setMsg] = useState<Message>(initialMsg)
   const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null)
-  const [showRemoveMessageModal, setShowRemoveMessageModal] = useState(false)
 
   useEffect(() => {
     if (removedMessages.includes(msg._id) && !msg.isRemoved) {
@@ -54,8 +55,10 @@ function Message({ initialMsg, i }: MessageProps) {
   }
 
   const handleMouseDown = () => {
+    if (msg.isRemoved || !msgBelongsToUser(msg, user)) return
+
     const timer = setTimeout(() => {
-      setShowRemoveMessageModal(true)
+      setMessageToRemove(msg)
     }, 1000)
 
     setHoldTimer(timer)
@@ -137,10 +140,6 @@ function Message({ initialMsg, i }: MessageProps) {
         // @ts-ignore
         openEvents={msg.voiceClipUrl && []}
       />
-
-      {!msg.isRemoved && msg.sender._id === user._id && (
-        <RemoveMessageModal isOpen={showRemoveMessageModal} setIsOpen={setShowRemoveMessageModal} message={msg} />
-      )}
     </div>
   )
 }

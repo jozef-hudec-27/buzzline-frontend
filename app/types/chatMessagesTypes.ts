@@ -22,3 +22,7 @@ export type RemoveMessageFn = (messageId: string) => void
 export type AddRemovedMessageFn = (messageId: string) => void
 
 export type FetchMessagesFn = (chatId: string, page?: number, initial?: boolean) => Promise<MessagesResponse>
+
+export type MessageToRemove = Message | null
+
+export type SetMessageToRemoveFn = (message: MessageToRemove) => void

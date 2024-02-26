@@ -13,6 +13,7 @@ import ChatTop from './ChatTop/ChatTop'
 import ChatBottom from './ChatBottom/ChatBottom'
 import ChatThread from './ChatThread/ChatThread'
 import api from '@/app/api/axiosInstance'
+import { restrictLength } from '@/app/utils/utils'
 
 type ChatMainProps = {
   typingUsers: string[]
@@ -131,7 +132,7 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
 
           return (
             <p key={`typing-${userId}`} className="text-[13px]">
-              {userFirstName} is typing<span className="pulsing-dot">.</span>
+              {restrictLength(userFirstName, 30)} is typing<span className="pulsing-dot">.</span>
               <span className="pulsing-dot">.</span>
               <span className="pulsing-dot">.</span>✍️
             </p>
