@@ -48,9 +48,7 @@ function FetchUser() {
           outcomingCallRef,
           setOutcomingCall,
         })
-      } catch (e) {
-        console.log(e)
-      }
+      } catch (e) {}
     }
 
     fn()
