@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
-import { User, SetUserFn, FetchUserFn } from '../types/userTypes'
+import { SetUserFn, FetchUserFn } from '../types/userTypes'
+import { User } from '../types/globalTypes'
 
 type UserStore = {
   user: User
