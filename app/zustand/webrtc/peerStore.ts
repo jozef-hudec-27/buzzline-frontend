@@ -18,7 +18,7 @@ export default create<PeerStore>((set, get) => ({
 
     // Importing PeerJs dynamically to avoid SSR issues
     const PeerJs = (await import('peerjs')).default
-    const peer = new PeerJs(peerId)
+    const peer = new PeerJs(peerId, JSON.parse(process.env.NEXT_PUBLIC_PEER_OPTIONS || '{}'))
     set({ peer })
 
     window.addEventListener('beforeunload', (e) => {
