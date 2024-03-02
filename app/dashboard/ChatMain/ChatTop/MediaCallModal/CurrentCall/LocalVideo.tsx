@@ -27,7 +27,7 @@ function LocalVideo({ videoRef }: { videoRef: RefObject<HTMLVideoElement> }) {
           Hide
         </p>
 
-        <video className={`h-[120px] sm:h-[180px] rounded-[6px]`} ref={videoRef}></video>
+        <video className={`h-[120px] sm:h-[180px] rounded-[6px]`} ref={videoRef} muted></video>
       </div>
     </button>
   )

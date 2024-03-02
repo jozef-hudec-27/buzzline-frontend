@@ -1,5 +1,4 @@
 import { TelephoneFill, CameraVideoFill, ThreeDots } from 'react-bootstrap-icons'
-import { toast } from 'react-hot-toast'
 
 import useSocketStore from '@/app/zustand/socketStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
