@@ -2,8 +2,10 @@ import Image from 'next/image'
 
 import defaultAvatar from '/public/assets/images/default-avatar.svg'
 
+import type { StaticImageData } from 'next/image'
+
 type AvatarProps = {
-  src: string | undefined
+  src: string | StaticImageData | undefined
   size: number
   alt: string
   cls?: string

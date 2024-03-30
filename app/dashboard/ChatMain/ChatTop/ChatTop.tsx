@@ -12,6 +12,8 @@ import { restrictLength } from '@/app/utils/utils'
 import { accessUserMediaCatchHandler, closeOutcomingCall, addTrackToPeerConnection } from '@/app/utils/mediaCallUtils'
 import { configurePeerConnection } from '@/app/utils/peerUtils'
 
+import AIAvatar from '/public/assets/images/my-ai-avatar.svg'
+
 function ChatTop() {
   const [socket] = useSocketStore((state) => [state.socket])
   const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
@@ -32,11 +34,11 @@ function ChatTop() {
     ]
   )
 
-  const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
-  const online = chat.users.some((user) => isOnline(user._id))
+  const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}$`
+  const online = chat.isAI || chat.users.some((user) => isOnline(user._id))
 
   async function callUser(video: boolean, remotePeerId: string) {
-    if (currentCall || !peer || peer.disconnected) return
+    if (chat.isAI || currentCall || !peer || peer.disconnected) return
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video })
@@ -95,7 +97,7 @@ function ChatTop() {
     <div className="px-[12px] py-[10px] flex items-center justify-between border-b border-black-10 shadow">
       <div className="flex items-center gap-[10px]">
         <div className="min-w-[36px] min-h-[36px] relative">
-          <Avatar src={chat.users[0].avatarUrl} alt={chatName} size={36} />
+          <Avatar src={chat.isAI ? AIAvatar : chat.users[0].avatarUrl} alt={chatName} size={36} />
 
           {online && <div className="user-online-dot" aria-label="Online"></div>}
         </div>
@@ -104,25 +106,29 @@ function ChatTop() {
       </div>
 
       <div className="flex items-center gap-[24px]">
-        <button
-          className="chat__icon-btn"
-          aria-label="Audio call"
-          title={`Audio Call${!peer || peer.disconnected ? ' Not Available' : ''}`}
-          onClick={() => callUser(false, chat.users[0]._id)}
-          disabled={!peer || peer.disconnected}
-        >
-          <TelephoneFill size={20} aria-hidden />
-        </button>
+        {!chat.isAI && (
+          <>
+            <button
+              className="chat__icon-btn"
+              aria-label="Audio call"
+              title={`Audio Call${!peer || peer.disconnected ? ' Not Available' : ''}`}
+              onClick={() => callUser(false, chat.users[0]._id)}
+              disabled={!peer || peer.disconnected}
+            >
+              <TelephoneFill size={20} aria-hidden />
+            </button>
 
-        <button
-          className="chat__icon-btn"
-          aria-label="Video call"
-          title={`Video Call${!peer || peer.disconnected ? ' Not Available' : ''}`}
-          onClick={() => callUser(true, chat.users[0]._id)}
-          disabled={!peer || peer.disconnected}
-        >
-          <CameraVideoFill size={20} aria-hidden />
-        </button>
+            <button
+              className="chat__icon-btn"
+              aria-label="Video call"
+              title={`Video Call${!peer || peer.disconnected ? ' Not Available' : ''}`}
+              onClick={() => callUser(true, chat.users[0]._id)}
+              disabled={!peer || peer.disconnected}
+            >
+              <CameraVideoFill size={20} aria-hidden />
+            </button>
+          </>
+        )}
 
         {/* <button className="chat__icon-btn" aria-label="Options">
           <ThreeDots size={20} aria-hidden />

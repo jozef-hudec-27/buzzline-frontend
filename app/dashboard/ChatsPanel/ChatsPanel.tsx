@@ -19,6 +19,7 @@ const Chats = memo(function () {
 
     c.forEach((chat) => {
       if (
+        (chat.isAI && 'my ai'.includes(search.toLowerCase())) ||
         chat.users.some((user) => `${user.firstName}${user.lastName}}`.toLowerCase().includes(search.toLowerCase()))
       ) {
         searchResult.push(chat)

@@ -52,6 +52,8 @@ function ChatBottom() {
   }, [message])
 
   const startRecording = async () => {
+    if (chat.isAI) return // AI chat doesn't support voice clips
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       mediaRecorder.current = new MediaRecorder(stream)
@@ -130,23 +132,27 @@ function ChatBottom() {
         />
       ) : (
         <>
-          <button
-            className="chat__icon-btn"
-            aria-label="Record a voice clip"
-            title="Record a voice clip"
-            onClick={startRecording}
-          >
-            <MicFill size={20} aria-hidden />
-          </button>
+          {!chat.isAI && (
+            <>
+              <button
+                className="chat__icon-btn"
+                aria-label="Record a voice clip"
+                title="Record a voice clip"
+                onClick={startRecording}
+              >
+                <MicFill size={20} aria-hidden />
+              </button>
 
-          <button
-            className="chat__icon-btn"
-            aria-label="Send an image"
-            title="Send an image"
-            onClick={() => imageInput.current?.click()}
-          >
-            <Image size={20} aria-hidden />
-          </button>
+              <button
+                className="chat__icon-btn"
+                aria-label="Send an image"
+                title="Send an image"
+                onClick={() => imageInput.current?.click()}
+              >
+                <Image size={20} aria-hidden />
+              </button>
+            </>
+          )}
 
           <form className="py-[12px] px-[24px] flex items-center bg-black-5 flex-1 rounded-full" onSubmit={sendMessage}>
             <input
@@ -183,6 +189,8 @@ function ChatBottom() {
             className="hidden"
             ref={imageInput}
             onChange={(e) => {
+              if (chat.isAI) return // AI chat doesn't support images
+
               const file = e.target.files?.[0]
 
               if (!file) return

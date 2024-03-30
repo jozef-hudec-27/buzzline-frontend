@@ -39,6 +39,7 @@ export type ChatIndex = {
   isGroup: boolean
   users: User[]
   newestMessage?: NewestMessage
+  isAI?: boolean
 }
 
 // Chat (show/detail page)
@@ -47,4 +48,5 @@ export type ChatShow = {
   isGroup: boolean
   users: User[]
   newestMessage?: NewestMessage
+  isAI?: boolean
 }

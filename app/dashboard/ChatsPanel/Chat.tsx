@@ -11,6 +11,8 @@ import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength, timeSince, randomInt } from '@/app/utils/utils'
 
+import AIAvatar from '/public/assets/images/my-ai-avatar.svg'
+
 import { ChatIndex } from '@/app/types/globalTypes'
 
 type ChatProps = {
@@ -32,8 +34,8 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
 
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 
-  const chatName = `${chat.users[0].firstName} ${chat.users[0].lastName}`
-  const online = chat.users.some((user) => isOnline(user._id))
+  const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
+  const online = chat.isAI || chat.users.some((user) => isOnline(user._id))
 
   useEffect(() => {
     const { newestMessage } = chat
@@ -65,7 +67,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
       }}
     >
       <div className="min-w-[48px] min-h-[48px] relative">
-        <Avatar src={chat.users[0].avatarUrl} alt={chatName} size={48} />
+        <Avatar src={chat.isAI ? AIAvatar : chat.users[0].avatarUrl} alt={chatName} size={48} />
 
         {online && <div className="user-online-dot" aria-label="Online"></div>}
       </div>
