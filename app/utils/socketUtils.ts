@@ -41,9 +41,11 @@ export function socketOnMessage(params: SocketOnMessageParams) {
   scket.on('message', (data: Message) => {
     addMessage(data)
 
-    if (data.sender._id === user._id) {
+    if (data.sender._id === user._id || data.isAI) {
+      const participants = data.isAI ? [user] : chat?.users?.concat([user])
+
       // Send notification to all participants
-      chat?.users?.concat([user]).forEach((participant) => {
+      participants.forEach((participant) => {
         scket.emit('dm', {
           from: chat._id,
           to: participant._id,
@@ -152,6 +154,7 @@ export function socketOnDM(params: SocketOnDMParams) {
 
           // Update chats panel
           setChats((prevChats) => {
+            console.log('UPDATING CHATS PANEL', data)
             let chat = prevChats.find((chat) => chat._id === data.from)
             if (!chat) return prevChats
 

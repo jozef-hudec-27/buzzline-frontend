@@ -9,6 +9,8 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 
+import aiAvatar from '/public/assets/images/my-ai-avatar.svg'
+
 import { Message, User } from '@/app/types/globalTypes'
 
 type MessageProps = {
@@ -50,8 +52,8 @@ function Message({ initialMsg, i }: MessageProps) {
     }
   }
 
-  function msgBelongsToUser(msg: Message, user: User): boolean {
-    return msg?.sender._id === user._id
+  function msgBelongsToUser(msg: Message, sender: User): boolean {
+    return msg?.sender._id === sender._id
   }
 
   const handleMouseDown = () => {
@@ -83,8 +85,8 @@ function Message({ initialMsg, i }: MessageProps) {
     >
       {!msgBelongsToUser(msg, user) && (
         <Avatar
-          src={msg.sender.avatarUrl}
-          alt={`${user.firstName} ${user.lastName}`}
+          src={msg.isAI ? aiAvatar : msg.sender.avatarUrl}
+          alt={msg.isAI ? 'My AI' : `${msg.sender.firstName} ${msg.sender.lastName}`}
           size={28}
           cls={`w-[28px] h-[28px] relative top-[4px] ${
             msgBelongsToUser(messages[i + 1], msg.sender) ? 'opacity-0' : ''
@@ -115,7 +117,7 @@ function Message({ initialMsg, i }: MessageProps) {
         ) : msg.imageUrl ? (
           <Image
             src={msg.imageUrl}
-            alt={`Message from ${msg.sender.firstName}`}
+            alt={`Message from ${msg.isAI ? 'My AI' : msg.sender.firstName}`}
             width={300}
             height={300}
             className="w-[300px] h-auto rounded-[24px] drop-shadow-sm"

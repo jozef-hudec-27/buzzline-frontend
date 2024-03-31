@@ -19,6 +19,7 @@ export type Message = {
   isRemoved?: boolean
   readBy: string[]
   createdAt: string
+  isAI?: boolean
 }
 
 // Newest message in chat (shown in left panel)

@@ -34,7 +34,7 @@ function ChatTop() {
     ]
   )
 
-  const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}$`
+  const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.isAI || chat.users.some((user) => isOnline(user._id))
 
   async function callUser(video: boolean, remotePeerId: string) {

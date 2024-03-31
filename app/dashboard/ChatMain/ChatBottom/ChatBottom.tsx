@@ -5,15 +5,20 @@ import { MicFill, Image, HandThumbsUpFill } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import getBlobDuration from 'get-blob-duration'
 
+import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
+import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 
 import EmojiButton from './EmojiButton'
 import VoiceClipRecording from './VoiceClipRecording'
+import { streamToString } from '@/app/utils/utils'
 
 function ChatBottom() {
   const [socket] = useSocketStore((state) => [state.socket])
+  const [user] = useUserStore((state) => [state.user])
   const [chat, message, setMessage] = useCurrentChatStore((state) => [state.chat, state.message, state.setMessage])
+  const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
 
   //   Voice clip recording
   const [isRecordingVoiceClip, setIsRecordingVoiceClip] = useState(false)
@@ -109,7 +114,7 @@ function ChatBottom() {
     localStorage.setItem('removeMsgTipShown', 'true')
   }
 
-  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!message.length || message.length > 500) return
@@ -118,6 +123,37 @@ function ChatBottom() {
     socket?.emit('message', { chat: chat._id, content: message })
 
     setMessage('')
+
+    if (!chat.isAI) return
+
+    const response = await fetch('http://127.0.0.1:3000/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages: [
+          //   ...messages.map((msg) => ({
+          //     role: msg.sender._id === user._id ? 'user' : 'assistant',
+          //     content: msg.content,
+          //   })),
+          //   ,
+          { role: 'user', content: message },
+        ],
+      }),
+    })
+
+    if (!response.ok) {
+      console.log(response.status)
+      return
+    }
+
+    let responseString = await streamToString(response.body)
+    if (responseString.length > 500) {
+      responseString = responseString.slice(0, 500)
+    }
+
+    socket?.emit('AIMessage', { chat: chat._id, content: responseString })
   }
 
   return (

@@ -47,3 +47,22 @@ export function randomInt(min: number, max: number): number {
 
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+export async function streamToString(stream: any) {
+  const reader = stream.getReader()
+  const textDecoder = new TextDecoder()
+  let result = ''
+
+  async function read() {
+    const { done, value } = await reader.read()
+
+    if (done) {
+      return result
+    }
+
+    result += textDecoder.decode(value, { stream: true })
+    return read()
+  }
+
+  return read()
+}
