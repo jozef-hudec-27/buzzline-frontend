@@ -13,7 +13,9 @@ export type MessagesResponse = {
   nextPage: number | null
 }
 
-export type SetMessagesFn = (updater: (prevMessages: Message[]) => Message[]) => void
+type SetMessagesUpdaterFn = (prevMessages: Message[]) => Message[]
+
+export type SetMessagesFn = (updater: SetMessagesUpdaterFn | Message[]) => void
 
 export type AddMessageFn = (message: Message) => void
 

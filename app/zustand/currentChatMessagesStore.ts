@@ -1,5 +1,7 @@
 import { create } from 'zustand'
+
 import api from '../api/axiosInstance'
+import { createSetter } from './zustandUtils'
 
 import { Message } from '../types/globalTypes'
 import {
@@ -38,8 +40,7 @@ type CurrentChatMessagesStore = {
 
 export default create<CurrentChatMessagesStore>()((set, get) => ({
   messages: [],
-  setMessages: (updater: (prevMessages: Message[]) => Message[]) =>
-    set((prev) => ({ messages: updater(prev.messages) })),
+  setMessages: createSetter<Message[], CurrentChatMessagesStore>('messages', set),
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
   removeMessage: (messageId) => {
     // set((state) => {

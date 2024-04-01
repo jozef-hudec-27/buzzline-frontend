@@ -270,7 +270,7 @@ export function socketOnConnect(params: SocketOnConnectParams) {
 
       const updateMessages = async () => {
         const response = await fetchMessages(chat._id)
-        setMessages(() => response.docs.reverse())
+        setMessages(response.docs.reverse())
       }
 
       updateMessages()

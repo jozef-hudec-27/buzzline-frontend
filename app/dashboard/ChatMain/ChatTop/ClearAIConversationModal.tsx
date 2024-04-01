@@ -29,7 +29,7 @@ function ClearAIConversationModal() {
     onSuccess: (data) => {
       const { chatId } = data
 
-      setMessages(() => [])
+      setMessages([])
       setChats((prevChats) => {
         // Update chats panel
         const chat = prevChats.find((chat) => chat._id === chatId)

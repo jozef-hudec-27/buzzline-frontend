@@ -1,5 +1,7 @@
 import { create } from 'zustand'
+
 import api from '../api/axiosInstance'
+import { createSetter } from './zustandUtils'
 
 import { ChatShow } from '../types/globalTypes'
 import { SetChatFn, FetchChatFn, SetMessageFn } from '../types/currentChatTypes'
@@ -28,13 +30,5 @@ export default create<CurrentChatStore>()((set) => ({
     }
   },
   message: '',
-  setMessage: (updater) => {
-    set((state) => {
-      if (typeof updater === 'function') {
-        return { message: updater(state.message) }
-      }
-
-      return { message: updater }
-    })
-  },
+  setMessage: createSetter<string, CurrentChatStore>('message', set),
 }))

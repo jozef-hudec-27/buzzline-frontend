@@ -84,7 +84,7 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
     const getMessages = async () => {
       try {
         const response = await fetchMessages(chat._id, undefined, true)
-        setMessages((prevMessages) => response.docs.reverse())
+        setMessages(response.docs.reverse())
         setNextMessagesPage(response.nextPage)
       } catch (err) {
         toast('Error fetching messages.', { icon: '❌' })

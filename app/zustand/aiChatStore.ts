@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 
+import { createSetter } from './zustandUtils'
+
 import { SetContextAwareFn, SetShowClearConversationModalFn } from '../types/aiChatTypes'
 
 type AIChatStore = {
@@ -21,12 +23,5 @@ export default create<AIChatStore>()((set) => ({
     }
   },
   showClearConversationModal: false,
-  setShowClearConversationModal: (updater) =>
-    set((state) => {
-      if (typeof updater === 'function') {
-        return { showClearConversationModal: updater(state.showClearConversationModal) }
-      } else {
-        return { showClearConversationModal: updater }
-      }
-    }),
+  setShowClearConversationModal: createSetter<boolean, AIChatStore>('showClearConversationModal', set),
 }))
