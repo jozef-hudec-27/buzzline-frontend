@@ -13,6 +13,7 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import EmojiButton from './EmojiButton'
 import VoiceClipRecording from './VoiceClipRecording'
 import { streamToString } from '@/app/utils/utils'
+import { MAX_MSG_LENGTH } from '@/app/config'
 
 function ChatBottom() {
   const [socket] = useSocketStore((state) => [state.socket])
@@ -117,7 +118,7 @@ function ChatBottom() {
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!message.length || message.length > 500) return
+    if (!message.length || message.length > MAX_MSG_LENGTH) return
     showMsgRemoveTip()
 
     socket?.emit('message', { chat: chat._id, content: message })
@@ -125,6 +126,8 @@ function ChatBottom() {
     setMessage('')
 
     if (!chat.isAI) return
+
+    socket?.emit('typing', { chat: chat._id, isTyping: true })
 
     const response = await fetch('http://127.0.0.1:3000/api/chat', {
       method: 'POST',
@@ -149,10 +152,11 @@ function ChatBottom() {
     }
 
     let responseString = await streamToString(response.body)
-    if (responseString.length > 500) {
-      responseString = responseString.slice(0, 500)
+    if (responseString.length > MAX_MSG_LENGTH) {
+      responseString = responseString.slice(0, MAX_MSG_LENGTH)
     }
 
+    socket?.emit('typing', { chat: chat._id, isTyping: false })
     socket?.emit('AIMessage', { chat: chat._id, content: responseString })
   }
 
@@ -200,8 +204,8 @@ function ChatBottom() {
               onChange={(e) => {
                 const newMsg = e.target.value
 
-                if (newMsg.length > 500) {
-                  return toast('Maximum message length is 500 characters.', { icon: '❌' })
+                if (newMsg.length > MAX_MSG_LENGTH) {
+                  return toast(`Maximum message length is ${MAX_MSG_LENGTH} characters.`, { icon: '❌' })
                 }
 
                 setMessage(() => newMsg)

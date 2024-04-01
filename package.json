@@ -26,6 +26,7 @@
     "react-h5-audio-player": "^3.9.1",
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
+    "react-switch": "^7.0.0",
     "react-tiny-popover": "^8.0.4",
     "react-tooltip": "^5.25.0",
     "sharp": "^0.33.1",

@@ -33,7 +33,7 @@ function ChatThread({ fetchOlderMessages, initialLoading }: ChatThreadProps) {
     if (
       messages.length &&
       messagesEl &&
-      messagesEl?.scrollHeight - messagesEl?.scrollTop - messagesEl?.clientHeight < 200
+      messagesEl?.scrollHeight - messagesEl?.scrollTop - messagesEl?.clientHeight < 1024
     ) {
       threadRef.current?.scrollTo(0, threadRef.current?.scrollHeight)
     }

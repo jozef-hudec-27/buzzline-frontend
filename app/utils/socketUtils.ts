@@ -154,7 +154,6 @@ export function socketOnDM(params: SocketOnDMParams) {
 
           // Update chats panel
           setChats((prevChats) => {
-            console.log('UPDATING CHATS PANEL', data)
             let chat = prevChats.find((chat) => chat._id === data.from)
             if (!chat) return prevChats
 
