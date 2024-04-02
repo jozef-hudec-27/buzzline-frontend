@@ -6,6 +6,7 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import useChatsStore from '@/app/zustand/chatsStore'
 
 import Modal from '@/app/components/Modal/Modal'
+import ActionModal from '@/app/components/Modal/ActionModal'
 import api from '@/app/api/axiosInstance'
 
 function ClearAIConversationModal() {
@@ -54,32 +55,15 @@ function ClearAIConversationModal() {
       }}
       contentLabel="Clear AI conversation modal"
     >
-      <div>
-        <div className="flex flex-col gap-[12px]">
-          <h3>Do you really want to clear your conversation with My AI?</h3>
-
-          <p>This cannot be undone.</p>
-
-          <div className="flex flex-col sm:flex-row gap-[8px] mt-[12px]">
-            <button
-              className={`btn btn--primary flex-1 ${clearConversationMutation.isPending ? 'cursor-wait' : ''}`}
-              onClick={() => {
-                clearConversationMutation.mutate()
-              }}
-              disabled={clearConversationMutation.isPending}
-            >
-              Yes, clear conversation
-            </button>
-            <button
-              className="btn btn--primary !bg-transparent !text-black-100 flex-1"
-              onClick={() => setShowClearConversationModal(false)}
-              disabled={clearConversationMutation.isPending}
-            >
-              No, take me back
-            </button>
-          </div>
-        </div>
-      </div>
+      <ActionModal
+        title="Do you really want to clear your conversation with My AI?"
+        subtitle="This cannot be undone."
+        confirmText="Yes, clear conversation"
+        confirmAction={clearConversationMutation.mutate}
+        cancelText="No, take me back"
+        cancelAction={() => setShowClearConversationModal(false)}
+        actionPending={clearConversationMutation.isPending}
+      />
     </Modal>
   )
 }
