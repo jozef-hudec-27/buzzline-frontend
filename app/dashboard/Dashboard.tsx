@@ -47,9 +47,10 @@ function DashBoard() {
   ])
   const [user] = useUserStore((state) => [state.user])
   const [chat] = useCurrentChatStore((state) => [state.chat])
-  const [fetchChats, setChats, hasFetched] = useChatsStore((state) => [
+  const [fetchChats, setChats, updateChats, hasFetched] = useChatsStore((state) => [
     state.fetchChats,
     state.setChats,
+    state.updateChats,
     state.hasFetched,
   ])
   const [addUser, removeUser] = useOnlineUsersStore((state) => [state.addUser, state.removeUser])
@@ -87,7 +88,7 @@ function DashBoard() {
       scket,
       user,
       chat,
-      setChats,
+      updateChats,
       setLocalMediaStream,
       setOutcomingCall,
       setIncomingCall,

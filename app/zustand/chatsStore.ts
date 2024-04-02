@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import api from '../api/axiosInstance'
 
 import { ChatIndex } from '../types/globalTypes'
-import { SetChatsFn, FetchChatsFn } from '../types/chatsTypes'
+import { SetChatsFn, FetchChatsFn, UpdateChatsFn } from '../types/chatsTypes'
 
 type ChatsStore = {
   chats: ChatIndex[]
@@ -10,9 +10,10 @@ type ChatsStore = {
   isLoading: boolean
   hasFetched: boolean
   fetchChats: FetchChatsFn
+  updateChats: UpdateChatsFn
 }
 
-export default create<ChatsStore>()((set) => ({
+export default create<ChatsStore>()((set, get) => ({
   chats: [],
   setChats: (updater: (prevChats: ChatIndex[]) => ChatIndex[]) => set((prev) => ({ chats: updater(prev.chats) })),
   isLoading: true,
@@ -26,5 +27,23 @@ export default create<ChatsStore>()((set) => ({
     } catch (err: unknown) {
       set({ isLoading: false })
     }
+  },
+  // Used to manually update chats panel
+  updateChats: (chatId, updater, action) => {
+    get().setChats((prevChats) => {
+      const chat = prevChats.find((c) => c._id === chatId)
+      if (!chat) return prevChats
+
+      const newChat = updater(chat)
+
+      switch (action) {
+        case 'replace':
+          return prevChats.map((c) => (c._id === chatId ? newChat : c))
+        case 'unshift':
+          return [newChat, ...prevChats.filter((c) => c._id !== chatId)]
+        default:
+          return prevChats
+      }
+    })
   },
 }))

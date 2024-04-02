@@ -10,7 +10,7 @@ import {
   RemoveMessageFn,
   SetMessagesFn,
 } from '../types/chatMessagesTypes'
-import { FetchChatsFn, SetChatsFn } from '../types/chatsTypes'
+import { FetchChatsFn, UpdateChatsFn } from '../types/chatsTypes'
 import { AddOnlineUserFn, RemoveOnlineUserFn } from '../types/onlineUsersTypes'
 import {
   SetSocketDisconnectedFn,
@@ -105,7 +105,7 @@ type SocketOnDMParams = {
   scket: Socket
   user: User
   chat: ChatShow
-  setChats: SetChatsFn
+  updateChats: UpdateChatsFn
   setLocalMediaStream: SetMediaStreamFn
   setRemoteDeviceMuted: SetDeviceMutedFn
   currentCall: MyCall
@@ -120,7 +120,7 @@ export function socketOnDM(params: SocketOnDMParams) {
     scket,
     user,
     chat,
-    setChats,
+    updateChats,
     setLocalMediaStream,
     setOutcomingCall,
     setIncomingCall,
@@ -152,16 +152,14 @@ export function socketOnDM(params: SocketOnDMParams) {
             notiAudio?.play().catch(function () {})
           }
 
-          // Update chats panel
-          setChats((prevChats) => {
-            let chat = prevChats.find((chat) => chat._id === data.from)
-            if (!chat) return prevChats
-
-            const newestMessage: NewestMessage = { ...data.message, sender: data.message.sender._id }
-            chat = { ...chat, newestMessage }
-            const updatedChats = [chat, ...prevChats.filter((chat) => chat._id !== data.from)]
-            return updatedChats
-          })
+          updateChats(
+            data.from,
+            (chat) => {
+              const newestMessage: NewestMessage = { ...data.message, sender: data.message.sender._id }
+              return { ...chat, newestMessage }
+            },
+            'unshift'
+          )
           break
         case 'DM_CALLEE_IN_CALL': // Calling someone who is already in a different call
           toast('User is in another call', { icon: '🤙' })

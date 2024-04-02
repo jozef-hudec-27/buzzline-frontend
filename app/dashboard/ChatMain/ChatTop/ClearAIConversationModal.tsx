@@ -15,7 +15,7 @@ function ClearAIConversationModal() {
     state.setShowClearConversationModal,
   ])
   const [setMessages] = useCurrentChatMessagesStore((state) => [state.setMessages])
-  const [setChats] = useChatsStore((state) => [state.setChats])
+  const [updateChats] = useChatsStore((state) => [state.updateChats])
 
   const clearConversationMutation = useMutation({
     mutationFn: async () => {
@@ -31,16 +31,7 @@ function ClearAIConversationModal() {
       const { chatId } = data
 
       setMessages([])
-      setChats((prevChats) => {
-        // Update chats panel
-        const chat = prevChats.find((chat) => chat._id === chatId)
-
-        if (!chat) return prevChats
-
-        const { newestMessage, ...chatWithoutNewestMessage } = chat
-
-        return prevChats.map((c) => (c._id === chatId ? chatWithoutNewestMessage : c))
-      })
+      updateChats(chatId, (chat) => ({ ...chat, newestMessage: undefined }), 'replace')
       setShowClearConversationModal(false)
     },
   })

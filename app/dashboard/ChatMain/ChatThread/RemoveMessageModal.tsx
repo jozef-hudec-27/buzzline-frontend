@@ -14,7 +14,7 @@ function RemoveMessageModal() {
     state.setMessageToRemove,
     state.messages,
   ])
-  const [setChats] = useChatsStore((state) => [state.setChats])
+  const [updateChats] = useChatsStore((state) => [state.updateChats])
 
   function setIsOpen(open: boolean) {
     if (open) return
@@ -32,23 +32,22 @@ function RemoveMessageModal() {
   function updateChatsPanel(removedMessage: MessageToRemove) {
     if (messages[messages.length - 1] && messages[messages.length - 1]._id !== removedMessage?._id) return
 
-    setChats((prevChats) => {
-      const chat = prevChats.find((c) => c._id === removedMessage?.chat)
+    updateChats(
+      removedMessage?.chat || '',
+      (chat) => {
+        const { newestMessage, ...chatWithoutNewestMessage } = chat
 
-      if (!chat) return prevChats
+        if (newestMessage) {
+          newestMessage.isRemoved = true
+          newestMessage.content = ''
+          newestMessage.voiceClipUrl = undefined
+          newestMessage.imageUrl = undefined
+        }
 
-      const { newestMessage, ...chatWithoutNewestMessage } = chat
-      if (newestMessage) {
-        newestMessage.isRemoved = true
-        newestMessage.content = ''
-        newestMessage.voiceClipUrl = undefined
-        newestMessage.imageUrl = undefined
-      }
-
-      const newChat = { ...chatWithoutNewestMessage, newestMessage }
-
-      return prevChats.map((c) => (c._id === removedMessage?.chat ? newChat : c))
-    })
+        return { ...chatWithoutNewestMessage, newestMessage }
+      },
+      'replace'
+    )
   }
 
   return (

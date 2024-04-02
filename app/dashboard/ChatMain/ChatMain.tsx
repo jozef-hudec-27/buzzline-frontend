@@ -30,7 +30,7 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
     state.isLoading,
     state.initialLoading,
   ])
-  const [setChats] = useChatsStore((state) => [state.setChats])
+  const [updateChats] = useChatsStore((state) => [state.updateChats])
 
   const [nextMessagesPage, setNextMessagesPage] = useState<null | number>(null)
 
@@ -53,26 +53,16 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
       await api(true).post(`/api/chats/${chat._id}/messages/read`)
     },
     onSuccess: () => {
-      //   Update left sidebar
-      // @ts-ignore
-      setChats((prevChats) => {
-        const chatIndex = prevChats.findIndex((c) => c._id === chat._id)
-
-        if (chatIndex === -1 || prevChats[chatIndex].newestMessage === undefined) {
-          return prevChats
-        }
-
-        const updatedChat = {
-          ...prevChats[chatIndex],
-          newestMessage: {
-            ...prevChats[chatIndex].newestMessage,
-            // @ts-ignore
-            readBy: [...prevChats[chatIndex].newestMessage.readBy, user._id],
-          },
-        }
-
-        return [...prevChats.slice(0, chatIndex), updatedChat, ...prevChats.slice(chatIndex + 1)]
-      })
+      updateChats(
+        chat._id,
+        (chat) => ({
+          ...chat,
+          newestMessage: chat.newestMessage
+            ? { ...chat.newestMessage, readBy: [...chat.newestMessage.readBy, user._id] }
+            : undefined,
+        }),
+        'replace'
+      )
     },
   })
 
