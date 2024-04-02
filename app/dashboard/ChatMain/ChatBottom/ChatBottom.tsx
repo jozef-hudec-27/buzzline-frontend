@@ -9,6 +9,7 @@ import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
+import useAIChatStore from '@/app/zustand/aiChatStore'
 
 import EmojiButton from './EmojiButton'
 import VoiceClipRecording from './VoiceClipRecording'
@@ -20,6 +21,7 @@ function ChatBottom() {
   const [user] = useUserStore((state) => [state.user])
   const [chat, message, setMessage] = useCurrentChatStore((state) => [state.chat, state.message, state.setMessage])
   const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
+  const [contextAware] = useAIChatStore((state) => [state.contextAware])
 
   //   Voice clip recording
   const [isRecordingVoiceClip, setIsRecordingVoiceClip] = useState(false)
@@ -127,7 +129,16 @@ function ChatBottom() {
 
     if (!chat.isAI) return
 
-    socket?.emit('typing', { chat: chat._id, isTyping: true })
+    const msgHistory = contextAware
+      ? [
+          ...messages.map((msg) => ({
+            role: msg.sender._id === user._id ? 'user' : 'assistant',
+            content: msg.content,
+          })),
+          ,
+          { role: 'user', content: message },
+        ].filter((m) => !!m)
+      : [{ role: 'user', content: message }]
 
     const response = await fetch('http://127.0.0.1:3000/api/chat', {
       method: 'POST',
@@ -135,19 +146,13 @@ function ChatBottom() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        messages: [
-          //   ...messages.map((msg) => ({
-          //     role: msg.sender._id === user._id ? 'user' : 'assistant',
-          //     content: msg.content,
-          //   })),
-          //   ,
-          { role: 'user', content: message },
-        ],
+        messages: msgHistory,
       }),
     })
 
     if (!response.ok) {
-      console.log(response.status)
+      const data = await response.json()
+      toast(data?.error?.message || 'Failed to get AI response.', { icon: '❌', duration: 8000 })
       return
     }
 
@@ -156,7 +161,6 @@ function ChatBottom() {
       responseString = responseString.slice(0, MAX_MSG_LENGTH)
     }
 
-    socket?.emit('typing', { chat: chat._id, isTyping: false })
     socket?.emit('AIMessage', { chat: chat._id, content: responseString })
   }
 
