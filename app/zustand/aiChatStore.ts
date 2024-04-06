@@ -12,7 +12,7 @@ type AIChatStore = {
 }
 
 export default create<AIChatStore>()((set) => ({
-  contextAware: !!window.localStorage.getItem('AIChatContextAware'),
+  contextAware: typeof window === 'undefined' ? false : !!window.localStorage.getItem('AIChatContextAware'),
   setContextAware: (aware) => {
     set(() => ({ contextAware: aware }))
 
