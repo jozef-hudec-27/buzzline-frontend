@@ -211,3 +211,47 @@ a {
 .coming-call__action {
   @include call__action(8px);
 }
+
+[role='tooltip'].react-tooltip {
+  @apply rounded-[8px] bg-black-100 drop-shadow-md z-10;
+}
+
+.introjs {
+  &-overlay {
+    cursor: default !important;
+  }
+
+  &-tooltip {
+    @apply rounded-[24px] w-[224px] sm:w-[448px] max-w-[224px] sm:max-w-[448px] shadow-none drop-shadow-xl;
+
+    &-header,
+    &text,
+    &buttons {
+      @apply px-[24px];
+    }
+
+    &-header {
+      @apply pt-[24px];
+    }
+
+    &buttons {
+      @apply pb-[24px] border-black-10;
+    }
+
+    .introjs-button {
+      @apply border-none shadow-none;
+      text-shadow: none;
+
+      @extend .btn;
+      @extend .btn--primary;
+    }
+
+    .introjs-skipbutton {
+      @apply text-black-75;
+    }
+  }
+
+  &-helperLayer {
+    box-shadow: rgb(23, 3, 22, 0.5) 0px 0px 0px 5000px !important;
+  }
+}

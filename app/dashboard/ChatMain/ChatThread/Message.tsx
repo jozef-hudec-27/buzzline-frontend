@@ -130,14 +130,14 @@ function Message({ initialMsg, i }: MessageProps) {
       {/* Tooltip for larger devices */}
       <Tooltip
         {...messageTooltip(msg)}
-        className="hidden sm:block !rounded-[8px] !bg-black-100 !drop-shadow-md z-10"
+        className="hidden sm:block"
         place={msgBelongsToUser(msg, user) ? 'left' : 'right'}
       />
 
       {/* Tooltip for mobile devices */}
       <Tooltip
         {...messageTooltip(msg)}
-        className="sm:hidden !rounded-[8px] !bg-black-100 !drop-shadow-md z-10"
+        className="sm:hidden"
         place="bottom"
         // @ts-ignore
         openEvents={msg.voiceClipUrl && []}

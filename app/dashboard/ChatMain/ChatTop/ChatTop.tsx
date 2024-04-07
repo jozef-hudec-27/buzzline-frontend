@@ -1,5 +1,6 @@
 import { TelephoneFill, CameraVideoFill, ThreeDots, TrashFill } from 'react-bootstrap-icons'
 import Switch from 'react-switch'
+import { Tooltip } from 'react-tooltip'
 
 import useSocketStore from '@/app/zustand/socketStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
@@ -116,6 +117,7 @@ function ChatTop() {
         {chat.isAI ? (
           <>
             <button
+              id="clear-ai-conversation"
               className="chat__icon-btn"
               aria-label="Clear conversation"
               title="Clear conversation"
@@ -137,6 +139,7 @@ function ChatTop() {
               activeBoxShadow="0 0 1px 8px rgba(0, 0, 0, 0.2)"
               height={20}
               width={48}
+              className="context-aware-switch"
             />
           </>
         ) : (
@@ -167,6 +170,15 @@ function ChatTop() {
           <ThreeDots size={20} aria-hidden />
         </button> */}
       </div>
+
+      <Tooltip
+        anchorSelect=".context-aware-switch"
+        arrowColor="transparent"
+        content="Context-aware AI - if enabled, AI will remember the context of the conversation and provide more accurate responses."
+        offset={4}
+        delayShow={1200}
+        className="hidden sm:block max-w-[384px]"
+      />
     </div>
   )
 }

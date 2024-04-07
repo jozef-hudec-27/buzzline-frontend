@@ -17,6 +17,8 @@
     "axios": "^1.6.2",
     "emoji-mart": "^5.5.2",
     "get-blob-duration": "^1.2.0",
+    "intro.js": "^7.2.0",
+    "intro.js-react": "^1.0.0",
     "next": "14.0.4",
     "openai": "^4.30.0",
     "peerjs": "^1.5.2",

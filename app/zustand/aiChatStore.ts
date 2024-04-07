@@ -2,13 +2,15 @@ import { create } from 'zustand'
 
 import { createSetter } from './zustandUtils'
 
-import { SetContextAwareFn, SetShowClearConversationModalFn } from '../types/aiChatTypes'
+import { SetContextAwareFn, SetShowClearConversationModalFn, SetGuideShownFn } from '../types/aiChatTypes'
 
 type AIChatStore = {
   contextAware: boolean
   setContextAware: SetContextAwareFn
   showClearConversationModal: boolean
   setShowClearConversationModal: SetShowClearConversationModalFn
+  guideShown: boolean
+  setGuideShown: SetGuideShownFn
 }
 
 export default create<AIChatStore>()((set) => ({
@@ -24,4 +26,14 @@ export default create<AIChatStore>()((set) => ({
   },
   showClearConversationModal: false,
   setShowClearConversationModal: createSetter<boolean, AIChatStore>('showClearConversationModal', set),
+  guideShown: typeof window === 'undefined' ? false : !!window.localStorage.getItem('AIChatGuideShown'),
+  setGuideShown: (show) => {
+    set(() => ({ guideShown: show }))
+
+    if (show) {
+      window.localStorage.setItem('AIChatGuideShown', 'true')
+    } else {
+      window.localStorage.removeItem('AIChatGuideShown')
+    }
+  },
 }))
