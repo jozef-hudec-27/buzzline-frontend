@@ -1,6 +1,4 @@
 import { TelephoneFill, CameraVideoFill, ThreeDots, TrashFill } from 'react-bootstrap-icons'
-import Switch from 'react-switch'
-import { Tooltip } from 'react-tooltip'
 
 import useSocketStore from '@/app/zustand/socketStore'
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
@@ -11,6 +9,8 @@ import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 import useAIChatStore from '@/app/zustand/aiChatStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
+import ContextAwareAISwitch from '../AIChat/ContextAwareAISwitch'
+import ContextAwareAITooltip from '../AIChat/ContextAwareAITooltip'
 import { restrictLength } from '@/app/utils/utils'
 import { accessUserMediaCatchHandler, closeOutcomingCall, addTrackToPeerConnection } from '@/app/utils/mediaCallUtils'
 import { configurePeerConnection } from '@/app/utils/peerUtils'
@@ -36,11 +36,7 @@ function ChatTop() {
       state.setLocalDeviceMuted,
     ]
   )
-  const [contextAware, setContextAware, setShowClearConversationModal] = useAIChatStore((state) => [
-    state.contextAware,
-    state.setContextAware,
-    state.setShowClearConversationModal,
-  ])
+  const [setShowClearConversationModal] = useAIChatStore((state) => [state.setShowClearConversationModal])
 
   const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.isAI || chat.users.some((user) => isOnline(user._id))
@@ -126,21 +122,7 @@ function ChatTop() {
               <TrashFill size={20} aria-hidden />
             </button>
 
-            <Switch
-              onChange={(checked) => setContextAware(checked)}
-              checked={contextAware}
-              onColor="#8b97d9"
-              onHandleColor="#4158D0"
-              offColor="#8B818A"
-              handleDiameter={30}
-              uncheckedIcon={false}
-              checkedIcon={false}
-              boxShadow="0 0 5px rgba(0, 0, 0, 0.6)"
-              activeBoxShadow="0 0 1px 8px rgba(0, 0, 0, 0.2)"
-              height={20}
-              width={48}
-              className="context-aware-switch"
-            />
+            <ContextAwareAISwitch />
           </>
         ) : (
           <>
@@ -171,14 +153,7 @@ function ChatTop() {
         </button> */}
       </div>
 
-      <Tooltip
-        anchorSelect=".context-aware-switch"
-        arrowColor="transparent"
-        content="Context-aware AI - if enabled, AI will remember the context of the conversation and provide more accurate responses."
-        offset={4}
-        delayShow={1200}
-        className="hidden sm:block max-w-[384px]"
-      />
+      <ContextAwareAITooltip />
     </div>
   )
 }

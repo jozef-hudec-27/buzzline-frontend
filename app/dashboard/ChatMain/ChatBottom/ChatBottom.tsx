@@ -117,18 +117,7 @@ function ChatBottom() {
     localStorage.setItem('removeMsgTipShown', 'true')
   }
 
-  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (!message.length || message.length > MAX_MSG_LENGTH) return
-    showMsgRemoveTip()
-
-    socket?.emit('message', { chat: chat._id, content: message })
-
-    setMessage('')
-
-    if (!chat.isAI) return
-
+  const handleAIMessage = async () => {
     const msgHistory = contextAware
       ? [
           ...messages.map((msg) => ({
@@ -162,6 +151,21 @@ function ChatBottom() {
     }
 
     socket?.emit('AIMessage', { chat: chat._id, content: responseString })
+  }
+
+  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (!message.length || message.length > MAX_MSG_LENGTH) return
+    showMsgRemoveTip()
+
+    socket?.emit('message', { chat: chat._id, content: message })
+
+    setMessage('')
+
+    if (chat.isAI) {
+      handleAIMessage()
+    }
   }
 
   return (
