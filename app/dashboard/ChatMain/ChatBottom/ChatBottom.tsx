@@ -21,7 +21,11 @@ function ChatBottom() {
   const [user] = useUserStore((state) => [state.user])
   const [chat, message, setMessage] = useCurrentChatStore((state) => [state.chat, state.message, state.setMessage])
   const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
-  const [contextAware] = useAIChatStore((state) => [state.contextAware])
+  const [contextAware, isAIGeneratingResponse, setIsGeneratingResponse] = useAIChatStore((state) => [
+    state.contextAware,
+    state.isGeneratingResponse,
+    state.setIsGeneratingResponse,
+  ])
 
   //   Voice clip recording
   const [isRecordingVoiceClip, setIsRecordingVoiceClip] = useState(false)
@@ -129,6 +133,7 @@ function ChatBottom() {
         ].filter((m) => !!m)
       : [{ role: 'user', content: message }]
 
+    setIsGeneratingResponse(true)
     const response = await fetch('http://127.0.0.1:3000/api/chat', {
       method: 'POST',
       headers: {
@@ -142,15 +147,24 @@ function ChatBottom() {
     if (!response.ok) {
       const data = await response.json()
       toast(data?.error?.message || 'Failed to get AI response.', { icon: '❌', duration: 8000 })
+      setIsGeneratingResponse(false)
       return
     }
 
     let responseString = await streamToString(response.body)
-    if (responseString.length > MAX_MSG_LENGTH) {
-      responseString = responseString.slice(0, MAX_MSG_LENGTH)
+    const stringPartitions: string[] = []
+    while (responseString.length) {
+      stringPartitions.push(responseString.slice(0, MAX_MSG_LENGTH))
+      responseString = responseString.slice(MAX_MSG_LENGTH)
     }
 
-    socket?.emit('AIMessage', { chat: chat._id, content: responseString })
+    stringPartitions.forEach((content, index) => {
+      setTimeout(() => {
+        socket?.emit('AIMessage', { chat: chat._id, content })
+      }, index * 1000)
+    })
+
+    setIsGeneratingResponse(false)
   }
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -205,7 +219,7 @@ function ChatBottom() {
           <form className="py-[12px] px-[24px] flex items-center bg-black-5 flex-1 rounded-full" onSubmit={sendMessage}>
             <input
               type="text"
-              className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none w-0"
+              className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none w-0 disabled:cursor-not-allowed"
               placeholder="Aa"
               aria-label="Message"
               value={message}
@@ -218,6 +232,7 @@ function ChatBottom() {
 
                 setMessage(() => newMsg)
               }}
+              disabled={chat.isAI && isAIGeneratingResponse}
             />
 
             <EmojiButton setMessage={setMessage} />

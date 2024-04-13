@@ -7,6 +7,7 @@ import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import useChatsStore from '@/app/zustand/chatsStore'
+import useAIChatStore from '@/app/zustand/aiChatStore'
 
 import ChatEmpty from './ChatEmpty'
 import ChatTop from './ChatTop/ChatTop'
@@ -32,6 +33,7 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
     state.initialLoading,
   ])
   const [updateChats] = useChatsStore((state) => [state.updateChats])
+  const [isAIGeneratingResponse] = useAIChatStore((state) => [state.isGeneratingResponse])
 
   const [nextMessagesPage, setNextMessagesPage] = useState<null | number>(null)
 
@@ -103,6 +105,10 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
     )
   }
 
+  const typing = isAIGeneratingResponse
+    ? Array.from(new Set(typingUsers)).concat(['ai'])
+    : Array.from(new Set(typingUsers))
+
   return (
     <div className="flex-1 flex flex-col h-0 sm:h-auto">
       <ChatTop />
@@ -113,19 +119,22 @@ const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) 
 
       <div
         className={`${
-          !typingUsers.length && 'hidden'
+          !typingUsers.length && !isAIGeneratingResponse && 'hidden'
         } fixed left-1/2 -translate-x-1/2 bottom-[64px] bg-[rgb(255,255,255,0.9)] border border-black-5 shadow py-[8px] px-[16px] rounded-[24px]`}
       >
-        {Array.from(new Set(typingUsers)).map((userId) => {
-          const userFirstName = chat.users.find((u) => u._id === userId)?.firstName
+        {typing.map((userId) => {
+          const userFirstName = userId === 'ai' ? 'ai' : chat.users.find((u) => u._id === userId)?.firstName
 
           if (!userFirstName) return
 
           return (
             <p key={`typing-${userId}`} className="text-[13px]">
-              {restrictLength(userFirstName, 30)} is typing<span className="pulsing-dot">.</span>
+              {isAIGeneratingResponse ? 'AI' : restrictLength(userFirstName, 30)}{' '}
+              {isAIGeneratingResponse ? 'is generating a response' : 'is typing'}
               <span className="pulsing-dot">.</span>
-              <span className="pulsing-dot">.</span>✍️
+              <span className="pulsing-dot">.</span>
+              <span className="pulsing-dot">.</span>
+              {isAIGeneratingResponse ? '🤖' : '✍️'}
             </p>
           )
         })}

@@ -222,7 +222,7 @@ a {
   }
 
   &-tooltip {
-    @apply rounded-[24px] w-[224px] sm:w-[448px] max-w-[224px] sm:max-w-[448px] shadow-none drop-shadow-xl;
+    @apply rounded-[24px] w-[300px] sm:w-[448px] max-w-[300px] sm:max-w-[448px] shadow-none drop-shadow-xl;
 
     &-header,
     &text,

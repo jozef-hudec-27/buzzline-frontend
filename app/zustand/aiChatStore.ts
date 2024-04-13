@@ -2,7 +2,12 @@ import { create } from 'zustand'
 
 import { createSetter } from './zustandUtils'
 
-import { SetContextAwareFn, SetShowClearConversationModalFn, SetGuideShownFn } from '../types/aiChatTypes'
+import {
+  SetContextAwareFn,
+  SetShowClearConversationModalFn,
+  SetGuideShownFn,
+  SetIsGeneratingResponseFn,
+} from '../types/aiChatTypes'
 
 type AIChatStore = {
   contextAware: boolean
@@ -11,6 +16,8 @@ type AIChatStore = {
   setShowClearConversationModal: SetShowClearConversationModalFn
   guideShown: boolean
   setGuideShown: SetGuideShownFn
+  isGeneratingResponse: boolean
+  setIsGeneratingResponse: SetIsGeneratingResponseFn
 }
 
 export default create<AIChatStore>()((set) => ({
@@ -36,4 +43,6 @@ export default create<AIChatStore>()((set) => ({
       window.localStorage.removeItem('AIChatGuideShown')
     }
   },
+  isGeneratingResponse: false,
+  setIsGeneratingResponse: createSetter<boolean, AIChatStore>('isGeneratingResponse', set),
 }))
