@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import useSocketStore from '@/app/zustand/socketStore'
@@ -9,7 +10,7 @@ import ActionModal from '@/app/components/Modal/ActionModal'
 
 import { MessageToRemove } from '@/app/types/chatMessagesTypes'
 
-function RemoveMessageModal() {
+const RemoveMessageModal = memo(function () {
   const socket = useSocketStore((state) => state.socket)
   const [messageToRemove, setMessageToRemove, messages] = useCurrentChatMessagesStore(
     useShallow((state) => [state.messageToRemove, state.setMessageToRemove, state.messages])
@@ -67,6 +68,6 @@ function RemoveMessageModal() {
       </Modal>
     )
   )
-}
+})
 
 export default RemoveMessageModal

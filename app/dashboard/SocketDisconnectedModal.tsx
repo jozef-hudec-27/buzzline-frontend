@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 
 import useSocketStore from '../zustand/socketStore'
 import useMediaCallStore from '../zustand/webrtc/mediaCallStore'
 
 import Modal from '../components/Modal/Modal'
 
-function SocketDisconnectedModal() {
+const SocketDisconnectedModal = memo(function () {
   const socketDisconnected = useSocketStore((state) => state.socketDisconnected)
   const currentCall = useMediaCallStore((state) => state.currentCall)
 
@@ -45,6 +45,6 @@ function SocketDisconnectedModal() {
       </div>
     </Modal>
   )
-}
+})
 
 export default SocketDisconnectedModal

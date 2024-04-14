@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
@@ -10,7 +11,7 @@ import Modal from '@/app/components/Modal/Modal'
 import ActionModal from '@/app/components/Modal/ActionModal'
 import api from '@/app/api/axiosInstance'
 
-function ClearAIConversationModal() {
+const ClearAIConversationModal = memo(function () {
   const [showClearConversationModal, setShowClearConversationModal] = useAIChatStore(
     useShallow((state) => [state.showClearConversationModal, state.setShowClearConversationModal])
   )
@@ -57,6 +58,6 @@ function ClearAIConversationModal() {
       />
     </Modal>
   )
-}
+})
 
 export default ClearAIConversationModal

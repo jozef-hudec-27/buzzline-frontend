@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
@@ -10,7 +10,7 @@ import Modal from '@/app/components/Modal/Modal'
 
 import { User } from '@/app/types/globalTypes'
 
-function MediaCallModal() {
+const MediaCallModal = memo(function () {
   const [isOpen, setIsOpen] = useState(false)
   const [friend, setFriend] = useState<User | null>(null)
 
@@ -72,6 +72,6 @@ function MediaCallModal() {
       </Modal>
     )
   )
-}
+})
 
 export default MediaCallModal
