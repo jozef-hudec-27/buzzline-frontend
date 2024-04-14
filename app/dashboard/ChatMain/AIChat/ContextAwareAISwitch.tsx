@@ -1,9 +1,12 @@
+import { useShallow } from 'zustand/react/shallow'
 import Switch from 'react-switch'
 
 import useAIChatStore from '@/app/zustand/aiChatStore'
 
 function ContextAwareAISwitch() {
-  const [contextAware, setContextAware] = useAIChatStore((state) => [state.contextAware, state.setContextAware])
+  const [contextAware, setContextAware] = useAIChatStore(
+    useShallow((state) => [state.contextAware, state.setContextAware])
+  )
 
   return (
     <Switch

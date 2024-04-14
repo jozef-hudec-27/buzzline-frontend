@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow'
 import { CameraVideoFill, TelephoneFill, X } from 'react-bootstrap-icons'
 import { toast } from 'react-hot-toast'
 
@@ -14,21 +15,22 @@ import { restrictLength } from '@/app/utils/utils'
 import { User } from '@/app/types/globalTypes'
 
 function ComingCall({ friend }: { friend: User }) {
-  const [user] = useUserStore((state) => [state.user])
-  const [socket] = useSocketStore((state) => [state.socket])
+  const user = useUserStore((state) => state.user)
+  const socket = useSocketStore((state) => state.socket)
   const [incomingCall, setIncomingCall, outcomingCall, setOutcomingCall, currentCallRef, setCurrentCall] =
-    useMediaCallStore((state) => [
-      state.incomingCall,
-      state.setIncomingCall,
-      state.outcomingCall,
-      state.setOutcomingCall,
-      state.currentCallRef,
-      state.setCurrentCall,
-    ])
-  const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
-    state.setLocalMediaStream,
-    state.setRemoteDeviceMuted,
-  ])
+    useMediaCallStore(
+      useShallow((state) => [
+        state.incomingCall,
+        state.setIncomingCall,
+        state.outcomingCall,
+        state.setOutcomingCall,
+        state.currentCallRef,
+        state.setCurrentCall,
+      ])
+    )
+  const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore(
+    useShallow((state) => [state.setLocalMediaStream, state.setRemoteDeviceMuted])
+  )
 
   function closeOutcomingCall() {
     closeMyCall({ paramsType: 'val', userId: user._id, socket, outcomingCall, setOutcomingCall, setLocalMediaStream })

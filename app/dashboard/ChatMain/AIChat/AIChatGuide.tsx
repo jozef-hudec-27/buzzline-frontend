@@ -1,11 +1,12 @@
+import { useShallow } from 'zustand/react/shallow'
 import { Steps } from 'intro.js-react'
 
 import useAIChatStore from '@/app/zustand/aiChatStore'
 import useCurrentChatStore from '@/app/zustand/currentChatStore'
 
 function AIChatGuide() {
-  const [AIGuideShown, setAIGuideShown] = useAIChatStore((state) => [state.guideShown, state.setGuideShown])
-  const [chat] = useCurrentChatStore((state) => [state.chat])
+  const [AIGuideShown, setAIGuideShown] = useAIChatStore(useShallow((state) => [state.guideShown, state.setGuideShown]))
+  const chat = useCurrentChatStore((state) => state.chat)
 
   return (
     <Steps

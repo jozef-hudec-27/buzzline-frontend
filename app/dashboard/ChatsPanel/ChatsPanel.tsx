@@ -1,5 +1,6 @@
-import { Search, PersonFillAdd } from 'react-bootstrap-icons'
 import { memo, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
+import { Search, PersonFillAdd } from 'react-bootstrap-icons'
 
 import useChatsStore from '@/app/zustand/chatsStore'
 
@@ -9,7 +10,7 @@ import Chat from './Chat'
 import { ChatIndex } from '@/app/types/globalTypes'
 
 const Chats = memo(function () {
-  const [chats, chatsLoading] = useChatsStore((state) => [state.chats, state.isLoading])
+  const [chats, chatsLoading] = useChatsStore(useShallow((state) => [state.chats, state.isLoading]))
 
   const [search, setSearch] = useState('')
   const [showNewChatModal, setShowNewChatModal] = useState(false)

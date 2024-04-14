@@ -1,3 +1,5 @@
+import { useShallow } from 'zustand/react/shallow'
+
 import useSocketStore from '@/app/zustand/socketStore'
 import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 import useChatsStore from '@/app/zustand/chatsStore'
@@ -8,13 +10,11 @@ import ActionModal from '@/app/components/Modal/ActionModal'
 import { MessageToRemove } from '@/app/types/chatMessagesTypes'
 
 function RemoveMessageModal() {
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [messageToRemove, setMessageToRemove, messages] = useCurrentChatMessagesStore((state) => [
-    state.messageToRemove,
-    state.setMessageToRemove,
-    state.messages,
-  ])
-  const [updateChats] = useChatsStore((state) => [state.updateChats])
+  const socket = useSocketStore((state) => state.socket)
+  const [messageToRemove, setMessageToRemove, messages] = useCurrentChatMessagesStore(
+    useShallow((state) => [state.messageToRemove, state.setMessageToRemove, state.messages])
+  )
+  const updateChats = useChatsStore((state) => state.updateChats)
 
   function setIsOpen(open: boolean) {
     if (open) return

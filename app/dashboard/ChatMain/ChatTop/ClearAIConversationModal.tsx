@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 
@@ -10,12 +11,11 @@ import ActionModal from '@/app/components/Modal/ActionModal'
 import api from '@/app/api/axiosInstance'
 
 function ClearAIConversationModal() {
-  const [showClearConversationModal, setShowClearConversationModal] = useAIChatStore((state) => [
-    state.showClearConversationModal,
-    state.setShowClearConversationModal,
-  ])
-  const [setMessages] = useCurrentChatMessagesStore((state) => [state.setMessages])
-  const [updateChats] = useChatsStore((state) => [state.updateChats])
+  const [showClearConversationModal, setShowClearConversationModal] = useAIChatStore(
+    useShallow((state) => [state.showClearConversationModal, state.setShowClearConversationModal])
+  )
+  const setMessages = useCurrentChatMessagesStore((state) => state.setMessages)
+  const updateChats = useChatsStore((state) => state.updateChats)
 
   const clearConversationMutation = useMutation({
     mutationFn: async () => {

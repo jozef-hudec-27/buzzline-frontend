@@ -1,7 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useShallow } from 'zustand/react/shallow'
 
 import DashBoard from './dashboard/Dashboard'
 
@@ -10,7 +11,7 @@ import useUserStore from './zustand/userStore'
 export default function Home() {
   const router = useRouter()
 
-  const [isLoggedIn, isLoading] = useUserStore((state) => [state.isLoggedIn, state.isLoading])
+  const [isLoggedIn, isLoading] = useUserStore(useShallow((state) => [state.isLoggedIn, state.isLoading]))
 
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {

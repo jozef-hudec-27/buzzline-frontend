@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { io } from 'socket.io-client'
 
 import useUserStore from '../zustand/userStore'
@@ -34,38 +35,31 @@ import {
 } from '../utils/socketUtils'
 
 function DashBoard() {
-  const [addMessage, removeMessage, fetchMessages, setMessages] = useCurrentChatMessagesStore((state) => [
-    state.addMessage,
-    state.removeMessage,
-    state.fetchMessages,
-    state.setMessages,
-  ])
-  const [socket, setSocket, setSocketDisconnected] = useSocketStore((state) => [
-    state.socket,
-    state.setSocket,
-    state.setSocketDisconnected,
-  ])
-  const [user] = useUserStore((state) => [state.user])
-  const [chat] = useCurrentChatStore((state) => [state.chat])
-  const [fetchChats, setChats, updateChats, hasFetched] = useChatsStore((state) => [
-    state.fetchChats,
-    state.setChats,
-    state.updateChats,
-    state.hasFetched,
-  ])
-  const [addUser, removeUser] = useOnlineUsersStore((state) => [state.addUser, state.removeUser])
-  const [addRemovedMessage] = useRemovedMessagesStore((state) => [state.addRemovedMessage])
-  const [currentCall, incomingCall, setIncomingCall, outcomingCall, setOutcomingCall] = useMediaCallStore((state) => [
-    state.currentCall,
-    state.incomingCall,
-    state.setIncomingCall,
-    state.outcomingCall,
-    state.setOutcomingCall,
-  ])
-  const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore((state) => [
-    state.setLocalMediaStream,
-    state.setRemoteDeviceMuted,
-  ])
+  const [addMessage, removeMessage, fetchMessages, setMessages] = useCurrentChatMessagesStore(
+    useShallow((state) => [state.addMessage, state.removeMessage, state.fetchMessages, state.setMessages])
+  )
+  const [socket, setSocket, setSocketDisconnected] = useSocketStore(
+    useShallow((state) => [state.socket, state.setSocket, state.setSocketDisconnected])
+  )
+  const user = useUserStore((state) => state.user)
+  const chat = useCurrentChatStore((state) => state.chat)
+  const [fetchChats, updateChats, hasFetched] = useChatsStore(
+    useShallow((state) => [state.fetchChats, state.updateChats, state.hasFetched])
+  )
+  const [addUser, removeUser] = useOnlineUsersStore(useShallow((state) => [state.addUser, state.removeUser]))
+  const addRemovedMessage = useRemovedMessagesStore((state) => state.addRemovedMessage)
+  const [currentCall, incomingCall, setIncomingCall, outcomingCall, setOutcomingCall] = useMediaCallStore(
+    useShallow((state) => [
+      state.currentCall,
+      state.incomingCall,
+      state.setIncomingCall,
+      state.outcomingCall,
+      state.setOutcomingCall,
+    ])
+  )
+  const [setLocalMediaStream, setRemoteDeviceMuted] = useMediaStreamStore(
+    useShallow((state) => [state.setLocalMediaStream, state.setRemoteDeviceMuted])
+  )
 
   const [leftPanel, setLeftPanel] = useState<'chats' | 'people'>('chats')
   const [typingUsers, setTypingUsers] = useState<string[]>([])

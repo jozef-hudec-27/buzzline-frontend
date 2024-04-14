@@ -5,6 +5,7 @@ import { createSetter } from './zustandUtils'
 
 import { ChatShow } from '../types/globalTypes'
 import { SetChatFn, FetchChatFn, SetMessageFn } from '../types/currentChatTypes'
+import { MutableRefObject } from 'react'
 
 type CurrentChatStore = {
   chat: ChatShow
@@ -12,10 +13,11 @@ type CurrentChatStore = {
   isLoading: boolean
   fetchChat: FetchChatFn
   message: string
+  messageRef: MutableRefObject<string>
   setMessage: SetMessageFn
 }
 
-export default create<CurrentChatStore>()((set) => ({
+export default create<CurrentChatStore>()((set, get) => ({
   chat: {} as ChatShow,
   setChat: (chat) => set({ chat }),
   isLoading: false,
@@ -30,5 +32,6 @@ export default create<CurrentChatStore>()((set) => ({
     }
   },
   message: '',
-  setMessage: createSetter<string, CurrentChatStore>('message', set),
+  messageRef: { current: '' },
+  setMessage: createSetter<string, CurrentChatStore>('message', set, () => (get().messageRef.current = get().message)),
 }))

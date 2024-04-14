@@ -6,8 +6,8 @@ import useMediaCallStore from '../zustand/webrtc/mediaCallStore'
 import Modal from '../components/Modal/Modal'
 
 function SocketDisconnectedModal() {
-  const [socketDisconnected] = useSocketStore((state) => [state.socketDisconnected])
-  const [currentCall] = useMediaCallStore((state) => [state.currentCall])
+  const socketDisconnected = useSocketStore((state) => state.socketDisconnected)
+  const currentCall = useMediaCallStore((state) => state.currentCall)
 
   const [showReloadBtn, setShowReloadBtn] = useState(false)
 

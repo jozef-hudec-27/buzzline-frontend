@@ -6,7 +6,7 @@ import useMediaStreamStore from '@/app/zustand/webrtc/mediaStreamStore'
 import { RefObject } from 'react'
 
 function LocalVideo({ videoRef }: { videoRef: RefObject<HTMLVideoElement> }) {
-  const [localVideoMuted] = useMediaStreamStore((state) => [state.localVideoMuted])
+  const localVideoMuted = useMediaStreamStore((state) => state.localVideoMuted)
 
   const [videoHidden, setVideoHidden] = useState(false)
 

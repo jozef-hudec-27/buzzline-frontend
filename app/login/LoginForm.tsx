@@ -1,8 +1,9 @@
 'use client'
 
-import Link from 'next/link'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { useShallow } from 'zustand/react/shallow'
+import Link from 'next/link'
 import toast from 'react-hot-toast'
 
 import useUserStore from '../zustand/userStore'
@@ -26,22 +27,23 @@ type LoginFormProps = {
 function LoginForm(props: LoginFormProps) {
   const router = useRouter()
 
-  const [fetchUser] = useUserStore((state) => [state.fetchUser])
-  const [socketRef] = useSocketStore((state) => [state.socketRef])
-  const [initPeer, killPeer] = usePeerStore((state) => [state.initPeer, state.killPeer])
+  const fetchUser = useUserStore((state) => state.fetchUser)
+  const socketRef = useSocketStore((state) => state.socketRef)
+  const [initPeer, killPeer] = usePeerStore(useShallow((state) => [state.initPeer, state.killPeer]))
   const [setCurrentCall, currentCallRef, setIncomingCall, incomingCallRef, setOutcomingCall, outcomingCallRef] =
-    useMediaCallStore((state) => [
-      state.setCurrentCall,
-      state.currentCallRef,
-      state.setIncomingCall,
-      state.incomingCallRef,
-      state.setOutcomingCall,
-      state.outcomingCallRef,
-    ])
-  const [setLocalMediaStream, setRemoteMediaStream] = useMediaStreamStore((state) => [
-    state.setLocalMediaStream,
-    state.setRemoteMediaStream,
-  ])
+    useMediaCallStore(
+      useShallow((state) => [
+        state.setCurrentCall,
+        state.currentCallRef,
+        state.setIncomingCall,
+        state.incomingCallRef,
+        state.setOutcomingCall,
+        state.outcomingCallRef,
+      ])
+    )
+  const [setLocalMediaStream, setRemoteMediaStream] = useMediaStreamStore(
+    useShallow((state) => [state.setLocalMediaStream, state.setRemoteMediaStream])
+  )
 
   const { formState, setFormState } = props
 

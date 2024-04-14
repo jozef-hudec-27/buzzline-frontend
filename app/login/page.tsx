@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
@@ -13,7 +14,7 @@ import { LoginFormState } from '../types/formTypes'
 
 function LoginPage() {
   const router = useRouter()
-  const [isLoggedIn, isLoading] = useUserStore((state) => [state.isLoggedIn, state.isLoading])
+  const [isLoggedIn, isLoading] = useUserStore(useShallow((state) => [state.isLoggedIn, state.isLoading]))
 
   const [formState, setFormState] = useState<LoginFormState>({ email: '', password: '' })
 

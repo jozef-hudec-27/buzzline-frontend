@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
@@ -21,16 +22,13 @@ type ChatProps = {
 }
 
 function Chat({ chat, hideNewestMessage }: ChatProps) {
-  const [user] = useUserStore((state) => [state.user])
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [fetchChat, currentChat, message, setMessage] = useCurrentChatStore((state) => [
-    state.fetchChat,
-    state.chat,
-    state.message,
-    state.setMessage,
-  ])
-  const [setChats] = useChatsStore((state) => [state.setChats])
-  const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
+  const user = useUserStore((state) => state.user)
+  const socket = useSocketStore((state) => state.socket)
+  const [fetchChat, currentChat, messageRef, setMessage] = useCurrentChatStore(
+    useShallow((state) => [state.fetchChat, state.chat, state.messageRef, state.setMessage])
+  )
+  const setChats = useChatsStore((state) => state.setChats)
+  const isOnline = useOnlineUsersStore((state) => state.isOnline)
 
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 
@@ -60,7 +58,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
           setChats((prevChats) => prevChats)
         }
 
-        if (currentChat && message) {
+        if (currentChat && !currentChat.isAI && messageRef.current) {
           socket?.emit('typing', { chat: currentChat._id, isTyping: false })
           setMessage('')
         }

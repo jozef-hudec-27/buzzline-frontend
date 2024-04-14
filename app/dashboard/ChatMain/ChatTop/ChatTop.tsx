@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow'
 import { TelephoneFill, CameraVideoFill, ThreeDots, TrashFill } from 'react-bootstrap-icons'
 
 import useSocketStore from '@/app/zustand/socketStore'
@@ -18,25 +19,22 @@ import { configurePeerConnection } from '@/app/utils/peerUtils'
 import AIAvatar from '/public/assets/images/my-ai-avatar.svg'
 
 function ChatTop() {
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
-  const [chat] = useCurrentChatStore((state) => [state.chat])
-  const [peer] = usePeerStore((state) => [state.peer])
-  const [outcomingCallRef, setOutcomingCall, currentCall, setCurrentCall] = useMediaCallStore((state) => [
-    state.outcomingCallRef,
-    state.setOutcomingCall,
-    state.currentCall,
-    state.setCurrentCall,
-  ])
+  const socket = useSocketStore((state) => state.socket)
+  const isOnline = useOnlineUsersStore((state) => state.isOnline)
+  const chat = useCurrentChatStore((state) => state.chat)
+  const peer = usePeerStore((state) => state.peer)
+  const [outcomingCallRef, setOutcomingCall, currentCall, setCurrentCall] = useMediaCallStore(
+    useShallow((state) => [state.outcomingCallRef, state.setOutcomingCall, state.currentCall, state.setCurrentCall])
+  )
   const [setLocalMediaStream, setRemoteMediaStream, setRemoteDeviceMuted, setLocalDeviceMuted] = useMediaStreamStore(
-    (state) => [
+    useShallow((state) => [
       state.setLocalMediaStream,
       state.setRemoteMediaStream,
       state.setRemoteDeviceMuted,
       state.setLocalDeviceMuted,
-    ]
+    ])
   )
-  const [setShowClearConversationModal] = useAIChatStore((state) => [state.setShowClearConversationModal])
+  const [setShowClearConversationModal] = useAIChatStore(useShallow((state) => [state.setShowClearConversationModal]))
 
   const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.isAI || chat.users.some((user) => isOnline(user._id))

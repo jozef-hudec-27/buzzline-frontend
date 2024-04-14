@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { MicFill, Image, HandThumbsUpFill } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import getBlobDuration from 'get-blob-duration'
@@ -17,15 +18,15 @@ import { streamToString } from '@/app/utils/utils'
 import { MAX_MSG_LENGTH } from '@/app/config'
 
 function ChatBottom() {
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [user] = useUserStore((state) => [state.user])
-  const [chat, message, setMessage] = useCurrentChatStore((state) => [state.chat, state.message, state.setMessage])
-  const [messages] = useCurrentChatMessagesStore((state) => [state.messages])
-  const [contextAware, isAIGeneratingResponse, setIsGeneratingResponse] = useAIChatStore((state) => [
-    state.contextAware,
-    state.isGeneratingResponse,
-    state.setIsGeneratingResponse,
-  ])
+  const socket = useSocketStore((state) => state.socket)
+  const user = useUserStore((state) => state.user)
+  const [chat, message, setMessage] = useCurrentChatStore(
+    useShallow((state) => [state.chat, state.message, state.setMessage])
+  )
+  const messages = useCurrentChatMessagesStore((state) => state.messages)
+  const [contextAware, isAIGeneratingResponse, setIsGeneratingResponse] = useAIChatStore(
+    useShallow((state) => [state.contextAware, state.isGeneratingResponse, state.setIsGeneratingResponse])
+  )
 
   //   Voice clip recording
   const [isRecordingVoiceClip, setIsRecordingVoiceClip] = useState(false)

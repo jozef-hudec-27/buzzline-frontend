@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 import useMediaCallStore from '@/app/zustand/webrtc/mediaCallStore'
 import useChatsStore from '@/app/zustand/chatsStore'
@@ -13,12 +14,10 @@ function MediaCallModal() {
   const [isOpen, setIsOpen] = useState(false)
   const [friend, setFriend] = useState<User | null>(null)
 
-  const [incomingCall, outcomingCall, currentCall] = useMediaCallStore((state) => [
-    state.incomingCall,
-    state.outcomingCall,
-    state.currentCall,
-  ])
-  const [chats] = useChatsStore((state) => [state.chats])
+  const [incomingCall, outcomingCall, currentCall] = useMediaCallStore(
+    useShallow((state) => [state.incomingCall, state.outcomingCall, state.currentCall])
+  )
+  const chats = useChatsStore((state) => state.chats)
 
   useEffect(() => {
     const call = incomingCall || outcomingCall || currentCall

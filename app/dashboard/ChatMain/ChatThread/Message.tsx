@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import ReactAudioPlayer from 'react-h5-audio-player'
 import Image from 'next/image'
 import { Tooltip } from 'react-tooltip'
@@ -19,12 +20,11 @@ type MessageProps = {
 }
 
 function Message({ initialMsg, i }: MessageProps) {
-  const [user] = useUserStore((state) => [state.user])
+  const user = useUserStore((state) => state.user)
   const [removedMessages] = useRemovedMessagesStore((state) => [state.removedMessages])
-  const [messages, setMessageToRemove] = useCurrentChatMessagesStore((state) => [
-    state.messages,
-    state.setMessageToRemove,
-  ])
+  const [messages, setMessageToRemove] = useCurrentChatMessagesStore(
+    useShallow((state) => [state.messages, state.setMessageToRemove])
+  )
 
   const [msg, setMsg] = useState<Message>(initialMsg)
   const [holdTimer, setHoldTimer] = useState<NodeJS.Timeout | null>(null)

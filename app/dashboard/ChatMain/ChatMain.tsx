@@ -1,4 +1,5 @@
 import { useEffect, useState, memo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { useMutation } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 
@@ -23,17 +24,14 @@ type ChatMainProps = {
 }
 
 const ChatMain = memo(function ({ typingUsers, setTypingUsers }: ChatMainProps) {
-  const [user] = useUserStore((state) => [state.user])
-  const [socket] = useSocketStore((state) => [state.socket])
-  const [chat, chatLoading] = useCurrentChatStore((state) => [state.chat, state.isLoading])
-  const [fetchMessages, setMessages, messagesLoading, initialLoading] = useCurrentChatMessagesStore((state) => [
-    state.fetchMessages,
-    state.setMessages,
-    state.isLoading,
-    state.initialLoading,
-  ])
-  const [updateChats] = useChatsStore((state) => [state.updateChats])
-  const [isAIGeneratingResponse] = useAIChatStore((state) => [state.isGeneratingResponse])
+  const user = useUserStore((state) => state.user)
+  const socket = useSocketStore((state) => state.socket)
+  const [chat, chatLoading] = useCurrentChatStore(useShallow((state) => [state.chat, state.isLoading]))
+  const [fetchMessages, setMessages, messagesLoading, initialLoading] = useCurrentChatMessagesStore(
+    useShallow((state) => [state.fetchMessages, state.setMessages, state.isLoading, state.initialLoading])
+  )
+  const updateChats = useChatsStore((state) => state.updateChats)
+  const isAIGeneratingResponse = useAIChatStore((state) => state.isGeneratingResponse)
 
   const [nextMessagesPage, setNextMessagesPage] = useState<null | number>(null)
 

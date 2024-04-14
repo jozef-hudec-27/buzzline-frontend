@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import useChatsStore from '@/app/zustand/chatsStore'
@@ -8,8 +9,8 @@ import Chat from '../ChatsPanel/Chat'
 import { ChatIndex } from '@/app/types/globalTypes'
 
 const PeoplePanel = memo(function () {
-  const [chats, chatsLoading] = useChatsStore((state) => [state.chats, state.isLoading])
-  const [isOnline] = useOnlineUsersStore((state) => [state.isOnline])
+  const [chats, chatsLoading] = useChatsStore(useShallow((state) => [state.chats, state.isLoading]))
+  const isOnline = useOnlineUsersStore((state) => state.isOnline)
 
   function removeGroupChats(chats: ChatIndex[]): ChatIndex[] {
     return chats.filter((chat) => !chat.isGroup)

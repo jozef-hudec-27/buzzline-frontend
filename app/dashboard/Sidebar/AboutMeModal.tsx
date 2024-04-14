@@ -10,7 +10,7 @@ import Modal, { ModalProps } from '@/app/components/Modal/Modal'
 import api from '@/app/api/axiosInstance'
 
 function AboutMeModal({ isOpen, setIsOpen }: ModalProps) {
-  const [user] = useUserStore((state) => [state.user])
+  const user = useUserStore((state) => state.user)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null)

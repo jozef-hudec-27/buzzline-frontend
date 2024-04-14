@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { useRouter } from 'next/navigation'
 
 import useUserStore from '@/app/zustand/userStore'
@@ -12,7 +13,7 @@ import { RegisterFormState } from '../types/formTypes'
 
 function RegisterPage() {
   const router = useRouter()
-  const [isLoggedIn, isLoading] = useUserStore((state) => [state.isLoggedIn, state.isLoading])
+  const [isLoggedIn, isLoading] = useUserStore(useShallow((state) => [state.isLoggedIn, state.isLoading]))
 
   useEffect(() => {
     if (isLoggedIn && !isLoading) {
