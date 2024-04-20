@@ -18,6 +18,9 @@ import VoiceClipRecording from './VoiceClipRecording'
 import { streamToString } from '@/app/utils/utils'
 import { MAX_MSG_LENGTH } from '@/app/config'
 
+import { Message, User, ChatShow } from '@/app/types/globalTypes'
+import { MySocket } from '@/app/types/socketTypes'
+
 function ChatBottom() {
   const socket = useSocketStore((state) => state.socket)
   const user = useUserStore((state) => state.user)
@@ -123,8 +126,8 @@ function ChatBottom() {
     localStorage.setItem('removeMsgTipShown', 'true')
   }
 
-  const handleAIMessage = async () => {
-    const msgHistory = contextAware
+  const createMessageHistory = (contextAware: boolean, messages: Message[], user: User, message: string) => {
+    return contextAware
       ? [
           ...messages.map((msg) => ({
             role: msg.sender._id === user._id ? 'user' : 'assistant',
@@ -134,41 +137,71 @@ function ChatBottom() {
           { role: 'user', content: message },
         ].filter((m) => !!m)
       : [{ role: 'user', content: message }]
+  }
 
-    setIsGeneratingResponse(true)
-    const requestBody = JSON.stringify({ messages: msgHistory })
-    const signature = crypto
-      .createHmac('sha256', process.env.NEXT_PUBLIC_SECRET || '')
+  const createSignature = (requestBody: string, secret: string) => {
+    return crypto
+      .createHmac('sha256', secret || '')
       .update(requestBody)
       .digest('hex')
-    const response = await fetch('http://127.0.0.1:3000/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-hub-signature-256': `sha256=${signature}`,
-      },
-      body: requestBody,
-    })
+  }
 
+  const postRequest = async (url: string, headers: { [key: string]: string }, body: string) => {
+    return await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: body,
+    })
+  }
+
+  const handleResponseError = async (response: Response) => {
     if (!response.ok) {
       const data = await response.json()
       toast(data?.error?.message || 'Failed to get AI response.', { icon: '❌', duration: 8000 })
       setIsGeneratingResponse(false)
-      return
-    }
 
-    let responseString = await streamToString(response.body)
-    const stringPartitions: string[] = []
+      return true
+    }
+  }
+
+  const partitionResponseString = (responseString: string, maxMsgLength: number) => {
+    const stringPartitions = []
     while (responseString.length) {
-      stringPartitions.push(responseString.slice(0, MAX_MSG_LENGTH))
-      responseString = responseString.slice(MAX_MSG_LENGTH)
+      stringPartitions.push(responseString.slice(0, maxMsgLength))
+      responseString = responseString.slice(maxMsgLength)
     }
+    return stringPartitions
+  }
 
+  const emitAIMessages = (stringPartitions: string[], socket: MySocket, chat: ChatShow) => {
     stringPartitions.forEach((content, index) => {
       setTimeout(() => {
         socket?.emit('AIMessage', { chat: chat._id, content })
       }, index * 1000)
     })
+  }
+
+  const handleAIMessage = async () => {
+    const msgHistory = createMessageHistory(contextAware, messages, user, message)
+
+    setIsGeneratingResponse(true)
+    const requestBody = JSON.stringify({ messages: msgHistory })
+    const signature = createSignature(requestBody, process.env.NEXT_PUBLIC_SECRET || '')
+    const response = await postRequest(
+      'http://127.0.0.1:3000/api/chat',
+      {
+        'Content-Type': 'application/json',
+        'x-hub-signature-256': `sha256=${signature}`,
+      },
+      requestBody
+    )
+
+    if (await handleResponseError(response)) return
+
+    let responseString = await streamToString(response.body)
+    const stringPartitions = partitionResponseString(responseString, MAX_MSG_LENGTH)
+
+    emitAIMessages(stringPartitions, socket, chat)
 
     setIsGeneratingResponse(false)
   }
