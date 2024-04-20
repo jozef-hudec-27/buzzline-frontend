@@ -48,7 +48,7 @@ const ClearAIConversationModal = memo(function () {
       contentLabel="Clear AI conversation modal"
     >
       <ActionModal
-        title="Do you really want to clear your conversation with My AI?"
+        title="Do you really want to clear your conversation with Buzz AI?"
         subtitle="This cannot be undone."
         confirmText="Yes, clear conversation"
         confirmAction={clearConversationMutation.mutate}

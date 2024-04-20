@@ -16,7 +16,7 @@ import { restrictLength } from '@/app/utils/utils'
 import { accessUserMediaCatchHandler, closeOutcomingCall, addTrackToPeerConnection } from '@/app/utils/mediaCallUtils'
 import { configurePeerConnection } from '@/app/utils/peerUtils'
 
-import AIAvatar from '/public/assets/images/my-ai-avatar.svg'
+import AIAvatar from '/public/assets/images/buzz-ai-avatar.svg'
 
 function ChatTop() {
   const socket = useSocketStore((state) => state.socket)
@@ -36,7 +36,7 @@ function ChatTop() {
   )
   const [setShowClearConversationModal] = useAIChatStore(useShallow((state) => [state.setShowClearConversationModal]))
 
-  const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
+  const chatName = chat.isAI ? 'Buzz AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.isAI || chat.users.some((user) => isOnline(user._id))
 
   async function callUser(video: boolean, remotePeerId: string) {

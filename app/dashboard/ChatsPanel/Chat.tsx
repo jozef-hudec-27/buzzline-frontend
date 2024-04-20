@@ -12,7 +12,7 @@ import useOnlineUsersStore from '@/app/zustand/onlineUsersStore'
 import Avatar from '@/app/components/avatar/Avatar'
 import { restrictLength, timeSince, randomInt } from '@/app/utils/utils'
 
-import AIAvatar from '/public/assets/images/my-ai-avatar.svg'
+import AIAvatar from '/public/assets/images/buzz-ai-avatar.svg'
 
 import { ChatIndex } from '@/app/types/globalTypes'
 
@@ -32,7 +32,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
 
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 
-  const chatName = chat.isAI ? 'My AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
+  const chatName = chat.isAI ? 'Buzz AI' : `${chat.users[0].firstName} ${chat.users[0].lastName}`
   const online = chat.isAI || chat.users.some((user) => isOnline(user._id))
 
   useEffect(() => {

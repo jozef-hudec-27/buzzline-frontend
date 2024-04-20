@@ -13,8 +13,8 @@ function AIChatGuide() {
       steps={[
         {
           intro: `<div class="flex flex-col gap-[24px]">
-          <h4>👋 Welcome to My AI!</h4>
-          <p>You need to know this before using My AI:</p>
+          <h4>👋 Welcome to Buzz AI!</h4>
+          <p>You need to know this before using Buzz AI:</p>
           <ul class="list-disc list-inside">
               <li>It operates using generative AI technology. While safety measures have been incorporated into its design, please be aware that its responses may occasionally exhibit bias, inaccuracies, or even provide misleading or harmful information. It's advisable not to solely depend on its advice.</li>
               <li>Sharing sensitive or confidential information is not recommended.</li>
@@ -26,8 +26,8 @@ function AIChatGuide() {
           intro: `<div class="flex flex-col gap-[24px]">
             <h4>🗑️ Clearing the conversation</h4>
             <ul class="list-disc list-inside">
-              <li>You can clear your conversation with My AI here. Keep in mind this action is irreversible and your messages will be deleted forever.</li>
-              <li>In rare cases (most often due to bad input), My AI gets stuck and can't generate new responses. If this happens, clearing the conversation is your best bet.</li>
+              <li>You can clear your conversation with Buzz AI here. Keep in mind this action is irreversible and your messages will be deleted forever.</li>
+              <li>In rare cases (most often due to bad input), Buzz AI gets stuck and can't generate new responses. If this happens, clearing the conversation is your best bet.</li>
             </ul>
           </div>`,
         },
@@ -36,8 +36,8 @@ function AIChatGuide() {
           intro: `<div class="flex flex-col gap-[24px]">
             <h4>🤖 Context-aware AI</h4>
             <ul class="list-disc list-inside">
-              <li>When enabled, My AI will remember the context of your conversation and provide more relevant responses.</li>
-              <li>When disabled, My AI will not remember the context of your conversation.</li>
+              <li>When enabled, Buzz AI will remember the context of your conversation and provide more relevant responses.</li>
+              <li>When disabled, Buzz AI will not remember the context of your conversation.</li>
             </ul>
           </div>`,
         },

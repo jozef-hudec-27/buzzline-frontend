@@ -10,7 +10,7 @@ import useCurrentChatMessagesStore from '@/app/zustand/currentChatMessagesStore'
 
 import Avatar from '@/app/components/avatar/Avatar'
 
-import aiAvatar from '/public/assets/images/my-ai-avatar.svg'
+import aiAvatar from '/public/assets/images/buzz-ai-avatar.svg'
 
 import { Message, User } from '@/app/types/globalTypes'
 
@@ -86,7 +86,7 @@ function Message({ initialMsg, i }: MessageProps) {
       {!msgBelongsToUser(msg, user) && (
         <Avatar
           src={msg.isAI ? aiAvatar : msg.sender.avatarUrl}
-          alt={msg.isAI ? 'My AI' : `${msg.sender.firstName} ${msg.sender.lastName}`}
+          alt={msg.isAI ? 'Buzz AI' : `${msg.sender.firstName} ${msg.sender.lastName}`}
           size={28}
           cls={`w-[28px] h-[28px] relative top-[4px] ${
             msgBelongsToUser(messages[i + 1], msg.sender) ? 'opacity-0' : ''
@@ -117,7 +117,7 @@ function Message({ initialMsg, i }: MessageProps) {
         ) : msg.imageUrl ? (
           <Image
             src={msg.imageUrl}
-            alt={`Message from ${msg.isAI ? 'My AI' : msg.sender.firstName}`}
+            alt={`Message from ${msg.isAI ? 'Buzz AI' : msg.sender.firstName}`}
             width={300}
             height={300}
             className="w-[300px] h-auto rounded-[24px] drop-shadow-sm"
