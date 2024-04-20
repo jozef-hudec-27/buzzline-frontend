@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { MicFill, Image, HandThumbsUpFill } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import getBlobDuration from 'get-blob-duration'
+import crypto from 'crypto'
 
 import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
@@ -135,14 +136,18 @@ function ChatBottom() {
       : [{ role: 'user', content: message }]
 
     setIsGeneratingResponse(true)
+    const requestBody = JSON.stringify({ messages: msgHistory })
+    const signature = crypto
+      .createHmac('sha256', process.env.NEXT_PUBLIC_SECRET || '')
+      .update(requestBody)
+      .digest('hex')
     const response = await fetch('http://127.0.0.1:3000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-hub-signature-256': `sha256=${signature}`,
       },
-      body: JSON.stringify({
-        messages: msgHistory,
-      }),
+      body: requestBody,
     })
 
     if (!response.ok) {
@@ -220,11 +225,13 @@ function ChatBottom() {
           <form className="py-[12px] px-[24px] flex items-center bg-black-5 flex-1 rounded-full" onSubmit={sendMessage}>
             <input
               type="text"
-              className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none w-0 disabled:cursor-not-allowed"
+              className="pr-[12px] bg-black-5 placeholder:text-black-50 text-black-75 flex-1 outline-none w-0"
               placeholder="Aa"
               aria-label="Message"
               value={message}
               onChange={(e) => {
+                if (chat.isAI && isAIGeneratingResponse) return
+
                 const newMsg = e.target.value
 
                 if (newMsg.length > MAX_MSG_LENGTH) {
@@ -233,7 +240,7 @@ function ChatBottom() {
 
                 setMessage(() => newMsg)
               }}
-              disabled={chat.isAI && isAIGeneratingResponse}
+              autoFocus
             />
 
             <EmojiButton setMessage={setMessage} />
