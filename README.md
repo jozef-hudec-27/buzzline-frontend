@@ -63,7 +63,7 @@ Create a file called `.env` in the root of the project and add the following:
 
 ```
 NEXT_PUBLIC_BASE_URL=<YOUR SERVER URL>
-CLOUD_HOSTNAME=<YOUR CLOUD PROVIDER URL>
+NEXT_PUBLIC_CLOUD_HOSTNAME=<YOUR CLOUD PROVIDER URL>
 ```
 
 Optionally, if you know what you're doing, you can add this variable:
