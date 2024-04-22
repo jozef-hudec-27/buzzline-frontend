@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { MicFill, Image, HandThumbsUpFill } from 'react-bootstrap-icons'
 import toast from 'react-hot-toast'
 import getBlobDuration from 'get-blob-duration'
-import crypto from 'crypto'
+import axios from 'axios'
 
 import useUserStore from '@/app/zustand/userStore'
 import useSocketStore from '@/app/zustand/socketStore'
@@ -139,13 +139,6 @@ function ChatBottom() {
       : [{ role: 'user', content: message }]
   }
 
-  const createSignature = (requestBody: string, secret: string) => {
-    return crypto
-      .createHmac('sha256', secret || '')
-      .update(requestBody)
-      .digest('hex')
-  }
-
   const postRequest = async (url: string, headers: { [key: string]: string }, body: string) => {
     return await fetch(url, {
       method: 'POST',
@@ -186,12 +179,12 @@ function ChatBottom() {
 
     setIsGeneratingResponse(true)
     const requestBody = JSON.stringify({ messages: msgHistory })
-    const signature = createSignature(requestBody, process.env.NEXT_PUBLIC_SECRET || '')
+    const signature = await axios.post('/api/signature', requestBody).then((res) => res.data.signature)
     const response = await postRequest(
-      'http://127.0.0.1:3000/api/chat',
+      '/api/chat',
       {
         'Content-Type': 'application/json',
-        'x-hub-signature-256': `sha256=${signature}`,
+        'x-hub-signature-256': signature,
       },
       requestBody
     )
