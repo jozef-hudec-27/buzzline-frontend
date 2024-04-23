@@ -6,7 +6,7 @@
 
 <br>
 
-BuzzLine is a real-time messaging and calling web application. Features include audio/video call, live messages and notifications, voice clip recording and more. Visit at [https://buzzline.live](https://buzzline.live).
+BuzzLine is a real-time messaging and calling web application. Features include audio/video call, live messages and notifications, voice clip recording, AI chat and more. Visit at [https://buzzline.live](https://buzzline.live).
 
 <br>
 <div>
@@ -15,6 +15,8 @@ BuzzLine is a real-time messaging and calling web application. Features include 
 <img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1709373061/buzzline-chat-2_xtw2mh.png" alt="Buzzline dashboard" width="500"/>
 
 <img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1709377232/buzzline-current-call_eo6yup.png" alt="Buzzline video call" width="500"/>
+
+<img class="hero__app-preview-photo" src="https://res.cloudinary.com/dsbky2fbe/image/upload/v1713861393/buzzline-ai-chat_nrgeli.png" alt="Buzzline video call" width="500"/>
 </div>
 <br/>
 
