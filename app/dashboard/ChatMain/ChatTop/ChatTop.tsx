@@ -20,7 +20,7 @@ import AIAvatar from '/public/assets/images/buzz-ai-avatar.svg'
 
 function ChatTop() {
   const socket = useSocketStore((state) => state.socket)
-  const isOnline = useOnlineUsersStore((state) => state.isOnline)
+  const { isOnline } = useOnlineUsersStore()
   const chat = useCurrentChatStore((state) => state.chat)
   const peer = usePeerStore((state) => state.peer)
   const [outcomingCallRef, setOutcomingCall, currentCall, setCurrentCall] = useMediaCallStore(

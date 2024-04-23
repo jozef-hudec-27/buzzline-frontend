@@ -10,7 +10,7 @@ import { ChatIndex } from '@/app/types/globalTypes'
 
 const PeoplePanel = memo(function () {
   const [chats, chatsLoading] = useChatsStore(useShallow((state) => [state.chats, state.isLoading]))
-  const isOnline = useOnlineUsersStore((state) => state.isOnline)
+  const { isOnline } = useOnlineUsersStore()
 
   function removeGroupChats(chats: ChatIndex[]): ChatIndex[] {
     return chats.filter((chat) => !chat.isGroup)

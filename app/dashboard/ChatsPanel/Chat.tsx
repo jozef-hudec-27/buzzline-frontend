@@ -28,7 +28,7 @@ function Chat({ chat, hideNewestMessage }: ChatProps) {
     useShallow((state) => [state.fetchChat, state.chat, state.messageRef, state.setMessage])
   )
   const setChats = useChatsStore((state) => state.setChats)
-  const isOnline = useOnlineUsersStore((state) => state.isOnline)
+  const { isOnline } = useOnlineUsersStore()
 
   const [hasUnreadMsg, setHasUnreadMsg] = useState(false)
 
