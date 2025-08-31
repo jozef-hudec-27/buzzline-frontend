@@ -17,7 +17,7 @@ function verifySignature(trusted: string, untrusted: string): boolean {
 async function getChatCompletion(messages: any): Promise<StreamingTextResponse | NextResponse> {
   try {
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-5-nano',
       stream: true,
       messages,
     })
